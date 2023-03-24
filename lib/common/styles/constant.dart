@@ -13,15 +13,15 @@ const kTitleContextStyle = TextStyle(
 );
 
 const kHeaderTextStyle = TextStyle(
-  fontSize: 20.0,
+  fontSize: 18.0,
   letterSpacing: 0.5,
   fontWeight: FontWeight.normal,
 );
 
 const kInputTextStyle = TextStyle(
-  fontSize: 16.0,
+  fontSize: 14.0,
   letterSpacing: 0.5,
-  fontWeight: FontWeight.normal,
+  fontWeight: FontWeight.w400,
 );
 
 const kButtonTextStyle = TextStyle(

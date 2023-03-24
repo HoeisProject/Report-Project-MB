@@ -9,6 +9,7 @@ import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
+import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 import 'package:report_project/feature_1/employee/widgets/report_attach_media.dart';
 
@@ -28,7 +29,7 @@ class ReportCreateState extends State<ReportCreate> {
   TextEditingController projectTitleCtl = TextEditingController();
   TextEditingController projectDescCtl = TextEditingController();
 
-  List<File?>? listMediaFile;
+  List<File?> listMediaFile = [];
 
   bool? isLoading = false;
 
@@ -57,7 +58,9 @@ class ReportCreateState extends State<ReportCreate> {
         title: "Location Unavailable",
         content: "Location services are disabled,\nplease enable it!",
         defaultActionText: "CLOSE",
-        onButtonPressed: () {},
+        onButtonPressed: () {
+          Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+        },
       );
     }
 
@@ -71,7 +74,9 @@ class ReportCreateState extends State<ReportCreate> {
           title: "Location Unavailable",
           content: "Location permissions are denied\nplease approve it",
           defaultActionText: "CLOSE",
-          onButtonPressed: () {},
+          onButtonPressed: () {
+            Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+          },
         );
       }
     }
@@ -84,7 +89,9 @@ class ReportCreateState extends State<ReportCreate> {
         content:
             "Location permissions are denied permanently\nplease approve it",
         defaultActionText: "CLOSE",
-        onButtonPressed: () {},
+        onButtonPressed: () {
+          Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+        },
       );
     }
 
@@ -96,8 +103,10 @@ class ReportCreateState extends State<ReportCreate> {
 
     Placemark place = placeMarks[0];
 
-    setState(() async {
-      _projectCreated = await NTP.now();
+    DateTime getNtpDateTime = await NTP.now();
+
+    setState(() {
+      _projectCreated = getNtpDateTime;
 
       locationAddress =
           '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
@@ -121,15 +130,20 @@ class ReportCreateState extends State<ReportCreate> {
   }
 
   Widget _body() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
+    return Container(
+      margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             inputTextField(context, keyProjectTitle, "Project Title",
                 projectTitleCtl, TextInputType.text, false, 1, (value) {}),
-            viewTextField(context, "Time and Date",
-                DateFormat.yMMMEd().format(_projectCreated!)),
+            viewTextField(
+                context,
+                "Time and Date",
+                _projectCreated != null
+                    ? DateFormat.yMMMEd().format(_projectCreated!)
+                    : "getting network time..."),
             viewTextField(context, "Location", locationAddress!),
             inputTextField(context, keyProjectDesc, "Project Description",
                 projectDescCtl, TextInputType.text, false, 6, (value) {}),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
+import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
 class AdminDetailReport extends StatefulWidget {
   static const routeName = '/admin_report_detail_screen';
@@ -23,15 +24,17 @@ class AdminDetailReportState extends State<AdminDetailReport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: customAppbar("Detail Report"),
       body: _body(),
     );
   }
 
   Widget _body() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
+    return Container(
+      margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             viewTextField(context, "Project Title", ""),
             viewTextField(context, "Time and Date", ""),
@@ -39,6 +42,7 @@ class AdminDetailReportState extends State<AdminDetailReport> {
             viewTextField(context, "Project Description", ""),
             viewMediaField(context, "Attach Media", mediaFile),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 customButton(context, isLoadingReject, "REJECT", () {}),
                 customButton(context, isLoadingApprove, "APPROVE", () {})

@@ -34,7 +34,7 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
   bool? isLoginScreen = true;
 
   Color? loginSwitchColor = Colors.black;
-  Color? registerSwitchColor = Colors.tealAccent;
+  Color? registerSwitchColor = Colors.lightBlue;
 
   @override
   Widget build(BuildContext context) {
@@ -53,18 +53,53 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
 
   Widget _body() {
     return Center(
-      child: Card(
+      child: SizedBox(
+        height: isLoginScreen!
+            ? MediaQuery.of(context).size.height / 1.5
+            : MediaQuery.of(context).size.height,
+        width: isLoginScreen!
+            ? MediaQuery.of(context).size.width / 1.2
+            : MediaQuery.of(context).size.width,
+        child: Card(
+          elevation: 10.0,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child:
+                isLoginScreen! ? _loginCard(context) : _registerCard(context),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _loginCard(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
         child: Column(
           children: [
-            isLoginScreen! ? _loginCard(context) : _registerCard(context),
+            titleContext("LOGIN"),
+            inputTextField(context, keyUsernameField, "Username", usernameCtl,
+                TextInputType.text, false, 1, (value) {}),
+            inputTextField(context, keyPasswordField, "Password", passwordCtl,
+                TextInputType.text, true, 1, (value) {}),
+            customButton(
+              context,
+              isLoading,
+              "LOGIN",
+              () {
+                Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+              },
+            ),
             _logRegSwitchLink(
-              "login",
-              "register",
+              "Login",
+              "Register",
               loginSwitchColor!,
               registerSwitchColor!,
               () {
                 if (isLoginScreen == false) {
                   setState(() {
+                    loginSwitchColor = Colors.black;
+                    registerSwitchColor = Colors.lightBlue;
                     isLoginScreen = true;
                   });
                 }
@@ -72,62 +107,68 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
               () {
                 if (isLoginScreen == true) {
                   setState(() {
+                    loginSwitchColor = Colors.lightBlue;
+                    registerSwitchColor = Colors.black;
                     isLoginScreen = false;
                   });
                 }
               },
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _loginCard(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          titleContext("LOGIN"),
-          inputTextField(context, keyUsernameField, "Username", usernameCtl,
-              TextInputType.text, false, 1, (value) {}),
-          inputTextField(context, keyPasswordField, "Password", passwordCtl,
-              TextInputType.text, true, 1, (value) {}),
-          customButton(
-            context,
-            isLoading,
-            "LOGIN",
-            () {
-              Navigator.popAndPushNamed(context, HomeEmployee.routeName);
-            },
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _registerCard(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          titleContext("Register"),
-          inputMediaField(context, "Profile Image", mediaFile, () {}),
-          inputTextField(context, keyUsernameField, "Username", usernameCtl,
-              TextInputType.text, false, 1, (value) {}),
-          inputTextField(context, keyNikField, "Nik", nikCtl,
-              TextInputType.text, false, 1, (value) {}),
-          inputTextField(context, keyEmailField, "Email", emailCtl,
-              TextInputType.emailAddress, false, 1, (value) {}),
-          inputTextField(context, keyPasswordField, "Password", passwordCtl,
-              TextInputType.text, true, 1, (value) {}),
-          customButton(
-            context,
-            isLoading,
-            "REGISTER",
-            () {
-              Navigator.popAndPushNamed(context, AdminHome.routeName);
-            },
-          )
-        ],
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            titleContext("REGISTER"),
+            inputMediaField(context, "Profile Image", mediaFile, () {}),
+            inputTextField(context, keyUsernameField, "Username", usernameCtl,
+                TextInputType.text, false, 1, (value) {}),
+            inputTextField(context, keyNikField, "Nik", nikCtl,
+                TextInputType.text, false, 1, (value) {}),
+            inputTextField(context, keyEmailField, "Email", emailCtl,
+                TextInputType.emailAddress, false, 1, (value) {}),
+            inputTextField(context, keyPasswordField, "Password", passwordCtl,
+                TextInputType.text, true, 1, (value) {}),
+            customButton(
+              context,
+              isLoading,
+              "REGISTER",
+              () {
+                Navigator.popAndPushNamed(context, AdminHome.routeName);
+              },
+            ),
+            _logRegSwitchLink(
+              "Login",
+              "Register",
+              loginSwitchColor!,
+              registerSwitchColor!,
+              () {
+                if (isLoginScreen == false) {
+                  setState(() {
+                    loginSwitchColor = Colors.black;
+                    registerSwitchColor = Colors.lightBlue;
+                    isLoginScreen = true;
+                  });
+                }
+              },
+              () {
+                if (isLoginScreen == true) {
+                  setState(() {
+                    loginSwitchColor = Colors.lightBlue;
+                    registerSwitchColor = Colors.black;
+                    isLoginScreen = false;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -139,27 +180,33 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
       Color secondColor,
       void Function()? onPressed_1,
       void Function()? onPressed_2) {
-    return Center(
-      child: SizedBox(
-        height: 50.0,
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: onPressed_1,
-              child: Text(
-                firstLabel,
-                style: TextStyle(color: firstColor),
+    return Container(
+      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+      child: Center(
+        child: SizedBox(
+          height: 25.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: onPressed_1,
+                child: Text(
+                  firstLabel,
+                  style: TextStyle(color: firstColor),
+                ),
               ),
-            ),
-            const VerticalDivider(),
-            GestureDetector(
-              onTap: onPressed_2,
-              child: Text(
-                secondLabel,
-                style: TextStyle(color: secondColor),
+              const VerticalDivider(
+                thickness: 2.5,
               ),
-            )
-          ],
+              GestureDetector(
+                onTap: onPressed_2,
+                child: Text(
+                  secondLabel,
+                  style: TextStyle(color: secondColor),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

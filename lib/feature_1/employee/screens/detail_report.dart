@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
+import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
 class ReportDetail extends StatefulWidget {
   static const routeName = '/report_detail_screen';
@@ -19,20 +20,22 @@ class ReportDetailState extends State<ReportDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: customAppbar("Detail Report"),
       body: _body(),
     );
   }
 
   Widget _body() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
+    return Container(
+      margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            viewTextField(context, "Project Title", ""),
-            viewTextField(context, "Time and Date", ""),
-            viewTextField(context, "Location", ""),
-            viewTextField(context, "Project Description", ""),
+            viewTextField(context, "Project Title", "aaaaaaa"),
+            viewTextField(context, "Time and Date", "aaaaaaaaaa"),
+            viewTextField(context, "Location", "aaaaaaaaaaa"),
+            viewTextField(context, "Project Description", "bbbbbb"),
             viewMediaField(context, "Attach Media", mediaFile)
           ],
         ),

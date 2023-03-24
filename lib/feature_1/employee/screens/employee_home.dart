@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/feature_1/employee/screens/create_report.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
@@ -29,34 +30,55 @@ class HomeEmployeeState extends State<HomeEmployee> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _menuBar(Icons.assignment, "Report", () {
-              Navigator.pushNamed(context, ReportCreate.routeName);
-            }),
-            _listProjectView()
+            _menuBar(),
+            _listProjectView(),
           ],
         ),
       ),
     );
   }
 
-  Widget _menuBar(IconData icon, String label, void Function()? onPressed) {
-    return SizedBox(
+  Widget _menuBar() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20.0, bottom: 15.0),
       width: MediaQuery.of(context).size.width,
-      child: SizedBox.fromSize(
-        size: const Size(50, 50),
-        child: Card(
-          elevation: 5.0,
-          child: Material(
-            child: InkWell(
-              onTap: onPressed,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(icon), // <-- Icon
-                  Text(label), // <-- Text
-                ],
-              ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _menuBarItem(Icons.assignment, "Report", () {
+              Navigator.pushNamed(context, ReportCreate.routeName);
+            }),
+            _menuBarItem(Icons.question_mark, "???", () {}),
+            _menuBarItem(Icons.question_mark, "???", () {}),
+            _menuBarItem(Icons.question_mark, "???", () {}),
+            _menuBarItem(Icons.question_mark, "???", () {}),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _menuBarItem(IconData icon, String label, void Function()? onPressed) {
+    return SizedBox(
+      height: 75.0,
+      width: 75.0,
+      child: Card(
+        elevation: 5.0,
+        child: Material(
+          child: InkWell(
+            onTap: onPressed,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  icon,
+                  size: 30.0,
+                ), // <-- Icon
+                Text(label), // <-- Text
+              ],
             ),
           ),
         ),
@@ -96,66 +118,74 @@ class HomeEmployeeState extends State<HomeEmployee> {
   }
 
   Widget _listProjectView() {
-    return Card(
-      shape: const RoundedRectangleBorder(
-        side: BorderSide(color: Colors.black38),
-        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-      ),
-      elevation: 5.0,
-      child: FutureBuilder(
-        future: getData(),
-        builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  '${snapshot.error} occurred',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              );
-            } else if (snapshot.hasData) {
-              final data = snapshot.data;
-              return ListView.builder(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  itemCount: snapshot.hasData ? snapshot.data!.length : 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _projectViewItem(data![index]);
-                  });
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 1.5,
+      child: Card(
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black38),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        elevation: 5.0,
+        child: FutureBuilder(
+          future: getData(),
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occurred',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                final data = snapshot.data;
+                return ListView.builder(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    itemCount: snapshot.hasData ? snapshot.data!.length : 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _projectViewItem(data![index]);
+                    });
+              }
             }
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget _projectViewItem(Map<String, dynamic> data) {
-    return Card(
-      elevation: 5.0,
-      clipBehavior: Clip.hardEdge,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-      ),
-      child: Material(
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, ReportDetail.routeName);
-          },
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(data['projectTitle']),
-                  Text(data['projectStatus'])
-                ],
-              ),
-              Text(data['projectDateTime']),
-              Text(data['projectLocation']),
-              Text(data['projectDesc']),
-            ],
+    return Container(
+      margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+      height: 100.0,
+      child: Card(
+        elevation: 5.0,
+        clipBehavior: Clip.hardEdge,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
+        child: Material(
+          child: InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, ReportDetail.routeName);
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(data['projectTitle']),
+                    Text(data['projectStatus'].toString())
+                  ],
+                ),
+                Text(data['projectDateTime']),
+                Text(data['projectLocation']),
+                Text(data['projectDesc']),
+              ],
+            ),
           ),
         ),
       ),
