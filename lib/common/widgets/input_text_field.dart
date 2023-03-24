@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../styles/constant.dart';
+import 'package:report_project/common/styles/constant.dart';
 
 Widget inputTextField(
     BuildContext context,
@@ -8,6 +7,7 @@ Widget inputTextField(
     String fieldLabel,
     TextEditingController controller,
     TextInputType inputType,
+    bool obscureText,
     int maxLine,
     void Function(String)? onChange) {
   return Form(
@@ -24,7 +24,7 @@ Widget inputTextField(
         ),
         TextFormField(
           decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+            border: UnderlineInputBorder(),
           ),
           validator: (text) {
             if (text == null || text.isEmpty) {
@@ -34,6 +34,7 @@ Widget inputTextField(
             }
           },
           style: kInputTextStyle,
+          obscureText: obscureText,
           controller: controller,
           keyboardType: inputType,
           maxLines: maxLine,

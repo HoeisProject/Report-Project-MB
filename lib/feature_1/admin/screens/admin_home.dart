@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
-import 'package:report_project/feature_1/employee/screens/create_report.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
-class HomeEmployee extends StatefulWidget {
-  static const routeName = '/home_employee_screen';
+class AdminHome extends StatefulWidget {
+  static const routeName = '/admin_home_screen';
 
-  const HomeEmployee({super.key});
+  const AdminHome({super.key});
 
   @override
-  State<StatefulWidget> createState() => HomeEmployeeState();
+  State<StatefulWidget> createState() => AdminHomeState();
 }
 
-class HomeEmployeeState extends State<HomeEmployee> {
+class AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,36 +26,7 @@ class HomeEmployeeState extends State<HomeEmployee> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(
-          children: [
-            _menuBar(Icons.assignment, "Report", () {
-              Navigator.pushNamed(context, ReportCreate.routeName);
-            }),
-            _listProjectView()
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _menuBar(IconData icon, String label, void Function()? onPressed) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: SizedBox.fromSize(
-        size: const Size(50, 50),
-        child: Card(
-          elevation: 5.0,
-          child: Material(
-            child: InkWell(
-              onTap: onPressed,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(icon), // <-- Icon
-                  Text(label), // <-- Text
-                ],
-              ),
-            ),
-          ),
+          children: [_listProjectView()],
         ),
       ),
     );

@@ -6,6 +6,12 @@ const kAppbarTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
+const kTitleContextStyle = TextStyle(
+  fontSize: 24.0,
+  letterSpacing: 0.5,
+  fontWeight: FontWeight.bold,
+);
+
 const kHeaderTextStyle = TextStyle(
   fontSize: 20.0,
   letterSpacing: 0.5,
