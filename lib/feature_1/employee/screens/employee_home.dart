@@ -3,6 +3,8 @@ import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/feature_1/employee/screens/create_report.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
+import 'detail_report.dart';
+
 class HomeEmployee extends StatefulWidget {
   static const routeName = '/home_employee_screen';
 
@@ -138,7 +140,9 @@ class HomeEmployeeState extends State<HomeEmployee> {
       ),
       child: Material(
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.pushNamed(context, ReportDetail.routeName);
+          },
           child: Column(
             children: [
               Row(

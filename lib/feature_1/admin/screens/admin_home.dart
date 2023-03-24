@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
+import 'package:report_project/feature_1/admin/screens/admin_detail_report.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
 class AdminHome extends StatefulWidget {
@@ -26,7 +27,9 @@ class AdminHomeState extends State<AdminHome> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(
-          children: [_listProjectView()],
+          children: [
+            _listProjectView(),
+          ],
         ),
       ),
     );
@@ -108,7 +111,9 @@ class AdminHomeState extends State<AdminHome> {
       ),
       child: Material(
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.pushNamed(context, AdminDetailReport.routeName);
+          },
           child: Column(
             children: [
               Row(

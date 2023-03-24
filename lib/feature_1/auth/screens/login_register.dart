@@ -5,6 +5,7 @@ import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/title_context.dart';
+import 'package:report_project/feature_1/admin/screens/admin_home.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 
 class LoginRegisterScreen extends StatefulWidget {
@@ -123,7 +124,7 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
             isLoading,
             "REGISTER",
             () {
-              Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+              Navigator.popAndPushNamed(context, AdminHome.routeName);
             },
           )
         ],
