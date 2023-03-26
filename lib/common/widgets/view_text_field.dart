@@ -4,7 +4,7 @@ import 'package:report_project/common/styles/constant.dart';
 Widget viewTextField(
     BuildContext context, String fieldLabel, String fieldContent) {
   return Container(
-    margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+    margin: const EdgeInsets.all(10.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

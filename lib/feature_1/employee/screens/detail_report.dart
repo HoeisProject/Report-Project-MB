@@ -15,7 +15,7 @@ class ReportDetail extends StatefulWidget {
 }
 
 class ReportDetailState extends State<ReportDetail> {
-  File? mediaFile;
+  List<File?> listMediaFile = [];
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class ReportDetailState extends State<ReportDetail> {
             viewTextField(context, "Time and Date", "aaaaaaaaaa"),
             viewTextField(context, "Location", "aaaaaaaaaaa"),
             viewTextField(context, "Project Description", "bbbbbb"),
-            viewMediaField(context, "Attach Media", mediaFile)
+            viewMediaField(context, "Attach Media", listMediaFile)
           ],
         ),
       ),

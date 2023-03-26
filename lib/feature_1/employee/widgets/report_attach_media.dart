@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:images_picker/images_picker.dart';
+
+// import 'package:image_picker/image_picker.dart';
 import 'package:report_project/common/styles/constant.dart';
 
 Widget reportAttachMedia(BuildContext context, String fieldLabel,
-    List<File?> listMediaFile, void Function()? onPressed) {
+    List<Media> listMediaFile, void Function()? onPressed) {
   return Container(
     margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
     child: Column(
@@ -18,19 +21,22 @@ Widget reportAttachMedia(BuildContext context, String fieldLabel,
           ),
         ),
         SizedBox(
-          height: 100.0,
+          height: listMediaFile.isEmpty ? 125.0 : 200.0,
           child: GridView.builder(
-            itemCount: listMediaFile.isEmpty ? 1 : listMediaFile.length,
+            itemCount: listMediaFile.isEmpty ? 1 : listMediaFile.length + 1,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3),
+              crossAxisCount: 3,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 5,
+            ),
             itemBuilder: (context, index) {
               if (listMediaFile.isEmpty) {
-                return InkWell(
-                  onTap: onPressed,
-                  child: const Icon(Icons.add_a_photo, size: 50.0),
-                );
+                return _attachMediaButton(onPressed);
               }
-              return _attachMediaItem(listMediaFile[index], onPressed, index);
+              if ((index + 1) <= listMediaFile.length) {
+                return _attachMediaItem(listMediaFile[index]);
+              }
+              return _attachMediaButton(onPressed);
             },
           ),
         ),
@@ -39,22 +45,27 @@ Widget reportAttachMedia(BuildContext context, String fieldLabel,
   );
 }
 
-Widget _attachMediaItem(
-    File? mediaFile, void Function()? onPressed, int itemLength) {
+Widget _attachMediaItem(Media mediaFile) {
   return SizedBox(
     width: 75.0,
     height: 75.0,
-    child: mediaFile != null
-        ? InkWell(
-            onTap: onPressed,
-            child: Image.file(
-              mediaFile,
-              fit: BoxFit.cover,
-            ),
-          )
-        : InkWell(
-            onTap: onPressed,
-            child: const Icon(Icons.add_a_photo, size: 50.0),
-          ),
+    child: Image.file(
+      File(mediaFile.path),
+      fit: BoxFit.cover,
+    ),
+  );
+}
+
+Widget _attachMediaButton(void Function()? onPressed) {
+  return Container(
+    decoration: BoxDecoration(
+      border: Border.all(),
+    ),
+    width: 75.0,
+    height: 75.0,
+    child: InkWell(
+      onTap: onPressed,
+      child: const Icon(Icons.add_a_photo, size: 50.0),
+    ),
   );
 }

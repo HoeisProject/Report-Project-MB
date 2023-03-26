@@ -16,7 +16,7 @@ class AdminDetailReport extends StatefulWidget {
 }
 
 class AdminDetailReportState extends State<AdminDetailReport> {
-  File? mediaFile;
+  List<File?> listMediaFile = [];
 
   bool? isLoadingReject = false;
   bool? isLoadingApprove = false;
@@ -40,7 +40,7 @@ class AdminDetailReportState extends State<AdminDetailReport> {
             viewTextField(context, "Time and Date", ""),
             viewTextField(context, "Location", ""),
             viewTextField(context, "Project Description", ""),
-            viewMediaField(context, "Attach Media", mediaFile),
+            viewMediaField(context, "Attach Media", listMediaFile),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

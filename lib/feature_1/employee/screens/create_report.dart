@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:images_picker/images_picker.dart';
+
+// import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
@@ -12,6 +15,7 @@ import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 import 'package:report_project/feature_1/employee/widgets/report_attach_media.dart';
+import 'package:report_project/feature_1/employee/widgets/select_media_dialog.dart';
 
 class ReportCreate extends StatefulWidget {
   static const routeName = '/report_create_screen';
@@ -38,6 +42,10 @@ class ReportCreateState extends State<ReportCreate> {
   Position? position;
 
   String? locationAddress = 'Loading...';
+
+  // ImagePicker picker = ImagePicker();
+
+  List<Media> listMediaPickerFile = [];
 
   @override
   void initState() {
@@ -147,11 +155,104 @@ class ReportCreateState extends State<ReportCreate> {
             viewTextField(context, "Location", locationAddress!),
             inputTextField(context, keyProjectDesc, "Project Description",
                 projectDescCtl, TextInputType.text, false, 6, (value) {}),
-            reportAttachMedia(context, "Attach Media", listMediaFile, () {}),
-            customButton(context, isLoading, "SEND", () {})
+            reportAttachMedia(context, "Attach Media", listMediaPickerFile,
+                () async {
+              //   ImagePicker picker = ImagePicker();
+              //   if (listMediaFile.isEmpty) {
+              //     final pickedFile = await picker.pickMultiImage(
+              //         imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+              //     listMediaFile = pickedFile;
+              //   } else {
+              //     final newListImage = await picker.pickMultiImage(
+              //         imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+              //     listMediaFile.addAll(newListImage);
+              //   }
+              await showSelectMediaDialog(
+                  context: context,
+                  title: "Choose Media",
+                  defaultActionText: "CLOSE",
+                  onPressedGallery: () {
+                    getMediaFromGallery();
+                    Navigator.pop(context);
+                  },
+                  onPressedCamera: () {
+                    getMediaFromCamera();
+                    Navigator.pop(context);
+                  },
+                  onButtonPressed: () {
+                    Navigator.pop(context);
+                  });
+            }),
+            customButton(context, isLoading, "SEND", () async {})
           ],
         ),
       ),
     );
+  }
+
+  void getMediaFromGallery() async {
+    try {
+      if (listMediaPickerFile.isEmpty) {
+        List<Media>? getMedia = await ImagesPicker.pick(
+          count: 5,
+          pickType: PickType.image,
+          language: Language.English,
+        );
+        setState(() {
+          if (getMedia != null) {
+            listMediaPickerFile = getMedia;
+          } else {
+            listMediaPickerFile = [];
+          }
+        });
+      } else {
+        List<Media>? getMedia = await ImagesPicker.pick(
+          count: 5,
+          pickType: PickType.image,
+          language: Language.English,
+        );
+        setState(() {
+          if (getMedia != null) {
+            listMediaPickerFile.addAll(getMedia);
+          } else {}
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void getMediaFromCamera() async {
+    try {
+      if (listMediaPickerFile.isEmpty) {
+        List<Media>? getMedia = await ImagesPicker.openCamera(
+          pickType: PickType.image,
+          quality: 0.8,
+          maxSize: 800,
+          language: Language.English,
+        );
+        setState(() {
+          if (getMedia != null) {
+            listMediaPickerFile = getMedia;
+          } else {
+            listMediaPickerFile = [];
+          }
+        });
+      } else {
+        List<Media>? getMedia = await ImagesPicker.openCamera(
+          pickType: PickType.image,
+          quality: 0.8,
+          maxSize: 800,
+          language: Language.English,
+        );
+        setState(() {
+          if (getMedia != null) {
+            listMediaPickerFile.addAll(getMedia);
+          } else {}
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

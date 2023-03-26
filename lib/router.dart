@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:report_project/feature_1/admin/screens/admin_detail_report.dart';
 import 'package:report_project/feature_1/admin/screens/admin_home.dart';
 import 'package:report_project/feature_1/auth/screens/login_register.dart';
+import 'package:report_project/feature_1/auth/screens/user_profile.dart';
 import 'package:report_project/feature_1/employee/screens/create_report.dart';
 import 'package:report_project/feature_1/employee/screens/detail_report.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
@@ -16,6 +17,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case LoginRegisterScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const LoginRegisterScreen());
+    case UserProfilePage.routeName:
+      return MaterialPageRoute(builder: (context) => const UserProfilePage());
     case HomeEmployee.routeName:
       return MaterialPageRoute(builder: (context) => const HomeEmployee());
     case ReportCreate.routeName:

@@ -1,13 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hoeis.report_project">
 
-    <!-- Permissions options for the `storage` group -->
+<!--     Permissions options for the `storage` group -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <!-- Permissions options for the `camera` group -->
+<!--     Permissions options for the `camera` group -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 
     <!-- Permissions options for the `location` group -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

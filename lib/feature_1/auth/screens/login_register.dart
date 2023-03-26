@@ -54,14 +54,13 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
   Widget _body() {
     return Center(
       child: SizedBox(
-        height: isLoginScreen!
-            ? MediaQuery.of(context).size.height / 1.5
-            : MediaQuery.of(context).size.height,
-        width: isLoginScreen!
-            ? MediaQuery.of(context).size.width / 1.2
-            : MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 1.5,
+        width: MediaQuery.of(context).size.width / 1.2,
         child: Card(
           elevation: 10.0,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child:

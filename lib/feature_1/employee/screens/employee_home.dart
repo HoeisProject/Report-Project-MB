@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/feature_1/employee/screens/create_report.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
@@ -76,8 +75,8 @@ class HomeEmployeeState extends State<HomeEmployee> {
                 Icon(
                   icon,
                   size: 30.0,
-                ), // <-- Icon
-                Text(label), // <-- Text
+                ),
+                Text(label),
               ],
             ),
           ),

@@ -16,7 +16,7 @@ Future<void> showAlertDialog(
       ),
       title: Text(title),
       content: SizedBox(
-        height: 200.0,
+        height: 150.0,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
