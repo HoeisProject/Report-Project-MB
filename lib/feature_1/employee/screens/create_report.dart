@@ -11,6 +11,7 @@ import 'package:ntp/ntp.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
+import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
@@ -41,7 +42,7 @@ class ReportCreateState extends State<ReportCreate> {
 
   Position? position;
 
-  String? locationAddress = 'Loading...';
+  String? locationAddress = 'Getting location...';
 
   // ImagePicker picker = ImagePicker();
 
@@ -144,8 +145,16 @@ class ReportCreateState extends State<ReportCreate> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            inputTextField(context, keyProjectTitle, "Project Title",
-                projectTitleCtl, TextInputType.text, false, 1, (value) {}),
+            inputTextField(
+                context,
+                keyProjectTitle,
+                "Project Title",
+                projectTitleCtl,
+                TextInputType.text,
+                false,
+                false,
+                1,
+                (value) {}),
             viewTextField(
                 context,
                 "Time and Date",
@@ -154,19 +163,9 @@ class ReportCreateState extends State<ReportCreate> {
                     : "getting network time..."),
             viewTextField(context, "Location", locationAddress!),
             inputTextField(context, keyProjectDesc, "Project Description",
-                projectDescCtl, TextInputType.text, false, 6, (value) {}),
+                projectDescCtl, TextInputType.text, false, true, 6, (value) {}),
             reportAttachMedia(context, "Attach Media", listMediaPickerFile,
                 () async {
-              //   ImagePicker picker = ImagePicker();
-              //   if (listMediaFile.isEmpty) {
-              //     final pickedFile = await picker.pickMultiImage(
-              //         imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
-              //     listMediaFile = pickedFile;
-              //   } else {
-              //     final newListImage = await picker.pickMultiImage(
-              //         imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
-              //     listMediaFile.addAll(newListImage);
-              //   }
               await showSelectMediaDialog(
                   context: context,
                   title: "Choose Media",
@@ -183,7 +182,9 @@ class ReportCreateState extends State<ReportCreate> {
                     Navigator.pop(context);
                   });
             }),
-            customButton(context, isLoading, "SEND", () async {})
+            sizedSpacer(height: 30.0),
+            customButton(context, isLoading, "SEND", () async {}),
+            sizedSpacer(height: 30.0),
           ],
         ),
       ),

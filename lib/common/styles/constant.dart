@@ -29,3 +29,15 @@ const kButtonTextStyle = TextStyle(
   letterSpacing: 0.5,
   fontWeight: FontWeight.bold,
 );
+
+const kTitleReportItem = TextStyle(
+  fontSize: 15.0,
+  letterSpacing: 0.5,
+  fontWeight: FontWeight.bold,
+);
+
+const kContentReportItem = TextStyle(
+  fontSize: 14.0,
+  letterSpacing: 0.5,
+  fontWeight: FontWeight.normal,
+);

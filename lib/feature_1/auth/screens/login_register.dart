@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:images_picker/images_picker.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
+import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/title_context.dart';
 import 'package:report_project/feature_1/admin/screens/admin_home.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
@@ -54,7 +56,7 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
   Widget _body() {
     return Center(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height / 1.5,
+        height: MediaQuery.of(context).size.height / 1.25,
         width: MediaQuery.of(context).size.width / 1.2,
         child: Card(
           elevation: 10.0,
@@ -62,7 +64,8 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(
+                top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
             child:
                 isLoginScreen! ? _loginCard(context) : _registerCard(context),
           ),
@@ -76,11 +79,15 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            sizedSpacer(height: 10.0),
             titleContext("LOGIN"),
+            sizedSpacer(height: 5.0),
             inputTextField(context, keyUsernameField, "Username", usernameCtl,
-                TextInputType.text, false, 1, (value) {}),
+                TextInputType.text, false, false, 1, (value) {}),
+            sizedSpacer(height: 5.0),
             inputTextField(context, keyPasswordField, "Password", passwordCtl,
-                TextInputType.text, true, 1, (value) {}),
+                TextInputType.text, true, false, 1, (value) {}),
+            sizedSpacer(height: 5.0),
             customButton(
               context,
               isLoading,
@@ -89,6 +96,7 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
                 Navigator.popAndPushNamed(context, HomeEmployee.routeName);
               },
             ),
+            sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
               "Login",
               "Register",
@@ -113,6 +121,7 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
                 }
               },
             ),
+            sizedSpacer(height: 20.0),
           ],
         ),
       ),
@@ -124,16 +133,25 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            sizedSpacer(height: 10.0),
             titleContext("REGISTER"),
-            inputMediaField(context, "Profile Image", mediaFile, () {}),
+            sizedSpacer(height: 5.0),
+            inputMediaField(context, "Profile Image", mediaFile, () {
+              getMediaFromCamera();
+            }),
+            sizedSpacer(height: 5.0),
             inputTextField(context, keyUsernameField, "Username", usernameCtl,
-                TextInputType.text, false, 1, (value) {}),
+                TextInputType.text, false, false, 1, (value) {}),
+            sizedSpacer(height: 5.0),
             inputTextField(context, keyNikField, "Nik", nikCtl,
-                TextInputType.text, false, 1, (value) {}),
+                TextInputType.text, false, false, 1, (value) {}),
+            sizedSpacer(height: 5.0),
             inputTextField(context, keyEmailField, "Email", emailCtl,
-                TextInputType.emailAddress, false, 1, (value) {}),
+                TextInputType.emailAddress, false, false, 1, (value) {}),
+            sizedSpacer(height: 5.0),
             inputTextField(context, keyPasswordField, "Password", passwordCtl,
-                TextInputType.text, true, 1, (value) {}),
+                TextInputType.text, true, false, 1, (value) {}),
+            sizedSpacer(height: 5.0),
             customButton(
               context,
               isLoading,
@@ -142,6 +160,7 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
                 Navigator.popAndPushNamed(context, AdminHome.routeName);
               },
             ),
+            sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
               "Login",
               "Register",
@@ -166,10 +185,30 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
                 }
               },
             ),
+            sizedSpacer(height: 20.0),
           ],
         ),
       ),
     );
+  }
+
+  void getMediaFromCamera() async {
+    try {
+      List<Media>? getMedia = await ImagesPicker.openCamera(
+        pickType: PickType.image,
+        quality: 0.8,
+        maxSize: 800,
+        language: Language.English,
+      );
+      if (getMedia != null) {
+        String? imagePath = getMedia[0].thumbPath;
+        setState(() {
+          mediaFile = File(imagePath!);
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Widget _logRegSwitchLink(

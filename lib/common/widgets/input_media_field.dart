@@ -6,7 +6,7 @@ import 'package:report_project/common/styles/constant.dart';
 Widget inputMediaField(BuildContext context, String fieldLabel, File? mediaFile,
     void Function()? onPressed) {
   return Container(
-    margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+    margin: const EdgeInsets.all(10.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -19,8 +19,8 @@ Widget inputMediaField(BuildContext context, String fieldLabel, File? mediaFile,
         ),
         Center(
           child: SizedBox(
-            width: 75.0,
-            height: 75.0,
+            width: 125.0,
+            height: 150.0,
             child: mediaFile != null
                 ? InkWell(
                     onTap: onPressed,

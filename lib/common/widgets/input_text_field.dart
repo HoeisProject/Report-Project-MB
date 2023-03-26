@@ -8,10 +8,11 @@ Widget inputTextField(
     TextEditingController controller,
     TextInputType inputType,
     bool obscureText,
+    bool allBorder,
     int maxLine,
     void Function(String)? onChange) {
   return Container(
-    margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+    margin: const EdgeInsets.all(10.0),
     child: Form(
       key: fieldKey,
       child: Column(
@@ -25,8 +26,10 @@ Widget inputTextField(
             ),
           ),
           TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
+            decoration: InputDecoration(
+              border: allBorder
+                  ? const OutlineInputBorder()
+                  : const UnderlineInputBorder(),
             ),
             validator: (text) {
               if (text == null || text.isEmpty) {

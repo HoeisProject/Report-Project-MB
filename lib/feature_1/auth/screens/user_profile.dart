@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:report_project/common/widgets/view_text_field.dart';
+import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/widgets/sized_spacer.dart';
+import 'package:report_project/common/widgets/view_with_icon.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -18,15 +20,28 @@ class UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar("USER PROFILE"),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          profileHeader(Colors.white,
-              "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80"),
-          viewTextField(context, "Username", "Username field"),
-          viewTextField(context, "Email", "Email field"),
-          viewTextField(context, "NIK", "NIK field"),
-        ],
+      body: SafeArea(
+        minimum: const EdgeInsets.only(top: 100),
+        child: Column(
+          children: [
+            profileHeader(Colors.black,
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80"),
+            sizedSpacer(
+              height: 20,
+              width: 200,
+            ),
+            ViewIconField(
+              text: 'NIK User',
+              icon: Icons.credit_card,
+              onPressed: () {},
+            ),
+            ViewIconField(
+              text: 'Email User',
+              icon: Icons.email,
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -36,19 +51,9 @@ class UserProfilePageState extends State<UserProfilePage> {
         ? NetworkImage(imagePath)
         : FileImage(File(imagePath));
 
-    return Center(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 150.0,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage(
-              "https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/rm309-aew-013_1_1.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=2724bd9481a065ee24e7e7eaaabf1c55",
-            ),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: CircleAvatar(
+    return Column(
+      children: [
+        CircleAvatar(
           radius: 72,
           backgroundColor: color,
           child: CircleAvatar(
@@ -56,7 +61,11 @@ class UserProfilePageState extends State<UserProfilePage> {
             radius: 70,
           ),
         ),
-      ),
+        const Text(
+          "Username",
+          style: kTitleContextStyle,
+        ),
+      ],
     );
   }
 }

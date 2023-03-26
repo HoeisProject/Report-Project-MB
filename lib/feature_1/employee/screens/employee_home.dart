@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/feature_1/employee/screens/create_report.dart';
+import 'package:report_project/feature_1/employee/screens/detail_report.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
-
-import 'detail_report.dart';
 
 class HomeEmployee extends StatefulWidget {
   static const routeName = '/home_employee_screen';
@@ -27,13 +27,16 @@ class HomeEmployeeState extends State<HomeEmployee> {
   Widget _body() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _menuBar(),
-            _listProjectView(),
-          ],
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _menuBar(),
+              _listProjectView(),
+            ],
+          ),
         ),
       ),
     );
@@ -50,8 +53,6 @@ class HomeEmployeeState extends State<HomeEmployee> {
             _menuBarItem(Icons.assignment, "Report", () {
               Navigator.pushNamed(context, ReportCreate.routeName);
             }),
-            _menuBarItem(Icons.question_mark, "???", () {}),
-            _menuBarItem(Icons.question_mark, "???", () {}),
             _menuBarItem(Icons.question_mark, "???", () {}),
             _menuBarItem(Icons.question_mark, "???", () {}),
           ],
@@ -91,10 +92,14 @@ class HomeEmployeeState extends State<HomeEmployee> {
       () {
         return [
           {
-            "projectTitle": "first title",
-            "projectDateTime": "first title",
-            "projectLocation": "first title",
-            "projectDesc": "first description",
+            "projectTitle":
+                "first title first description first description first description first description",
+            "projectDateTime":
+                "first title first description first description first description first description",
+            "projectLocation":
+                "first title first description first description first description first description",
+            "projectDesc":
+                "first description first description first description first description first description first description first description first description",
             "projectStatus": 0,
           },
           {
@@ -109,7 +114,7 @@ class HomeEmployeeState extends State<HomeEmployee> {
             "projectDateTime": "third title",
             "projectLocation": "third title",
             "projectDesc": "third description",
-            "projectStatus": 3,
+            "projectStatus": 2,
           }
         ];
       },
@@ -158,7 +163,7 @@ class HomeEmployeeState extends State<HomeEmployee> {
   Widget _projectViewItem(Map<String, dynamic> data) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
-      height: 100.0,
+      height: 150.0,
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
@@ -170,24 +175,81 @@ class HomeEmployeeState extends State<HomeEmployee> {
             onTap: () {
               Navigator.pushNamed(context, ReportDetail.routeName);
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(data['projectTitle']),
-                    Text(data['projectStatus'].toString())
-                  ],
-                ),
-                Text(data['projectDateTime']),
-                Text(data['projectLocation']),
-                Text(data['projectDesc']),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            data['projectTitle'],
+                            style: kTitleReportItem,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        reportStatus(data['projectStatus'])
+                      ],
+                    ),
+                  ),
+                  reportItemContent(data['projectDateTime'], false),
+                  reportItemContent(data['projectLocation'], false),
+                  reportItemContent(data['projectDesc'], true),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget reportItemContent(String content, bool isDesc) {
+    return Flexible(
+      flex: isDesc ? 2 : 1,
+      child: Container(
+        margin: const EdgeInsets.only(top: 2.5, bottom: 2.5),
+        child: Text(
+          content,
+          style: kContentReportItem,
+          softWrap: true,
+          maxLines: isDesc ? 3 : 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
+  }
+
+  Widget reportStatus(int status) {
+    IconData? statusIcon;
+    Color? iconColor;
+    switch (status) {
+      case 0:
+        statusIcon = Icons.timelapse;
+        iconColor = Colors.yellow;
+        break;
+      case 1:
+        statusIcon = Icons.done;
+        iconColor = Colors.green;
+        break;
+      case 2:
+        statusIcon = Icons.cancel_outlined;
+        iconColor = Colors.red;
+        break;
+      default:
+        statusIcon = Icons.timelapse;
+        iconColor = Colors.yellow;
+        break;
+    }
+    return Center(
+        child: Icon(
+      statusIcon,
+      size: 20.0,
+      color: iconColor,
+    ));
   }
 }
