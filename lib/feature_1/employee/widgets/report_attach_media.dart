@@ -23,6 +23,9 @@ Widget reportAttachMedia(BuildContext context, String fieldLabel,
         SizedBox(
           height: listMediaFile.isEmpty ? 125.0 : 200.0,
           child: GridView.builder(
+            physics: listMediaFile.isEmpty
+                ? const NeverScrollableScrollPhysics()
+                : const ScrollPhysics(),
             itemCount: listMediaFile.isEmpty ? 1 : listMediaFile.length + 1,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,

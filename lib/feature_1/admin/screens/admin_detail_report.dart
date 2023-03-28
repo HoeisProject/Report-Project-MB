@@ -44,8 +44,10 @@ class AdminDetailReportState extends State<AdminDetailReport> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                customButton(context, isLoadingReject, "REJECT", () {}),
-                customButton(context, isLoadingApprove, "APPROVE", () {})
+                customButton(context, isLoadingReject, "REJECT", Colors.red,
+                    rejectReport),
+                customButton(context, isLoadingApprove, "APPROVE", Colors.greenAccent,
+                    approveReport)
               ],
             ),
           ],
@@ -53,4 +55,8 @@ class AdminDetailReportState extends State<AdminDetailReport> {
       ),
     );
   }
+
+  void rejectReport() {}
+
+  void approveReport() {}
 }

@@ -49,11 +49,11 @@ class HomeEmployeeState extends State<HomeEmployee> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _menuBarItem(Icons.assignment, "Report", () {
               Navigator.pushNamed(context, ReportCreate.routeName);
             }),
-            _menuBarItem(Icons.question_mark, "???", () {}),
             _menuBarItem(Icons.question_mark, "???", () {}),
           ],
         ),
@@ -63,19 +63,19 @@ class HomeEmployeeState extends State<HomeEmployee> {
 
   Widget _menuBarItem(IconData icon, String label, void Function()? onPressed) {
     return SizedBox(
-      height: 75.0,
-      width: 75.0,
+      height: 85.0,
+      width: 85.0,
       child: Card(
         elevation: 5.0,
         child: Material(
           child: InkWell(
             onTap: onPressed,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Icon(
                   icon,
-                  size: 30.0,
+                  size: 35.0,
                 ),
                 Text(label),
               ],

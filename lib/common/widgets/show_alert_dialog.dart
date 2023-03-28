@@ -13,6 +13,7 @@ Future<void> showAlertDialog(
       icon: Icon(
         icon,
         size: 75.0,
+        color: Colors.lightBlue,
       ),
       title: Text(title),
       content: SizedBox(

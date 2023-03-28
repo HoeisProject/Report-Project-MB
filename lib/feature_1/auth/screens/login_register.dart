@@ -5,6 +5,7 @@ import 'package:images_picker/images_picker.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
+import 'package:report_project/common/widgets/show_snackBar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/title_context.dart';
 import 'package:report_project/feature_1/admin/screens/admin_home.dart';
@@ -92,9 +93,8 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
               context,
               isLoading,
               "LOGIN",
-              () {
-                Navigator.popAndPushNamed(context, HomeEmployee.routeName);
-              },
+              Colors.lightBlue,
+              userLogin,
             ),
             sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
@@ -102,24 +102,8 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
               "Register",
               loginSwitchColor!,
               registerSwitchColor!,
-              () {
-                if (isLoginScreen == false) {
-                  setState(() {
-                    loginSwitchColor = Colors.black;
-                    registerSwitchColor = Colors.lightBlue;
-                    isLoginScreen = true;
-                  });
-                }
-              },
-              () {
-                if (isLoginScreen == true) {
-                  setState(() {
-                    loginSwitchColor = Colors.lightBlue;
-                    registerSwitchColor = Colors.black;
-                    isLoginScreen = false;
-                  });
-                }
-              },
+              changeToLoginCard,
+              changeToRegisterCard,
             ),
             sizedSpacer(height: 20.0),
           ],
@@ -156,9 +140,8 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
               context,
               isLoading,
               "REGISTER",
-              () {
-                Navigator.popAndPushNamed(context, AdminHome.routeName);
-              },
+              Colors.lightBlue,
+              userRegister,
             ),
             sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
@@ -166,30 +149,53 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
               "Register",
               loginSwitchColor!,
               registerSwitchColor!,
-              () {
-                if (isLoginScreen == false) {
-                  setState(() {
-                    loginSwitchColor = Colors.black;
-                    registerSwitchColor = Colors.lightBlue;
-                    isLoginScreen = true;
-                  });
-                }
-              },
-              () {
-                if (isLoginScreen == true) {
-                  setState(() {
-                    loginSwitchColor = Colors.lightBlue;
-                    registerSwitchColor = Colors.black;
-                    isLoginScreen = false;
-                  });
-                }
-              },
+              changeToLoginCard,
+              changeToRegisterCard,
             ),
             sizedSpacer(height: 20.0),
           ],
         ),
       ),
     );
+  }
+
+  void userLogin() {
+    if (fieldValidation()) {
+      Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+    } else {
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "There is empty field!", Colors.red);
+    }
+  }
+
+  void userRegister() {
+    if (fieldValidation()) {
+      Navigator.popAndPushNamed(context, AdminHome.routeName);
+    } else {
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "There is empty field!", Colors.red);
+    }
+  }
+
+  bool fieldValidation() {
+    if (isLoginScreen!) {
+      if (usernameCtl.text.trim().isNotEmpty &&
+          passwordCtl.text.trim().isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (usernameCtl.text.trim().isNotEmpty &&
+          nikCtl.text.trim().isNotEmpty &&
+          emailCtl.text.trim().isNotEmpty &&
+          passwordCtl.text.trim().isNotEmpty &&
+          mediaFile != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   void getMediaFromCamera() async {
@@ -248,5 +254,39 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
         ),
       ),
     );
+  }
+
+  void changeToLoginCard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    if (isLoginScreen == false) {
+      setState(() {
+        usernameCtl.clear();
+        passwordCtl.clear();
+        loginSwitchColor = Colors.black;
+        registerSwitchColor = Colors.lightBlue;
+        isLoginScreen = true;
+      });
+    }
+  }
+
+  void changeToRegisterCard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    if (isLoginScreen == true) {
+      setState(() {
+        usernameCtl.clear();
+        nikCtl.clear();
+        emailCtl.clear();
+        passwordCtl.clear();
+        loginSwitchColor = Colors.lightBlue;
+        registerSwitchColor = Colors.black;
+        isLoginScreen = false;
+      });
+    }
   }
 }

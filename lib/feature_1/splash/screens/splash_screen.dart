@@ -60,13 +60,37 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: 200.0,
-          height: 200.0,
-          child: Image.asset(
-            "assets/images/app_ic_launch.png",
-          ),
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: SizedBox(
+                width: 200.0,
+                height: 200.0,
+                child: Image.asset(
+                  "assets/images/app_ic_launch.png",
+                ),
+              ),
+            ),
+            const Text('from',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 14.0,
+                )),
+            const Text(
+              "HOEI's",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.deepPurpleAccent,
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+              ),
+            )
+          ],
         ),
       ),
     );

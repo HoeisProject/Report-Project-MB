@@ -11,6 +11,7 @@ import 'package:ntp/ntp.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
+import 'package:report_project/common/widgets/show_snackBar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
@@ -38,7 +39,7 @@ class ReportCreateState extends State<ReportCreate> {
 
   bool? isLoading = false;
 
-  DateTime? _projectCreated;
+  DateTime? projectCreated;
 
   Position? position;
 
@@ -63,12 +64,13 @@ class ReportCreateState extends State<ReportCreate> {
     if (!serviceEnabled) {
       return await showAlertDialog(
         context: context,
-        icon: Icons.warning,
+        icon: Icons.error_outline,
         title: "Location Unavailable",
         content: "Location services are disabled,\nplease enable it!",
         defaultActionText: "CLOSE",
         onButtonPressed: () {
-          Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeEmployee.routeName, (Route<dynamic> route) => false);
         },
       );
     }
@@ -79,12 +81,13 @@ class ReportCreateState extends State<ReportCreate> {
       if (permission == LocationPermission.denied) {
         return await showAlertDialog(
           context: context,
-          icon: Icons.warning,
+          icon: Icons.error_outline,
           title: "Location Unavailable",
           content: "Location permissions are denied\nplease approve it",
           defaultActionText: "CLOSE",
           onButtonPressed: () {
-            Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+            Navigator.pushNamedAndRemoveUntil(context, HomeEmployee.routeName,
+                (Route<dynamic> route) => false);
           },
         );
       }
@@ -93,13 +96,14 @@ class ReportCreateState extends State<ReportCreate> {
     if (permission == LocationPermission.deniedForever) {
       return await showAlertDialog(
         context: context,
-        icon: Icons.warning,
+        icon: Icons.error_outline,
         title: "Location Unavailable",
         content:
             "Location permissions are denied permanently\nplease approve it",
         defaultActionText: "CLOSE",
         onButtonPressed: () {
-          Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeEmployee.routeName, (Route<dynamic> route) => false);
         },
       );
     }
@@ -115,7 +119,7 @@ class ReportCreateState extends State<ReportCreate> {
     DateTime getNtpDateTime = await NTP.now();
 
     setState(() {
-      _projectCreated = getNtpDateTime;
+      projectCreated = getNtpDateTime;
 
       locationAddress =
           '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
@@ -158,8 +162,8 @@ class ReportCreateState extends State<ReportCreate> {
             viewTextField(
                 context,
                 "Time and Date",
-                _projectCreated != null
-                    ? DateFormat.yMMMEd().format(_projectCreated!)
+                projectCreated != null
+                    ? DateFormat.yMMMEd().format(projectCreated!)
                     : "getting network time..."),
             viewTextField(context, "Location", locationAddress!),
             inputTextField(context, keyProjectDesc, "Project Description",
@@ -183,12 +187,37 @@ class ReportCreateState extends State<ReportCreate> {
                   });
             }),
             sizedSpacer(height: 30.0),
-            customButton(context, isLoading, "SEND", () async {}),
+            customButton(
+                context, isLoading, "SEND", Colors.lightBlue, createDataReport),
             sizedSpacer(height: 30.0),
           ],
         ),
       ),
     );
+  }
+
+  void createDataReport() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    if (fieldValidation()) {
+    } else {
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "There is empty field!", Colors.red);
+    }
+  }
+
+  bool fieldValidation() {
+    if (projectTitleCtl.text.trim().isNotEmpty &&
+        projectDescCtl.text.trim().isNotEmpty &&
+        projectCreated != null &&
+        position != null &&
+        listMediaPickerFile.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void getMediaFromGallery() async {
@@ -219,7 +248,8 @@ class ReportCreateState extends State<ReportCreate> {
         });
       }
     } catch (e) {
-      debugPrint(e.toString());
+      showSnackBar(
+          context, Icons.error_outline, Colors.red, "Error: $e", Colors.red);
     }
   }
 
@@ -253,7 +283,8 @@ class ReportCreateState extends State<ReportCreate> {
         });
       }
     } catch (e) {
-      debugPrint(e.toString());
+      showSnackBar(
+          context, Icons.error_outline, Colors.red, "Error: $e", Colors.red);
     }
   }
 }
