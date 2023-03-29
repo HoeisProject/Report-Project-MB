@@ -5,30 +5,32 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
 
-// import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
+import 'package:report_project/feature_1/auth/controllers/auth_controller.dart';
+import 'package:report_project/feature_1/employee/controllers/project_report_controller.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 import 'package:report_project/feature_1/employee/widgets/report_attach_media.dart';
 import 'package:report_project/feature_1/employee/widgets/select_media_dialog.dart';
 
-class ReportCreate extends StatefulWidget {
+class ReportCreate extends ConsumerStatefulWidget {
   static const routeName = '/report_create_screen';
 
   const ReportCreate({super.key});
 
   @override
-  State<StatefulWidget> createState() => ReportCreateState();
+  ConsumerState<ReportCreate> createState() => _ReportCreateState();
 }
 
-class ReportCreateState extends State<ReportCreate> {
+class _ReportCreateState extends ConsumerState<ReportCreate> {
   var keyProjectTitle = GlobalKey<FormState>();
   var keyProjectDesc = GlobalKey<FormState>();
 
@@ -51,12 +53,11 @@ class ReportCreateState extends State<ReportCreate> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _getDateTimeLoc();
+    _getDateTimeLoc(context);
   }
 
-  Future<void> _getDateTimeLoc() async {
+  Future<void> _getDateTimeLoc(context) async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -201,11 +202,23 @@ class ReportCreateState extends State<ReportCreate> {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    if (fieldValidation()) {
-    } else {
+    if (!fieldValidation()) {
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
     }
+    ref
+        .read(projectReportControllerProvider.notifier)
+        .createProject(
+          projectTitle: projectTitleCtl.text.trim(),
+          projectDateTime: projectCreated!,
+          projectPosition: position!,
+          projectDesc: projectDescCtl.text.trim(),
+          listMediaFile: listMediaPickerFile,
+        )
+        .then((value) {
+      debugPrint('Done Create Project');
+      Navigator.pop(context);
+    });
   }
 
   bool fieldValidation() {

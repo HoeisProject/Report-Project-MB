@@ -60,6 +60,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       });
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
+      return;
     }
     final user = await ref.read(authControllerProvider.notifier).loginUser(
           username: usernameCtl.text.trim(),

@@ -1,25 +1,32 @@
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+final reportServiceProvider = Provider((ref) {
+  return ReportService();
+});
+
 class ReportService {
-  Future<void> createReport(
-      String projectTitle,
-      DateTime projectDateTime,
-      Position projectPosition,
-      String projectDesc,
-      ParseUser currentUser,
-      List<Media> listMediaFile) async {
+  Future<void> create(
+    String projectTitle,
+    DateTime projectDateTime,
+    Position projectPosition,
+    String projectDesc,
+    ParseUser currentUser,
+    List<Media> listMediaFile,
+  ) async {
     ParseObject newReport = ParseObject("ProjectReport")
       ..set('projectTitle', projectTitle)
       ..set('projectDateTime', projectDateTime)
       ..set(
-          'projectLocation',
+          'projectPosition',
           ParseGeoPoint(
-              latitude: projectPosition.latitude,
-              longitude: projectPosition.longitude))
+            latitude: projectPosition.latitude,
+            longitude: projectPosition.longitude,
+          ))
       ..set('projectDesc', projectDesc)
       ..set('uploadBy', currentUser)
       ..set('projectStatus', 0);

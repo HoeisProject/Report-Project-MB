@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
+import 'package:report_project/feature_1/employee/controllers/project_report_controller.dart';
 import 'package:report_project/feature_1/employee/screens/create_report.dart';
 import 'package:report_project/feature_1/employee/screens/detail_report.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
-class HomeEmployee extends StatefulWidget {
+class HomeEmployee extends ConsumerStatefulWidget {
   static const routeName = '/home_employee_screen';
 
   const HomeEmployee({super.key});
 
   @override
-  State<StatefulWidget> createState() => HomeEmployeeState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeEmployeeState();
 }
 
-class HomeEmployeeState extends State<HomeEmployee> {
+class _HomeEmployeeState extends ConsumerState<HomeEmployee> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,32 +132,11 @@ class HomeEmployeeState extends State<HomeEmployee> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
         elevation: 5.0,
-        child: FutureBuilder(
-          future: getData(),
-          builder: (ctx, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    '${snapshot.error} occurred',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                );
-              } else if (snapshot.hasData) {
-                final data = snapshot.data;
-                return ListView.builder(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    itemCount: snapshot.hasData ? snapshot.data!.length : 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _projectViewItem(data![index]);
-                    });
-              }
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
+        child: ref.watch(getProjectReportsProvider).when(
+              data: (data) {},
+              error: (error, stackTrace) {},
+              loading: () {},
+            ),
       ),
     );
   }
@@ -253,3 +234,91 @@ class HomeEmployeeState extends State<HomeEmployee> {
     ));
   }
 }
+
+// Widget _listProjectView() {
+//   final getProjectReports = ref.watch(projectReportControllerProvider);
+//   return SizedBox(
+//     height: MediaQuery.of(context).size.height / 1.5,
+//     child: Card(
+//       shape: const RoundedRectangleBorder(
+//         side: BorderSide(color: Colors.black38),
+//         borderRadius: BorderRadius.all(Radius.circular(15.0)),
+//       ),
+//       elevation: 5.0,
+//       child: FutureBuilder(
+//         future: getData(),
+//         builder: (ctx, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.done) {
+//             if (snapshot.hasError) {
+//               return Center(
+//                 child: Text(
+//                   '${snapshot.error} occurred',
+//                   style: const TextStyle(fontSize: 18),
+//                 ),
+//               );
+//             } else if (snapshot.hasData) {
+//               final data = snapshot.data;
+//               return ListView.builder(
+//                   padding: const EdgeInsets.only(top: 10.0),
+//                   itemCount: snapshot.hasData ? snapshot.data!.length : 1,
+//                   itemBuilder: (BuildContext context, int index) {
+//                     return _projectViewItem(data![index]);
+//                   });
+//             }
+//           }
+//           return const Center(
+//             child: CircularProgressIndicator(),
+//           );
+//         },
+//       ),
+//     ),
+//   );
+// }
+
+// Widget _projectViewItem(Map<String, dynamic> data) {
+//   return Container(
+//     margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+//     height: 150.0,
+//     child: Card(
+//       elevation: 5.0,
+//       clipBehavior: Clip.hardEdge,
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: BorderRadius.all(Radius.circular(10.0)),
+//       ),
+//       child: Material(
+//         child: InkWell(
+//           onTap: () {
+//             Navigator.pushNamed(context, ReportDetail.routeName);
+//           },
+//           child: Padding(
+//             padding: const EdgeInsets.all(5.0),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Flexible(
+//                   child: Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Expanded(
+//                         child: Text(
+//                           data['projectTitle'],
+//                           style: kTitleReportItem,
+//                           maxLines: 1,
+//                           overflow: TextOverflow.ellipsis,
+//                         ),
+//                       ),
+//                       reportStatus(data['projectStatus'])
+//                     ],
+//                   ),
+//                 ),
+//                 reportItemContent(data['projectDateTime'], false),
+//                 reportItemContent(data['projectLocation'], false),
+//                 reportItemContent(data['projectDesc'], true),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
