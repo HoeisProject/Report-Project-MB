@@ -2,26 +2,32 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:report_project/common/models/user_model.dart';
+import 'package:report_project/feature_1/admin/screens/admin_home.dart';
 import 'package:report_project/feature_1/auth/screens/login_register.dart';
+import 'package:report_project/feature_1/auth/services/profile_service.dart';
+import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   static const routeName = '/splash_screen';
 
   const SplashScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    requestPermission();
+    requestPermission(context);
   }
 
-  void requestPermission() async {
+  void requestPermission(context) async {
     if (Platform.isAndroid) {
       if (await Permission.location.isPermanentlyDenied) {
         Permission.location.request();
@@ -42,10 +48,18 @@ class SplashScreenState extends State<SplashScreen> {
         Permission.microphone,
       ].request();
 
-      Timer(
-          const Duration(seconds: 2),
-          () => Navigator.popAndPushNamed(
-              context, LoginRegisterScreen.routeName));
+      Timer(const Duration(seconds: 2), () async {
+        final parseUser =
+            await ref.read(profileServiceProvider).getCurrentUser();
+        if (parseUser == null) {
+          Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
+        }
+        final user = UserModel.fromParseUser(parseUser!);
+        if (user.role == 'admin') {
+          Navigator.popAndPushNamed(context, AdminHome.routeName);
+        }
+        Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+      });
     }
     // else if (Platform.isIOS) {
     //   Map<Permission, PermissionStatus> reqPermission = await [
