@@ -53,10 +53,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             await ref.read(profileServiceProvider).getCurrentUser();
         if (parseUser == null) {
           Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
+          return;
         }
-        final user = UserModel.fromParseUser(parseUser!);
+        final user = UserModel.fromParseUser(parseUser);
         if (user.role == 'admin') {
           Navigator.popAndPushNamed(context, AdminHome.routeName);
+          return;
         }
         Navigator.popAndPushNamed(context, HomeEmployee.routeName);
       });
