@@ -22,12 +22,15 @@ class AdminHomeState extends State<AdminHome> {
   Future<List<ParseObject>>? getReportList;
   ParseUser? user;
 
+  String? locationAddress;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getReportList = AdminService().getReports();
     ProfileService().getCurrentUser().then((value) {
+      getReportList = AdminService().getReports();
       setState(() {
         user = value;
       });
@@ -104,6 +107,13 @@ class AdminHomeState extends State<AdminHome> {
     );
   }
 
+  Future<String> getLoc(ParseGeoPoint? projectGeoPoint) async {
+    List<Placemark> placeMarks = await placemarkFromCoordinates(
+        projectGeoPoint!.latitude, projectGeoPoint.longitude);
+    Placemark place = placeMarks[0];
+    return '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+  }
+
   Widget _projectViewItem(ParseObject data) {
     String? projectTitle = data.get<String>('projectTitle');
     DateTime? projectDateTime = data.get<DateTime>('projectDateTime');
@@ -112,18 +122,11 @@ class AdminHomeState extends State<AdminHome> {
     ParseUser? uploadBy = data.get<ParseUser>('uploadBy');
     int? projectStatus = data.get<int>('projectStatus');
 
-    List<Placemark> placeMarks = [];
-
-    placemarkFromCoordinates(
-            projectGeoPoint!.latitude, projectGeoPoint.longitude)
-        .then((value) {
-      placeMarks = value;
+    getLoc(projectGeoPoint).then((value) {
+      setState(() {
+        locationAddress = value;
+      });
     });
-
-    Placemark place = placeMarks[0];
-
-    String locationAddress =
-        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
 
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
@@ -137,7 +140,11 @@ class AdminHomeState extends State<AdminHome> {
         child: Material(
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, AdminDetailReport.routeName);
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return AdminDetailReport(
+                  reportObject: data,
+                );
+              }));
             },
             child: Padding(
               padding: const EdgeInsets.all(5.0),
@@ -165,7 +172,7 @@ class AdminHomeState extends State<AdminHome> {
                       DateFormat.yMMMEd()
                           .format(projectDateTime ?? DateTime.now()),
                       false),
-                  reportItemContent(locationAddress, false),
+                  reportItemContent(locationAddress ?? "Loading...", false),
                   reportItemContent(projectDesc ?? "Project Description", true),
                 ],
               ),

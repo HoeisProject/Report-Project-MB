@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart';
@@ -9,8 +7,8 @@ import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
+import 'package:report_project/feature_1/admin/screens/admin_home.dart';
 import 'package:report_project/feature_1/admin/services/admin_service.dart';
-import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
 class AdminDetailReport extends StatefulWidget {
@@ -55,13 +53,8 @@ class AdminDetailReportState extends State<AdminDetailReport> {
         reportObject.get<ParseGeoPoint>('projectPosition');
     String? projectDescObject = reportObject.get<String>('projectDesc');
 
-    List<Placemark> placeMarks = [];
-
-    placemarkFromCoordinates(
-            projectGeoPointObject!.latitude, projectGeoPointObject.longitude)
-        .then((value) {
-      placeMarks = value;
-    });
+    List<Placemark> placeMarks = await placemarkFromCoordinates(
+        projectGeoPointObject!.latitude, projectGeoPointObject.longitude);
 
     Placemark place = placeMarks[0];
 
@@ -142,7 +135,7 @@ class AdminDetailReportState extends State<AdminDetailReport> {
         showSnackBar(context, Icons.done, Colors.greenAccent,
             "Rejection Success", Colors.greenAccent);
         Navigator.pushNamedAndRemoveUntil(
-            context, HomeEmployee.routeName, (Route<dynamic> route) => false);
+            context, AdminHome.routeName, (Route<dynamic> route) => false);
       } else {
         Navigator.pop(context);
         showSnackBar(context, Icons.error_outline, Colors.red,
@@ -159,7 +152,7 @@ class AdminDetailReportState extends State<AdminDetailReport> {
         showSnackBar(context, Icons.done, Colors.greenAccent,
             "Approval Success", Colors.greenAccent);
         Navigator.pushNamedAndRemoveUntil(
-            context, HomeEmployee.routeName, (Route<dynamic> route) => false);
+            context, AdminHome.routeName, (Route<dynamic> route) => false);
       } else {
         Navigator.pop(context);
         showSnackBar(context, Icons.error_outline, Colors.red,
