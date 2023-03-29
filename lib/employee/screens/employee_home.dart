@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
-import 'package:report_project/feature_1/auth/services/profile_service.dart';
-import 'package:report_project/feature_1/employee/controllers/project_report_controller.dart';
-import 'package:report_project/feature_1/employee/screens/create_report.dart';
-import 'package:report_project/feature_1/employee/screens/detail_report.dart';
-import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
+import 'package:report_project/auth/services/profile_service.dart';
+import 'package:report_project/employee/controllers/project_report_controller.dart';
+import 'package:report_project/employee/screens/create_report.dart';
+import 'package:report_project/employee/screens/detail_report.dart';
+import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class HomeEmployee extends ConsumerStatefulWidget {
   static const routeName = '/home_employee_screen';

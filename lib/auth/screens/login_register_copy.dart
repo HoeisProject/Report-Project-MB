@@ -8,8 +8,8 @@ import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/title_context.dart';
-import 'package:report_project/feature_1/admin/screens/admin_home.dart';
-import 'package:report_project/feature_1/employee/screens/employee_home.dart';
+import 'package:report_project/admin/screens/admin_home.dart';
+import 'package:report_project/employee/screens/employee_home.dart';
 
 class LoginRegisterScreen extends StatefulWidget {
   static const routeName = '/login_register_screen';

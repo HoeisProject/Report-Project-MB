@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/services/back4app_config.dart';
-import 'package:report_project/feature_1/splash/screens/splash_screen.dart';
+import 'package:report_project/splash/screens/splash_screen.dart';
 import 'package:report_project/router.dart';
 
 void main() async {

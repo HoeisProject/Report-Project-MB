@@ -4,8 +4,8 @@ import 'package:images_picker/images_picker.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/models/project_report_model.dart';
 import 'package:report_project/common/models/report_media_model.dart';
-import 'package:report_project/feature_1/auth/services/profile_service.dart';
-import 'package:report_project/feature_1/employee/services/report_service.dart';
+import 'package:report_project/auth/services/profile_service.dart';
+import 'package:report_project/employee/services/report_service.dart';
 
 final projectReportControllerProvider =
     StateNotifierProvider<ProjectReportController, List<ProjectReportModel>>(

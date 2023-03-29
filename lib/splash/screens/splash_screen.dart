@@ -6,10 +6,10 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/feature_1/admin/screens/admin_home.dart';
-import 'package:report_project/feature_1/auth/screens/login_register.dart';
-import 'package:report_project/feature_1/auth/services/profile_service.dart';
-import 'package:report_project/feature_1/employee/screens/employee_home.dart';
+import 'package:report_project/admin/screens/admin_home.dart';
+import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/auth/services/profile_service.dart';
+import 'package:report_project/employee/screens/employee_home.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   static const routeName = '/splash_screen';

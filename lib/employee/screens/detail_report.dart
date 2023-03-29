@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
-import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
+import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class ReportDetail extends StatefulWidget {
   static const routeName = '/report_detail_screen';

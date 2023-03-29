@@ -5,8 +5,8 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_with_icon.dart';
-import 'package:report_project/feature_1/auth/services/profile_service.dart';
-import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
+import 'package:report_project/auth/services/profile_service.dart';
+import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class UserProfilePage extends StatefulWidget {
   static const routeName = '/user_profile_screen';

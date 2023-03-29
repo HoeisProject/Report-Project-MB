@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/feature_1/auth/services/auth_service.dart';
-import 'package:report_project/feature_1/auth/services/profile_service.dart';
+import 'package:report_project/auth/services/auth_service.dart';
+import 'package:report_project/auth/services/profile_service.dart';
 
 final authControllerProvider = StateNotifierProvider((ref) {
   final authService = ref.watch(authServiceProvider);
@@ -31,8 +31,8 @@ class AuthController extends StateNotifier<UserModel?> {
     required String role,
   }) async {
     debugPrint('auth - controller - register user');
-    final res =
-        await authService.register(imagePath, username, password, email, nik, role);
+    final res = await authService.register(
+        imagePath, username, password, email, nik, role);
 
     if (!res.success) return false;
     return true;

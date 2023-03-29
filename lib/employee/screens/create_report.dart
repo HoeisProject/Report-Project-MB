@@ -14,12 +14,12 @@ import 'package:report_project/common/widgets/show_alert_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
-import 'package:report_project/feature_1/auth/controllers/auth_controller.dart';
-import 'package:report_project/feature_1/employee/controllers/project_report_controller.dart';
-import 'package:report_project/feature_1/employee/screens/employee_home.dart';
-import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
-import 'package:report_project/feature_1/employee/widgets/report_attach_media.dart';
-import 'package:report_project/feature_1/employee/widgets/select_media_dialog.dart';
+import 'package:report_project/auth/controllers/auth_controller.dart';
+import 'package:report_project/employee/controllers/project_report_controller.dart';
+import 'package:report_project/employee/screens/employee_home.dart';
+import 'package:report_project/employee/widgets/custom_appbar.dart';
+import 'package:report_project/employee/widgets/report_attach_media.dart';
+import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
 class ReportCreate extends ConsumerStatefulWidget {
   static const routeName = '/report_create_screen';

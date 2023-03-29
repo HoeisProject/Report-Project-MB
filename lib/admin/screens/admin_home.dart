@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
-import 'package:report_project/feature_1/admin/screens/admin_detail_report.dart';
-import 'package:report_project/feature_1/admin/services/admin_service.dart';
-import 'package:report_project/feature_1/auth/services/profile_service.dart';
-import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
+import 'package:report_project/admin/screens/admin_detail_report.dart';
+import 'package:report_project/admin/services/admin_service.dart';
+import 'package:report_project/auth/services/profile_service.dart';
+import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class AdminHome extends StatefulWidget {
   static const routeName = '/admin_home_screen';

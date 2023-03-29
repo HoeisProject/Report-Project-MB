@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
-import 'package:report_project/feature_1/auth/screens/user_profile.dart';
-import 'package:report_project/feature_1/auth/services/auth_service.dart';
+import 'package:report_project/auth/screens/user_profile.dart';
+import 'package:report_project/auth/services/auth_service.dart';
 
 Widget showDrawer(BuildContext context, ParseUser? user) {
   return Container(
