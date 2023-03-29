@@ -14,6 +14,7 @@ class AuthService {
     String password,
     String email,
     String nik,
+    String role,
   ) async {
     ParseFile parseUserImage = ParseFile(File(imagePath));
 
@@ -21,7 +22,8 @@ class AuthService {
 
     final newUser = ParseUser.createUser(username, password, email)
       ..set('userImage', parseUserImage)
-      ..set('nik', nik);
+      ..set('nik', nik)
+      ..set('role', role);
 
     return newUser.signUp();
   }

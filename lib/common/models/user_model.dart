@@ -10,12 +10,14 @@ class UserModel {
   final String username;
   final String email;
   final String nik;
+  final String role;
   final String userImage;
 
   const UserModel({
     required this.objectId,
     required this.username,
     required this.email,
+    required this.role,
     required this.nik,
     required this.userImage,
   });
@@ -26,6 +28,7 @@ class UserModel {
       username: parseUser.get<String>('username')!,
       email: parseUser.get<String>('email')!,
       nik: parseUser.get<String>('nik')!,
+      role: parseUser.get<String>('role')!,
       userImage: parseUser.get<ParseFile>('userImage')!.url ?? '',
     );
   }
@@ -35,6 +38,7 @@ class UserModel {
     String? username,
     String? email,
     String? nik,
+    String? role,
     String? userImage,
   }) {
     return UserModel(
@@ -42,6 +46,7 @@ class UserModel {
       username: username ?? this.username,
       email: email ?? this.email,
       nik: nik ?? this.nik,
+      role: role ?? this.role,
       userImage: userImage ?? this.userImage,
     );
   }
@@ -52,6 +57,7 @@ class UserModel {
       'username': username,
       'email': email,
       'nik': nik,
+      'role': role,
       'userImage': userImage,
     };
   }
@@ -62,6 +68,7 @@ class UserModel {
       username: map['username'] as String,
       email: map['email'] as String,
       nik: map['nik'] as String,
+      role: map['role'] as String,
       userImage: map['userImage'] as String,
     );
   }
@@ -73,7 +80,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(objectId: $objectId, username: $username, email: $email, nik: $nik, userImage: $userImage)';
+    return 'UserModel(objectId: $objectId, username: $username, email: $email, nik: $nik, role : $role, userImage: $userImage)';
   }
 
   @override
@@ -84,6 +91,7 @@ class UserModel {
         other.username == username &&
         other.email == email &&
         other.nik == nik &&
+        other.role == role &&
         other.userImage == userImage;
   }
 
@@ -93,6 +101,7 @@ class UserModel {
         username.hashCode ^
         email.hashCode ^
         nik.hashCode ^
+        role.hashCode ^
         userImage.hashCode;
   }
 }

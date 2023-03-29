@@ -49,6 +49,7 @@ class AdminHomeState extends State<AdminHome> {
             "projectDateTime": "first title",
             "projectLocation": "first title",
             "projectDesc": "first description",
+            "uploadBy": "user A",
             "projectStatus": 0,
           },
           {
@@ -56,6 +57,7 @@ class AdminHomeState extends State<AdminHome> {
             "projectDateTime": "second title",
             "projectLocation": "second title",
             "projectDesc": "second description",
+            "uploadBy": "user A",
             "projectStatus": 1,
           },
           {
@@ -63,6 +65,7 @@ class AdminHomeState extends State<AdminHome> {
             "projectDateTime": "third title",
             "projectLocation": "third title",
             "projectDesc": "third description",
+            "uploadBy": "user A",
             "projectStatus": 3,
           }
         ];
@@ -145,6 +148,7 @@ class AdminHomeState extends State<AdminHome> {
                       ],
                     ),
                   ),
+                  reportItemContent(data['uploadBy'], false),
                   reportItemContent(data['projectDateTime'], false),
                   reportItemContent(data['projectLocation'], false),
                   reportItemContent(data['projectDesc'], true),

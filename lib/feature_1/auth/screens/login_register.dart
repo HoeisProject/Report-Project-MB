@@ -11,6 +11,7 @@ import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/title_context.dart';
 import 'package:report_project/feature_1/admin/screens/admin_home.dart';
 import 'package:report_project/feature_1/auth/controllers/auth_controller.dart';
+import 'package:report_project/feature_1/auth/widgets/role_switch.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 
 class LoginRegisterScreen extends ConsumerStatefulWidget {
@@ -34,6 +35,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final emailCtl = TextEditingController();
   final passwordCtl = TextEditingController();
 
+  bool isAdmin = false;
+  String role = "employee";
+
   File? mediaFile;
 
   bool isLoading = false;
@@ -43,7 +47,17 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   Color registerSwitchColor = Colors.lightBlue;
 
   void userLogin(context) async {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    setState(() {
+      isLoading = true;
+    });
     if (!fieldValidation()) {
+      setState(() {
+        isLoading = false;
+      });
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
     }
@@ -52,16 +66,43 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           password: passwordCtl.text.trim(),
         );
     if (user == null) {
+      setState(() {
+        isLoading = false;
+      });
       showSnackBar(
           context, Icons.error_outline, Colors.red, "Login Failed", Colors.red);
       return;
     }
-    Navigator.popAndPushNamed(context, HomeEmployee.routeName);
-    // Navigator.popAndPushNamed(context, AdminHome.routeName);
+
+    if (user.role == "admin") {
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(context, Icons.done, Colors.greenAccent, "Login Success",
+          Colors.greenAccent);
+      Navigator.popAndPushNamed(context, AdminHome.routeName);
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(context, Icons.done, Colors.greenAccent, "Login Success",
+          Colors.greenAccent);
+      Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+    }
   }
 
   void userRegister(context) async {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    setState(() {
+      isLoading = true;
+    });
     if (!fieldValidation()) {
+      setState(() {
+        isLoading = false;
+      });
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
     }
@@ -72,13 +113,24 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               password: passwordCtl.text.trim(),
               email: emailCtl.text.trim(),
               nik: nikCtl.text.trim(),
+              role: role,
             );
     if (!isSuccess) {
+      setState(() {
+        isLoading = false;
+      });
       showSnackBar(context, Icons.error_outline, Colors.red, "Register Failed",
           Colors.red);
     }
+    showSnackBar(context, Icons.done, Colors.greenAccent, "Register Success",
+        Colors.greenAccent);
+    setState(() {
+      isLoading = false;
+    });
     setState(() {
       isLoginScreen = true;
+      loginSwitchColor = Colors.black;
+      registerSwitchColor = Colors.lightBlue;
     });
   }
 
@@ -245,6 +297,17 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             sizedSpacer(height: 5.0),
             inputTextField(context, keyNikField, "Nik", nikCtl,
                 TextInputType.text, false, false, 1, (value) {}),
+            sizedSpacer(height: 5.0),
+            roleSwitch(context, "Set as admin", isAdmin, (value) {
+              setState(() {
+                isAdmin = value;
+                if (isAdmin) {
+                  role = "admin";
+                } else {
+                  role = "employee";
+                }
+              });
+            }),
             sizedSpacer(height: 5.0),
             inputTextField(context, keyEmailField, "Email", emailCtl,
                 TextInputType.emailAddress, false, false, 1, (value) {}),

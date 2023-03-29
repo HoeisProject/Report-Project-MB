@@ -28,10 +28,11 @@ class AuthController extends StateNotifier<UserModel?> {
     required String password,
     required String email,
     required String nik,
+    required String role,
   }) async {
     debugPrint('auth - controller - register user');
     final res =
-        await authService.register(imagePath, username, password, email, nik);
+        await authService.register(imagePath, username, password, email, nik, role);
 
     if (!res.success) return false;
     return true;

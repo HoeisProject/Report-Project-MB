@@ -25,10 +25,7 @@ Widget viewMediaField(
                 crossAxisCount: 3),
             itemBuilder: (context, index) {
               if (listMediaFile.isEmpty) {
-                return InkWell(
-                  onTap: () {},
-                  child: const Icon(Icons.add_a_photo, size: 50.0),
-                );
+                return const Icon(Icons.image_not_supported, size: 50.0);
               }
               return _attachMediaItem(listMediaFile[index], () {}, index);
             },
@@ -45,16 +42,10 @@ Widget _attachMediaItem(
     width: 75.0,
     height: 75.0,
     child: mediaFile != null
-        ? InkWell(
-            onTap: onPressed,
-            child: Image.file(
-              mediaFile,
-              fit: BoxFit.cover,
-            ),
+        ? Image.file(
+            mediaFile,
+            fit: BoxFit.cover,
           )
-        : InkWell(
-            onTap: onPressed,
-            child: const Icon(Icons.add_a_photo, size: 50.0),
-          ),
+        : const Icon(Icons.add_a_photo, size: 50.0),
   );
 }
