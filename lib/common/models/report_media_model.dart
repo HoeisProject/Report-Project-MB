@@ -4,6 +4,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+enum ReportMediaEnum {
+  objectId,
+  reportAttachment,
+  reportId,
+}
+
 @immutable
 class ReportMediaModel {
   final String objectId;
@@ -17,10 +23,12 @@ class ReportMediaModel {
 
   factory ReportMediaModel.fromParseObject(ParseObject parseObject) {
     return ReportMediaModel(
-      objectId: parseObject.get<String>('objectId')!,
-      reportAttachment:
-          parseObject.get<ParseFile>('reportAttachment')!.url ?? '',
-      reportId: parseObject.get<String>('objectId')!,
+      objectId: parseObject.get<String>(ReportMediaEnum.objectId.name)!,
+      reportAttachment: parseObject
+              .get<ParseFile>(ReportMediaEnum.reportAttachment.name)!
+              .url ??
+          '',
+      reportId: parseObject.get<String>(ReportMediaEnum.reportId.name)!,
     );
   }
 

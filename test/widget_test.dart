@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:report_project/employee/services/report_service.dart';
 
 import 'package:report_project/main.dart';
 
@@ -26,5 +27,7 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+
+    // debugPrint(EnumReportProject.objectId.name);
   });
 }

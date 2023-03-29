@@ -6,6 +6,16 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import 'package:report_project/common/models/user_model.dart';
 
+enum ReportProjectEnum {
+  objectId,
+  projectTitle,
+  projectDesc,
+  projectStatus,
+  projectPosition,
+  projectDateTime,
+  uploadBy
+}
+
 @immutable
 class ProjectReportModel {
   final String objectId;
@@ -28,16 +38,20 @@ class ProjectReportModel {
 
   factory ProjectReportModel.fromParseObject(ParseObject parseObject) {
     return ProjectReportModel(
-      objectId: parseObject.get<String>('objectId')!,
-      projectTitle: parseObject.get<String>('projectTitle')!,
-      projectDesc: parseObject.get<String>('projectDesc')!,
-      projectStatus: parseObject.get<int>('projectStatus')!,
-      projectPosition: parseObject.get<ParseGeoPoint>('projectPosition')!,
-      projectDateTime: parseObject.get<DateTime>('projectDateTime')!,
+      objectId: parseObject.get<String>(ReportProjectEnum.objectId.name)!,
+      projectTitle:
+          parseObject.get<String>(ReportProjectEnum.projectTitle.name)!,
+      projectDesc: parseObject.get<String>(ReportProjectEnum.projectDesc.name)!,
+      projectStatus:
+          parseObject.get<int>(ReportProjectEnum.projectStatus.name)!,
+      projectPosition: parseObject
+          .get<ParseGeoPoint>(ReportProjectEnum.projectPosition.name)!,
+      projectDateTime:
+          parseObject.get<DateTime>(ReportProjectEnum.projectDateTime.name)!,
       // projectDateTime: DateTime.fromMillisecondsSinceEpoch(
       //     parseObject['projectDateTime'] as int),
-      uploadBy:
-          UserModel.fromParseUser(parseObject.get<ParseUser>('uploadBy')!),
+      uploadBy: UserModel.fromParseUser(
+          parseObject.get<ParseUser>(ReportProjectEnum.uploadBy.name)!),
     );
   }
 

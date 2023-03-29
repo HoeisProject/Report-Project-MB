@@ -4,12 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_media_model.dart';
+import 'package:report_project/common/models/user_model.dart';
 
 final reportServiceProvider = Provider((ref) {
   return ReportService();
 });
 
 class ReportService {
+  static const reportProjectClassName = 'ProjectReport';
+  static const reportMediaClassName = 'ReportMedia';
+
   Future<void> create(
     String projectTitle,
     DateTime projectDateTime,
@@ -18,29 +24,30 @@ class ReportService {
     ParseUser currentUser,
     List<Media> listMediaFile,
   ) async {
-    ParseObject newReport = ParseObject("ProjectReport")
-      ..set('projectTitle', projectTitle)
-      ..set('projectDateTime', projectDateTime)
+    final newReport = ParseObject(reportProjectClassName)
+      ..set(ReportProjectEnum.projectTitle.name, projectTitle)
+      ..set(ReportProjectEnum.projectDateTime.name, projectDateTime)
       ..set(
-          'projectPosition',
+          ReportProjectEnum.projectPosition.name,
           ParseGeoPoint(
             latitude: projectPosition.latitude,
             longitude: projectPosition.longitude,
           ))
-      ..set('projectDesc', projectDesc)
-      ..set('uploadBy', currentUser)
-      ..set('projectStatus', 0);
+      ..set(ReportProjectEnum.projectDesc.name, projectDesc)
+      ..set(ReportProjectEnum.uploadBy.name, currentUser)
+      ..set(ReportProjectEnum.projectStatus.name, 0);
 
     await newReport.save();
 
     for (var media in listMediaFile) {
       ParseFile parseReportMedia = ParseFile(File(media.path));
 
-      ParseObject newReportMedia = ParseObject("ReportMedia");
-      newReportMedia.set('reportId', newReport.objectId);
-      newReportMedia.set('reportAttachment', parseReportMedia);
+      final newReportMedia = ParseObject(reportMediaClassName);
+      newReportMedia.set(ReportMediaEnum.objectId.name, newReport.objectId);
+      newReportMedia.set(
+          ReportMediaEnum.reportAttachment.name, parseReportMedia);
 
-      ParseResponse response = await newReportMedia.save();
+      final response = await newReportMedia.save();
       if (response.success) {
       } else {
         break;
@@ -49,10 +56,9 @@ class ReportService {
   }
 
   Future<List<ParseObject>> getReports(ParseUser currentUser) async {
-    ParseObject? getPostObject = ParseObject('ProjectReport');
-    QueryBuilder<ParseObject> queryPosts =
-        QueryBuilder<ParseObject>(getPostObject)
-          ..whereEqualTo('uploadBy', currentUser);
+    ParseObject? getPostObject = ParseObject(reportProjectClassName);
+    final queryPosts = QueryBuilder<ParseObject>(getPostObject)
+      ..whereEqualTo(ReportProjectEnum.uploadBy.name, currentUser);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {
@@ -63,10 +69,10 @@ class ReportService {
   }
 
   Future<List<ParseObject>> getReportsMedia(String reportObjectId) async {
-    ParseObject? getPostObject = ParseObject('ReportMedia');
+    ParseObject? getPostObject = ParseObject(reportMediaClassName);
     QueryBuilder<ParseObject> queryPosts =
         QueryBuilder<ParseObject>(getPostObject)
-          ..whereEqualTo('reportId', reportObjectId);
+          ..whereEqualTo(ReportMediaEnum.reportId.name, reportObjectId);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {
