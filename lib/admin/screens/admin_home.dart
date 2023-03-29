@@ -9,40 +9,24 @@ import 'package:report_project/admin/services/admin_service.dart';
 import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
-class AdminHome extends StatefulWidget {
+class AdminHomeScreen extends StatefulWidget {
   static const routeName = '/admin_home_screen';
 
-  const AdminHome({super.key});
+  const AdminHomeScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => AdminHomeState();
+  State<StatefulWidget> createState() => AdminHomeScreenState();
 }
 
-class AdminHomeState extends State<AdminHome> {
+class AdminHomeScreenState extends State<AdminHomeScreen> {
   Future<List<ParseObject>>? getReportList;
-  ParseUser? user;
-
-  String? locationAddress;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getReportList = AdminService().getReports();
-    ProfileService().getCurrentUser().then((value) {
-      getReportList = AdminService().getReports();
-      setState(() {
-        user = value;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar("HOME"),
       body: _body(),
-      drawer: showDrawer(context, user),
+      drawer: showDrawer(context),
     );
   }
 
@@ -107,27 +91,7 @@ class AdminHomeState extends State<AdminHome> {
     );
   }
 
-  Future<String> getLoc(ParseGeoPoint? projectGeoPoint) async {
-    List<Placemark> placeMarks = await placemarkFromCoordinates(
-        projectGeoPoint!.latitude, projectGeoPoint.longitude);
-    Placemark place = placeMarks[0];
-    return '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-  }
-
   Widget _projectViewItem(ParseObject data) {
-    String? projectTitle = data.get<String>('projectTitle');
-    DateTime? projectDateTime = data.get<DateTime>('projectDateTime');
-    ParseGeoPoint? projectGeoPoint = data.get<ParseGeoPoint>('projectPosition');
-    String? projectDesc = data.get<String>('projectDesc');
-    ParseUser? uploadBy = data.get<ParseUser>('uploadBy');
-    int? projectStatus = data.get<int>('projectStatus');
-
-    getLoc(projectGeoPoint).then((value) {
-      setState(() {
-        locationAddress = value;
-      });
-    });
-
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -141,7 +105,7 @@ class AdminHomeState extends State<AdminHome> {
           child: InkWell(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return AdminDetailReport(
+                return AdminDetailReportScreen(
                   reportObject: data,
                 );
               }));
@@ -155,25 +119,23 @@ class AdminHomeState extends State<AdminHome> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Text(
-                            projectTitle ?? "Project Title",
+                            "Project Title",
                             style: kTitleReportItem,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(projectStatus?.toInt() ?? 0)
+                        reportStatus(0)
                       ],
                     ),
                   ),
-                  reportItemContent(uploadBy?.username ?? "username", false),
+                  reportItemContent("username", false),
                   reportItemContent(
-                      DateFormat.yMMMEd()
-                          .format(projectDateTime ?? DateTime.now()),
-                      false),
-                  reportItemContent(locationAddress ?? "Loading...", false),
-                  reportItemContent(projectDesc ?? "Project Description", true),
+                      DateFormat.yMMMEd().format(DateTime.now()), false),
+                  reportItemContent("Project Location", false),
+                  reportItemContent("Project Description", true),
                 ],
               ),
             ),

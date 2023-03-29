@@ -19,25 +19,12 @@ class HomeEmployee extends ConsumerStatefulWidget {
 }
 
 class _HomeEmployeeState extends ConsumerState<HomeEmployee> {
-  ParseUser? user;
-
-  @override
-  void initState() {
-// TODO: implement initState
-    super.initState();
-    ProfileService().getCurrentUser().then((value) {
-      setState(() {
-        user = value;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar("HOME"),
       body: _body(),
-      drawer: showDrawer(context, user),
+      drawer: showDrawer(context),
     );
   }
 
@@ -69,7 +56,7 @@ class _HomeEmployeeState extends ConsumerState<HomeEmployee> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _menuBarItem(Icons.assignment, "Report", () {
-              Navigator.pushNamed(context, ReportCreate.routeName);
+              Navigator.pushNamed(context, CreateReportScreen.routeName);
             }),
             _menuBarItem(Icons.question_mark, "???", () {}),
           ],
@@ -169,7 +156,7 @@ class _HomeEmployeeState extends ConsumerState<HomeEmployee> {
         child: Material(
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, ReportDetail.routeName);
+              Navigator.pushNamed(context, DetailReportScreen.routeName);
             },
             child: Padding(
               padding: const EdgeInsets.all(5.0),

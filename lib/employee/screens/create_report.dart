@@ -21,16 +21,16 @@ import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/employee/widgets/report_attach_media.dart';
 import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
-class ReportCreate extends ConsumerStatefulWidget {
+class CreateReportScreen extends ConsumerStatefulWidget {
   static const routeName = '/report_create_screen';
 
-  const ReportCreate({super.key});
+  const CreateReportScreen({super.key});
 
   @override
-  ConsumerState<ReportCreate> createState() => _ReportCreateState();
+  ConsumerState<CreateReportScreen> createState() => _ReportCreateState();
 }
 
-class _ReportCreateState extends ConsumerState<ReportCreate> {
+class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   var keyProjectTitle = GlobalKey<FormState>();
   var keyProjectDesc = GlobalKey<FormState>();
 

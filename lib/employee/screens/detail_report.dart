@@ -3,16 +3,16 @@ import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
-class ReportDetail extends StatefulWidget {
+class DetailReportScreen extends StatefulWidget {
   static const routeName = '/report_detail_screen';
 
-  const ReportDetail({super.key});
+  const DetailReportScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => ReportDetailState();
+  State<StatefulWidget> createState() => DetailReportScreenState();
 }
 
-class ReportDetailState extends State<ReportDetail> {
+class DetailReportScreenState extends State<DetailReportScreen> {
   List<String?> listMediaFilePath = [];
 
   @override

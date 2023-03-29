@@ -57,7 +57,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         }
         final user = UserModel.fromParseUser(parseUser);
         if (user.role == 'admin') {
-          Navigator.popAndPushNamed(context, AdminHome.routeName);
+          Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
           return;
         }
         Navigator.popAndPushNamed(context, HomeEmployee.routeName);

@@ -17,21 +17,21 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case LoginRegisterScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const LoginRegisterScreen());
-    case UserProfilePage.routeName:
-      return MaterialPageRoute(builder: (context) => const UserProfilePage());
+    case UserProfileScreen.routeName:
+      return MaterialPageRoute(builder: (context) => const UserProfileScreen());
     case HomeEmployee.routeName:
       return MaterialPageRoute(builder: (context) => const HomeEmployee());
-    case ReportCreate.routeName:
-      return MaterialPageRoute(builder: (context) => const ReportCreate());
-    case ReportDetail.routeName:
-      return MaterialPageRoute(builder: (context) => const ReportDetail());
-    case AdminHome.routeName:
-      return MaterialPageRoute(builder: (context) => const AdminHome());
-    case AdminDetailReport.routeName:
+    case CreateReportScreen.routeName:
+      return MaterialPageRoute(builder: (context) => const CreateReportScreen());
+    case DetailReportScreen.routeName:
+      return MaterialPageRoute(builder: (context) => const DetailReportScreen());
+    case AdminHomeScreen.routeName:
+      return MaterialPageRoute(builder: (context) => const AdminHomeScreen());
+    case AdminDetailReportScreen.routeName:
       final arguments = routeSettings.arguments as Map<String, dynamic>;
       final reportObject = arguments['reportObject'];
       return MaterialPageRoute(
-          builder: (context) => AdminDetailReport(
+          builder: (context) => AdminDetailReportScreen(
                 reportObject: reportObject ?? "",
               ));
     default:
