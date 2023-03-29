@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:report_project/common/styles/constant.dart';
 
 Widget inputTextField(
-    BuildContext context,
-    GlobalKey<FormState> fieldKey,
-    String fieldLabel,
-    TextEditingController controller,
-    TextInputType inputType,
-    bool obscureText,
-    bool allBorder,
-    int maxLine,
-    void Function(String)? onChange) {
+  BuildContext context,
+  GlobalKey<FormState> fieldKey,
+  String fieldLabel,
+  TextEditingController controller,
+  TextInputType inputType,
+  bool obscureText,
+  bool allBorder,
+  int maxLine,
+  void Function(String)? onChange,
+) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     child: Form(

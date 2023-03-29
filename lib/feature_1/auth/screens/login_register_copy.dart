@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
@@ -10,20 +9,18 @@ import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/title_context.dart';
 import 'package:report_project/feature_1/admin/screens/admin_home.dart';
-import 'package:report_project/feature_1/auth/controllers/auth_controller.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';
 
-class LoginRegisterScreen extends ConsumerStatefulWidget {
+class LoginRegisterScreen extends StatefulWidget {
   static const routeName = '/login_register_screen';
 
   const LoginRegisterScreen({super.key});
 
   @override
-  ConsumerState<LoginRegisterScreen> createState() =>
-      _LoginRegisterScreenState();
+  State<StatefulWidget> createState() => LoginRegisterScreenState();
 }
 
-class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
+class LoginRegisterScreenState extends State<LoginRegisterScreen> {
   final keyUsernameField = GlobalKey<FormState>();
   final keyNikField = GlobalKey<FormState>();
   final keyEmailField = GlobalKey<FormState>();
@@ -41,120 +38,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
   Color loginSwitchColor = Colors.black;
   Color registerSwitchColor = Colors.lightBlue;
-
-  void userLogin(context) async {
-    if (!fieldValidation()) {
-      showSnackBar(context, Icons.error_outline, Colors.red,
-          "There is empty field!", Colors.red);
-    }
-    final user = await ref.read(authControllerProvider.notifier).loginUser(
-          username: usernameCtl.text.trim(),
-          password: passwordCtl.text.trim(),
-        );
-    if (user == null) {
-      showSnackBar(
-          context, Icons.error_outline, Colors.red, "Login Failed", Colors.red);
-      return;
-    }
-    Navigator.popAndPushNamed(context, HomeEmployee.routeName);
-    // Navigator.popAndPushNamed(context, AdminHome.routeName);
-  }
-
-  void userRegister(context) async {
-    if (!fieldValidation()) {
-      showSnackBar(context, Icons.error_outline, Colors.red,
-          "There is empty field!", Colors.red);
-    }
-    final isSuccess =
-        await ref.read(authControllerProvider.notifier).registerUser(
-              imagePath: mediaFile!.path,
-              username: usernameCtl.text.trim(),
-              password: passwordCtl.text.trim(),
-              email: emailCtl.text.trim(),
-              nik: nikCtl.text.trim(),
-            );
-    if (!isSuccess) {
-      showSnackBar(context, Icons.error_outline, Colors.red, "Register Failed",
-          Colors.red);
-    }
-    setState(() {
-      isLoginScreen = true;
-    });
-  }
-
-  bool fieldValidation() {
-    if (isLoginScreen) {
-      if (usernameCtl.text.trim().isNotEmpty &&
-          passwordCtl.text.trim().isNotEmpty) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if (usernameCtl.text.trim().isNotEmpty &&
-          nikCtl.text.trim().isNotEmpty &&
-          emailCtl.text.trim().isNotEmpty &&
-          passwordCtl.text.trim().isNotEmpty &&
-          mediaFile != null) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-  void getMediaFromCamera() async {
-    try {
-      List<Media>? getMedia = await ImagesPicker.openCamera(
-        pickType: PickType.image,
-        quality: 0.8,
-        maxSize: 800,
-        language: Language.English,
-      );
-      if (getMedia != null) {
-        String? imagePath = getMedia[0].thumbPath;
-        setState(() {
-          mediaFile = File(imagePath!);
-        });
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  void changeToLoginCard() {
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
-    if (isLoginScreen == false) {
-      setState(() {
-        usernameCtl.clear();
-        passwordCtl.clear();
-        loginSwitchColor = Colors.black;
-        registerSwitchColor = Colors.lightBlue;
-        isLoginScreen = true;
-      });
-    }
-  }
-
-  void changeToRegisterCard() {
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
-    if (isLoginScreen == true) {
-      setState(() {
-        usernameCtl.clear();
-        nikCtl.clear();
-        emailCtl.clear();
-        passwordCtl.clear();
-        loginSwitchColor = Colors.lightBlue;
-        registerSwitchColor = Colors.black;
-        isLoginScreen = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +93,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               isLoading,
               "LOGIN",
               Colors.lightBlue,
-              () => userLogin(context),
+              userLogin,
             ),
             sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
@@ -257,7 +140,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               isLoading,
               "REGISTER",
               Colors.lightBlue,
-              () => userRegister(context),
+              userRegister,
             ),
             sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
@@ -273,6 +156,64 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         ),
       ),
     );
+  }
+
+  void userLogin() {
+    if (fieldValidation()) {
+      Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+    } else {
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "There is empty field!", Colors.red);
+    }
+  }
+
+  void userRegister() {
+    if (fieldValidation()) {
+      Navigator.popAndPushNamed(context, AdminHome.routeName);
+    } else {
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "There is empty field!", Colors.red);
+    }
+  }
+
+  bool fieldValidation() {
+    if (isLoginScreen) {
+      if (usernameCtl.text.trim().isNotEmpty &&
+          passwordCtl.text.trim().isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (usernameCtl.text.trim().isNotEmpty &&
+          nikCtl.text.trim().isNotEmpty &&
+          emailCtl.text.trim().isNotEmpty &&
+          passwordCtl.text.trim().isNotEmpty &&
+          mediaFile != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  void getMediaFromCamera() async {
+    try {
+      List<Media>? getMedia = await ImagesPicker.openCamera(
+        pickType: PickType.image,
+        quality: 0.8,
+        maxSize: 800,
+        language: Language.English,
+      );
+      if (getMedia != null) {
+        String? imagePath = getMedia[0].thumbPath;
+        setState(() {
+          mediaFile = File(imagePath!);
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Widget _logRegSwitchLink(
@@ -313,5 +254,39 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         ),
       ),
     );
+  }
+
+  void changeToLoginCard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    if (isLoginScreen == false) {
+      setState(() {
+        usernameCtl.clear();
+        passwordCtl.clear();
+        loginSwitchColor = Colors.black;
+        registerSwitchColor = Colors.lightBlue;
+        isLoginScreen = true;
+      });
+    }
+  }
+
+  void changeToRegisterCard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+    if (isLoginScreen == true) {
+      setState(() {
+        usernameCtl.clear();
+        nikCtl.clear();
+        emailCtl.clear();
+        passwordCtl.clear();
+        loginSwitchColor = Colors.lightBlue;
+        registerSwitchColor = Colors.black;
+        isLoginScreen = false;
+      });
+    }
   }
 }

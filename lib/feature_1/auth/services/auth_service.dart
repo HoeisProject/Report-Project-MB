@@ -1,29 +1,38 @@
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+final authServiceProvider = Provider((ref) {
+  return AuthService();
+});
+
 class AuthService {
-  Future<ParseResponse> registerAccount(String imagePath, String username,
-      String password, String email, String nik) async {
+  Future<ParseResponse> register(
+    String imagePath,
+    String username,
+    String password,
+    String email,
+    String nik,
+  ) async {
     ParseFile parseUserImage = ParseFile(File(imagePath));
 
     await parseUserImage.save();
 
-    ParseUser newUser = ParseUser.createUser(username, password, email);
-    newUser.set('userImage', parseUserImage);
-    newUser.set('nik', nik);
+    final newUser = ParseUser.createUser(username, password, email)
+      ..set('userImage', parseUserImage)
+      ..set('nik', nik);
 
-    return await newUser.signUp();
+    return newUser.signUp();
   }
 
-  Future<ParseResponse> loginAccount(String username, String password) async {
-    ParseUser user = ParseUser.createUser(username, password, null);
-
-    return await user.login();
+  Future<ParseResponse> login(String username, String password) async {
+    final user = ParseUser.createUser(username, password, null);
+    return user.login();
   }
 
-  Future<ParseResponse> logoutAccount() async {
+  Future<ParseResponse> logout() async {
     final user = await ParseUser.currentUser() as ParseUser;
-    return await user.logout();
+    return user.logout();
   }
 }

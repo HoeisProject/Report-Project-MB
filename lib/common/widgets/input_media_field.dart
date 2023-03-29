@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:report_project/common/styles/constant.dart';
 
-Widget inputMediaField(BuildContext context, String fieldLabel, File? mediaFile,
-    void Function()? onPressed) {
+Widget inputMediaField(
+  BuildContext context,
+  String fieldLabel,
+  File? mediaFile,
+  void Function()? onPressed,
+) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     child: Column(

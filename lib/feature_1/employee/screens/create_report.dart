@@ -11,7 +11,7 @@ import 'package:ntp/ntp.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
-import 'package:report_project/common/widgets/show_snackBar.dart';
+import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/feature_1/employee/screens/employee_home.dart';

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-Future<void> showSelectMediaDialog(
-    {required BuildContext context,
-    required String title,
-    required String defaultActionText,
-    required void Function()? onPressedGallery,
-    required void Function()? onPressedCamera,
-    required VoidCallback? onButtonPressed}) async {
+Future<void> showSelectMediaDialog({
+  required BuildContext context,
+  required String title,
+  required String defaultActionText,
+  required void Function()? onPressedGallery,
+  required void Function()? onPressedCamera,
+  required VoidCallback? onButtonPressed,
+}) async {
   return await showDialog(
     context: context,
     builder: (context) => AlertDialog(

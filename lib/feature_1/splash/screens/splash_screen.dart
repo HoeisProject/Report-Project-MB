@@ -35,7 +35,7 @@ class SplashScreenState extends State<SplashScreen> {
       if (await Permission.microphone.isPermanentlyDenied) {
         Permission.microphone.request();
       }
-      Map<Permission, PermissionStatus> reqPermission = await [
+      Map<Permission, PermissionStatus> _ = await [
         Permission.location,
         Permission.storage,
         Permission.camera,
