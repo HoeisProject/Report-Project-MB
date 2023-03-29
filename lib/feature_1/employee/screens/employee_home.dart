@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
+import 'package:report_project/feature_1/auth/services/profile_service.dart';
 import 'package:report_project/feature_1/employee/controllers/project_report_controller.dart';
 import 'package:report_project/feature_1/employee/screens/create_report.dart';
 import 'package:report_project/feature_1/employee/screens/detail_report.dart';
@@ -17,12 +19,25 @@ class HomeEmployee extends ConsumerStatefulWidget {
 }
 
 class _HomeEmployeeState extends ConsumerState<HomeEmployee> {
+  ParseUser? user;
+
+  @override
+  void initState() {
+// TODO: implement initState
+    super.initState();
+    ProfileService().getCurrentUser().then((value) {
+      setState(() {
+        user = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar("HOME"),
       body: _body(),
-      drawer: showDrawer(context),
+      drawer: showDrawer(context, user),
     );
   }
 

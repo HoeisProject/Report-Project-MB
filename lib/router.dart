@@ -28,7 +28,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AdminHome.routeName:
       return MaterialPageRoute(builder: (context) => const AdminHome());
     case AdminDetailReport.routeName:
-      return MaterialPageRoute(builder: (context) => const AdminDetailReport());
+      final arguments = routeSettings.arguments as Map<String, dynamic>;
+      final reportObject = arguments['reportObject'];
+      return MaterialPageRoute(
+          builder: (context) => AdminDetailReport(
+                reportObject: reportObject ?? "",
+              ));
     default:
       return MaterialPageRoute(builder: (context) {
         return Scaffold(

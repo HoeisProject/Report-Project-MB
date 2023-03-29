@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:intl/intl.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/feature_1/admin/screens/admin_detail_report.dart';
+import 'package:report_project/feature_1/admin/services/admin_service.dart';
+import 'package:report_project/feature_1/auth/services/profile_service.dart';
 import 'package:report_project/feature_1/employee/widgets/custom_appbar.dart';
 
 class AdminHome extends StatefulWidget {
@@ -14,12 +19,27 @@ class AdminHome extends StatefulWidget {
 }
 
 class AdminHomeState extends State<AdminHome> {
+  Future<List<ParseObject>>? getReportList;
+  ParseUser? user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getReportList = AdminService().getReports();
+    ProfileService().getCurrentUser().then((value) {
+      setState(() {
+        user = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar("HOME"),
       body: _body(),
-      drawer: showDrawer(context),
+      drawer: showDrawer(context, user),
     );
   }
 
@@ -39,40 +59,6 @@ class AdminHomeState extends State<AdminHome> {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getData() {
-    return Future.delayed(
-      const Duration(seconds: 2),
-      () {
-        return [
-          {
-            "projectTitle": "first title",
-            "projectDateTime": "first title",
-            "projectLocation": "first title",
-            "projectDesc": "first description",
-            "uploadBy": "user A",
-            "projectStatus": 0,
-          },
-          {
-            "projectTitle": "second title",
-            "projectDateTime": "second title",
-            "projectLocation": "second title",
-            "projectDesc": "second description",
-            "uploadBy": "user A",
-            "projectStatus": 1,
-          },
-          {
-            "projectTitle": "third title",
-            "projectDateTime": "third title",
-            "projectLocation": "third title",
-            "projectDesc": "third description",
-            "uploadBy": "user A",
-            "projectStatus": 3,
-          }
-        ];
-      },
-    );
-  }
-
   Widget _listProjectView() {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
@@ -82,8 +68,9 @@ class AdminHomeState extends State<AdminHome> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
         elevation: 5.0,
-        child: FutureBuilder(
-          future: getData(),
+        child: FutureBuilder<List<ParseObject>>(
+          initialData: const [],
+          future: getReportList,
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
@@ -94,6 +81,11 @@ class AdminHomeState extends State<AdminHome> {
                   ),
                 );
               } else if (snapshot.hasData) {
+                if (snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text('NO DATA', style: TextStyle(fontSize: 36.0)),
+                  );
+                }
                 final data = snapshot.data;
                 return ListView.builder(
                     padding: const EdgeInsets.only(top: 10.0),
@@ -112,7 +104,27 @@ class AdminHomeState extends State<AdminHome> {
     );
   }
 
-  Widget _projectViewItem(Map<String, dynamic> data) {
+  Widget _projectViewItem(ParseObject data) {
+    String? projectTitle = data.get<String>('projectTitle');
+    DateTime? projectDateTime = data.get<DateTime>('projectDateTime');
+    ParseGeoPoint? projectGeoPoint = data.get<ParseGeoPoint>('projectPosition');
+    String? projectDesc = data.get<String>('projectDesc');
+    ParseUser? uploadBy = data.get<ParseUser>('uploadBy');
+    int? projectStatus = data.get<int>('projectStatus');
+
+    List<Placemark> placeMarks = [];
+
+    placemarkFromCoordinates(
+            projectGeoPoint!.latitude, projectGeoPoint.longitude)
+        .then((value) {
+      placeMarks = value;
+    });
+
+    Placemark place = placeMarks[0];
+
+    String locationAddress =
+        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -138,20 +150,23 @@ class AdminHomeState extends State<AdminHome> {
                       children: [
                         Expanded(
                           child: Text(
-                            data['projectTitle'],
+                            projectTitle ?? "Project Title",
                             style: kTitleReportItem,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(data['projectStatus'])
+                        reportStatus(projectStatus?.toInt() ?? 0)
                       ],
                     ),
                   ),
-                  reportItemContent(data['uploadBy'], false),
-                  reportItemContent(data['projectDateTime'], false),
-                  reportItemContent(data['projectLocation'], false),
-                  reportItemContent(data['projectDesc'], true),
+                  reportItemContent(uploadBy?.username ?? "username", false),
+                  reportItemContent(
+                      DateFormat.yMMMEd()
+                          .format(projectDateTime ?? DateTime.now()),
+                      false),
+                  reportItemContent(locationAddress, false),
+                  reportItemContent(projectDesc ?? "Project Description", true),
                 ],
               ),
             ),

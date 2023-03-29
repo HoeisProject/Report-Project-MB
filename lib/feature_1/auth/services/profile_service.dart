@@ -7,7 +7,6 @@ final profileServiceProvider = Provider((ref) {
 
 class ProfileService {
   Future<ParseUser?> getCurrentUser() async {
-    final user = await ParseUser.currentUser();
     return await ParseUser.currentUser() as ParseUser?;
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
@@ -15,7 +13,7 @@ class ReportDetail extends StatefulWidget {
 }
 
 class ReportDetailState extends State<ReportDetail> {
-  List<File?> listMediaFile = [];
+  List<String?> listMediaFilePath = [];
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,7 @@ class ReportDetailState extends State<ReportDetail> {
                 viewTextField(context, "Time and Date", "projectDateTime"),
                 viewTextField(context, "Location", "projectLocation"),
                 viewTextField(context, "Project Description", "projectDesc"),
-                viewMediaField(context, "Attach Media", listMediaFile)
+                viewMediaField(context, "Attach Media", listMediaFilePath)
               ],
             ),
           ),
