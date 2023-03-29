@@ -9,16 +9,16 @@ import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
-class HomeEmployee extends ConsumerStatefulWidget {
+class employeeHomeScreen extends ConsumerStatefulWidget {
   static const routeName = '/home_employee_screen';
 
-  const HomeEmployee({super.key});
+  const employeeHomeScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeEmployeeState();
 }
 
-class _HomeEmployeeState extends ConsumerState<HomeEmployee> {
+class _HomeEmployeeState extends ConsumerState<employeeHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

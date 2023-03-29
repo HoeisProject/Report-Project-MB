@@ -60,7 +60,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
           return;
         }
-        Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+        Navigator.popAndPushNamed(context, employeeHomeScreen.routeName);
       });
     }
     // else if (Platform.isIOS) {

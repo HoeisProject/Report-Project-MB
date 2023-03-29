@@ -160,7 +160,7 @@ class LoginRegisterScreenState extends State<LoginRegisterScreen> {
 
   void userLogin() {
     if (fieldValidation()) {
-      Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+      Navigator.popAndPushNamed(context, employeeHomeScreen.routeName);
     } else {
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);

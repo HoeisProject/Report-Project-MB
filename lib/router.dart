@@ -19,8 +19,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           builder: (context) => const LoginRegisterScreen());
     case UserProfileScreen.routeName:
       return MaterialPageRoute(builder: (context) => const UserProfileScreen());
-    case HomeEmployee.routeName:
-      return MaterialPageRoute(builder: (context) => const HomeEmployee());
+    case employeeHomeScreen.routeName:
+      return MaterialPageRoute(builder: (context) => const employeeHomeScreen());
     case CreateReportScreen.routeName:
       return MaterialPageRoute(builder: (context) => const CreateReportScreen());
     case DetailReportScreen.routeName:

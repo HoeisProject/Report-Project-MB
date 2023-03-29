@@ -71,7 +71,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
         defaultActionText: "CLOSE",
         onButtonPressed: () {
           Navigator.pushNamedAndRemoveUntil(
-              context, HomeEmployee.routeName, (Route<dynamic> route) => false);
+              context, employeeHomeScreen.routeName, (Route<dynamic> route) => false);
         },
       );
     }
@@ -87,7 +87,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
           content: "Location permissions are denied\nplease approve it",
           defaultActionText: "CLOSE",
           onButtonPressed: () {
-            Navigator.pushNamedAndRemoveUntil(context, HomeEmployee.routeName,
+            Navigator.pushNamedAndRemoveUntil(context, employeeHomeScreen.routeName,
                 (Route<dynamic> route) => false);
           },
         );
@@ -104,7 +104,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
         defaultActionText: "CLOSE",
         onButtonPressed: () {
           Navigator.pushNamedAndRemoveUntil(
-              context, HomeEmployee.routeName, (Route<dynamic> route) => false);
+              context, employeeHomeScreen.routeName, (Route<dynamic> route) => false);
         },
       );
     }

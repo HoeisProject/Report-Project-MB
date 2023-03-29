@@ -88,7 +88,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       });
       showSnackBar(context, Icons.done, Colors.greenAccent, "Login Success",
           Colors.greenAccent);
-      Navigator.popAndPushNamed(context, HomeEmployee.routeName);
+      Navigator.popAndPushNamed(context, employeeHomeScreen.routeName);
     }
   }
 
