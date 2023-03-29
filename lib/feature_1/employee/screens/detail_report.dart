@@ -26,24 +26,27 @@ class ReportDetailState extends State<ReportDetail> {
   }
 
   Widget _body() {
-    return Card(
-      elevation: 5.0,
-      clipBehavior: Clip.hardEdge,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ),
-      child: Container(
-        margin: const EdgeInsets.all(10.0),
+    return Container(
+      margin: const EdgeInsets.all(10.0),
+      child: Card(
+        elevation: 5.0,
+        clipBehavior: Clip.hardEdge,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              viewTextField(context, "Project Title", "aaaaaaa"),
-              viewTextField(context, "Time and Date", "aaaaaaaaaa"),
-              viewTextField(context, "Location", "aaaaaaaaaaa"),
-              viewTextField(context, "Project Description", "bbbbbb"),
-              viewMediaField(context, "Attach Media", listMediaFile)
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                viewTextField(context, "Project Title", "projectTitle"),
+                viewTextField(context, "Time and Date", "projectDateTime"),
+                viewTextField(context, "Location", "projectLocation"),
+                viewTextField(context, "Project Description", "projectDesc"),
+                viewMediaField(context, "Attach Media", listMediaFile)
+              ],
+            ),
           ),
         ),
       ),

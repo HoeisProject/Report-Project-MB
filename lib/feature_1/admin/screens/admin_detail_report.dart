@@ -39,25 +39,28 @@ class AdminDetailReportState extends State<AdminDetailReport> {
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              viewTextField(context, "Project Title", "projectTitle"),
-              viewTextField(context, "Report by", "uploadBy"),
-              viewTextField(context, "Time and Date", "projectDateTime"),
-              viewTextField(context, "Location", "projectLocation"),
-              viewTextField(context, "Project Description", "projectDesc"),
-              viewMediaField(context, "Attach Media", listMediaFile),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  customButton(context, isLoadingReject, "REJECT", Colors.red,
-                      rejectReport),
-                  customButton(context, isLoadingApprove, "APPROVE",
-                      Colors.greenAccent, approveReport)
-                ],
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                viewTextField(context, "Project Title", "projectTitle"),
+                viewTextField(context, "Report by", "uploadBy"),
+                viewTextField(context, "Time and Date", "projectDateTime"),
+                viewTextField(context, "Location", "projectLocation"),
+                viewTextField(context, "Project Description", "projectDesc"),
+                viewMediaField(context, "Attach Media", listMediaFile),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    customButton(context, isLoadingReject, "REJECT", Colors.red,
+                        rejectReport),
+                    customButton(context, isLoadingApprove, "APPROVE",
+                        Colors.greenAccent, approveReport)
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
