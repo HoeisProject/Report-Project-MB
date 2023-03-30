@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
+import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
@@ -202,24 +203,37 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   }
 
   void createDataReport(context) async {
+    showLoadingDialog(context);
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
     if (!fieldValidation()) {
+      Navigator.pop(context);
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
       return;
     }
-    await ref.read(projectReportControllerProvider.notifier).createProject(
-          projectTitle: projectTitleCtl.text.trim(),
-          projectDateTime: projectCreated!,
-          projectPosition: position!,
-          projectDesc: projectDescCtl.text.trim(),
-          listMediaFile: listMediaPickerFile,
-        );
-    debugPrint('Done Create Project');
-    Navigator.pop(context);
+    final response =
+        await ref.read(projectReportControllerProvider.notifier).createProject(
+              projectTitle: projectTitleCtl.text.trim(),
+              projectDateTime: projectCreated!,
+              projectPosition: position!,
+              projectDesc: projectDescCtl.text.trim(),
+              listMediaFile: listMediaPickerFile,
+            );
+    if (response) {
+      debugPrint('Done Create Project');
+      Navigator.pop(context);
+      showSnackBar(context, Icons.done, Colors.greenAccent, "Report Created",
+          Colors.greenAccent);
+      Navigator.pushNamedAndRemoveUntil(context, EmployeeHomeScreen.routeName,
+          (Route<dynamic> route) => false);
+    } else {
+      Navigator.pop(context);
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "Failed, please try again!", Colors.red);
+    }
   }
 
   bool fieldValidation() {
