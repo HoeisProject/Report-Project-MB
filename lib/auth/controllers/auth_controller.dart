@@ -4,7 +4,8 @@ import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/auth/services/auth_service.dart';
 import 'package:report_project/auth/services/profile_service.dart';
 
-final authControllerProvider = StateNotifierProvider((ref) {
+final authControllerProvider =
+    StateNotifierProvider<AuthController, UserModel?>((ref) {
   final authService = ref.watch(authServiceProvider);
   final profileService = ref.watch(profileServiceProvider);
   return AuthController(
@@ -57,6 +58,14 @@ class AuthController extends StateNotifier<UserModel?> {
     final user = UserModel.fromParseUser(parseUser);
     state = user;
 
+    return user;
+  }
+
+  Future<UserModel?> checkCurrentUser() async {
+    final parseUser = await profileService.getCurrentUser();
+    if (parseUser == null) return null;
+    final user = UserModel.fromParseUser(parseUser);
+    state = user;
     return user;
   }
 

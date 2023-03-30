@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/models/project_report_model.dart';
 import 'package:report_project/common/models/report_media_model.dart';
 import 'package:report_project/auth/services/profile_service.dart';
@@ -20,9 +20,7 @@ final projectReportControllerProvider =
 
 final getProjectReportsProvider =
     FutureProvider<List<ProjectReportModel>>((ref) {
-  return ref
-      .watch(projectReportControllerProvider.notifier)
-      .getProjectReports();
+  return ref.watch(projectReportControllerProvider);
 });
 
 final getReportsMediaProvider =
@@ -43,16 +41,17 @@ class ProjectReportController extends StateNotifier<List<ProjectReportModel>> {
     required this.profileService,
   }) : super([]);
 
-  Future<void> createProject({
+  Future<bool> createProject({
     required String projectTitle,
     required DateTime projectDateTime,
     required Position projectPosition,
     required String projectDesc,
     required List<Media> listMediaFile,
   }) async {
+    debugPrint('project report - controller - createProject');
     final user = await profileService.getCurrentUser();
-    if (user == null) return;
-    return reportService.create(
+    if (user == null) return false;
+    final res = await reportService.create(
       projectTitle,
       projectDateTime,
       projectPosition,
@@ -60,9 +59,17 @@ class ProjectReportController extends StateNotifier<List<ProjectReportModel>> {
       user,
       listMediaFile,
     );
+    if (!res.success || res.results == null) {
+      return false;
+    }
+
+    final projectReport = ProjectReportModel.fromParseObject(res.results![0]);
+    state = [...state, projectReport];
+    return true;
   }
 
   Future<List<ProjectReportModel>> getProjectReports() async {
+    debugPrint('project report - controller - getProjectReports');
     final user = await profileService.getCurrentUser();
     if (user == null) return [];
 

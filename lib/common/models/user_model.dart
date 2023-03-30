@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
+enum UserRoleEnum { admin, employee }
+
 enum UserModelEnum {
   objectId,
   username,
@@ -33,13 +35,13 @@ class UserModel {
 
   factory UserModel.fromParseUser(ParseUser parseUser) {
     return UserModel(
-      objectId: parseUser.get<String>(UserModelEnum.objectId.name)!,
-      username: parseUser.get<String>(UserModelEnum.username.name)!,
-      email: parseUser.get<String>(UserModelEnum.email.name)!,
-      nik: parseUser.get<String>(UserModelEnum.nik.name)!,
-      role: parseUser.get<String>(UserModelEnum.role.name)!,
+      objectId: parseUser.get<String>(UserModelEnum.objectId.name) ?? '',
+      username: parseUser.get<String>(UserModelEnum.username.name) ?? '',
+      email: parseUser.get<String>(UserModelEnum.email.name) ?? '',
+      nik: parseUser.get<String>(UserModelEnum.nik.name) ?? '',
+      role: parseUser.get<String>(UserModelEnum.role.name) ?? '',
       userImage:
-          parseUser.get<ParseFile>(UserModelEnum.userImage.name)!.url ?? '',
+          parseUser.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
     );
   }
 

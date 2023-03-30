@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:intl/intl.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
-import 'package:report_project/common/widgets/show_loading_dialog.dart';
-import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
-import 'package:report_project/admin/screens/admin_home.dart';
-import 'package:report_project/admin/services/admin_service.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class AdminDetailReportScreen extends StatefulWidget {

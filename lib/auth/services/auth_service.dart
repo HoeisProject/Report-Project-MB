@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/common/models/user_model.dart';
 
 final authServiceProvider = Provider((ref) {
   return AuthService();
@@ -21,9 +22,9 @@ class AuthService {
     await parseUserImage.save();
 
     final newUser = ParseUser.createUser(username, password, email)
-      ..set('userImage', parseUserImage)
-      ..set('nik', nik)
-      ..set('role', role);
+      ..set(UserModelEnum.userImage.name, parseUserImage)
+      ..set(UserModelEnum.nik.name, nik)
+      ..set(UserModelEnum.role.name, role);
 
     return newUser.signUp();
   }

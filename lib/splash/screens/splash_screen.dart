@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:report_project/common/models/user_model.dart';
+import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/auth/screens/login_register.dart';
-import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -49,18 +47,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       ].request();
 
       Timer(const Duration(seconds: 2), () async {
-        final parseUser =
-            await ref.read(profileServiceProvider).getCurrentUser();
-        if (parseUser == null) {
+        final currentUser =
+            await ref.read(authControllerProvider.notifier).checkCurrentUser();
+        if (currentUser == null) {
           Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
           return;
         }
-        final user = UserModel.fromParseUser(parseUser);
-        if (user.role == 'admin') {
+        if (currentUser.role == 'admin') {
           Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
           return;
         }
-        Navigator.popAndPushNamed(context, employeeHomeScreen.routeName);
+        Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
       });
     }
     // else if (Platform.isIOS) {

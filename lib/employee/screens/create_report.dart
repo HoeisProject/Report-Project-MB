@@ -14,7 +14,6 @@ import 'package:report_project/common/widgets/show_alert_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
-import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/employee/controllers/project_report_controller.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
@@ -31,25 +30,25 @@ class CreateReportScreen extends ConsumerStatefulWidget {
 }
 
 class _ReportCreateState extends ConsumerState<CreateReportScreen> {
-  var keyProjectTitle = GlobalKey<FormState>();
-  var keyProjectDesc = GlobalKey<FormState>();
+  final keyProjectTitle = GlobalKey<FormState>();
+  final keyProjectDesc = GlobalKey<FormState>();
 
-  TextEditingController projectTitleCtl = TextEditingController();
-  TextEditingController projectDescCtl = TextEditingController();
+  final projectTitleCtl = TextEditingController();
+  final projectDescCtl = TextEditingController();
 
   List<File?> listMediaFile = [];
 
-  bool? isLoading = false;
+  bool isLoading = false;
 
   DateTime? projectCreated;
 
   Position? position;
 
-  String? locationAddress = 'Getting location...';
+  String locationAddress = 'Getting location...';
 
   // ImagePicker picker = ImagePicker();
 
-  List<Media> listMediaPickerFile = [];
+  final List<Media> listMediaPickerFile = [];
 
   @override
   void initState() {
@@ -70,8 +69,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
         content: "Location services are disabled,\nplease enable it!",
         defaultActionText: "CLOSE",
         onButtonPressed: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, employeeHomeScreen.routeName, (Route<dynamic> route) => false);
+          Navigator.pushNamedAndRemoveUntil(context,
+              EmployeeHomeScreen.routeName, (Route<dynamic> route) => false);
         },
       );
     }
@@ -87,8 +86,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
           content: "Location permissions are denied\nplease approve it",
           defaultActionText: "CLOSE",
           onButtonPressed: () {
-            Navigator.pushNamedAndRemoveUntil(context, employeeHomeScreen.routeName,
-                (Route<dynamic> route) => false);
+            Navigator.pushNamedAndRemoveUntil(context,
+                EmployeeHomeScreen.routeName, (Route<dynamic> route) => false);
           },
         );
       }
@@ -103,8 +102,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
             "Location permissions are denied permanently\nplease approve it",
         defaultActionText: "CLOSE",
         onButtonPressed: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, employeeHomeScreen.routeName, (Route<dynamic> route) => false);
+          Navigator.pushNamedAndRemoveUntil(context,
+              EmployeeHomeScreen.routeName, (Route<dynamic> route) => false);
         },
       );
     }
@@ -138,12 +137,12 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
       },
       child: Scaffold(
         appBar: customAppbar("Create Report"),
-        body: _body(),
+        body: _body(context),
       ),
     );
   }
 
-  Widget _body() {
+  Widget _body(context) {
     return Container(
       margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
@@ -166,7 +165,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                 projectCreated != null
                     ? DateFormat.yMMMEd().format(projectCreated!)
                     : "getting network time..."),
-            viewTextField(context, "Location", locationAddress!),
+            viewTextField(context, "Location", locationAddress),
             inputTextField(context, keyProjectDesc, "Project Description",
                 projectDescCtl, TextInputType.text, false, true, 6, (value) {}),
             reportAttachMedia(context, "Attach Media", listMediaPickerFile,
@@ -189,7 +188,12 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
             }),
             sizedSpacer(height: 30.0),
             customButton(
-                context, isLoading, "SEND", Colors.lightBlue, createDataReport),
+              context,
+              isLoading,
+              "SEND",
+              Colors.lightBlue,
+              () => createDataReport(context),
+            ),
             sizedSpacer(height: 30.0),
           ],
         ),
@@ -197,7 +201,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     );
   }
 
-  void createDataReport() {
+  void createDataReport(context) async {
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
@@ -205,20 +209,17 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     if (!fieldValidation()) {
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
+      return;
     }
-    ref
-        .read(projectReportControllerProvider.notifier)
-        .createProject(
+    await ref.read(projectReportControllerProvider.notifier).createProject(
           projectTitle: projectTitleCtl.text.trim(),
           projectDateTime: projectCreated!,
           projectPosition: position!,
           projectDesc: projectDescCtl.text.trim(),
           listMediaFile: listMediaPickerFile,
-        )
-        .then((value) {
-      debugPrint('Done Create Project');
-      Navigator.pop(context);
-    });
+        );
+    debugPrint('Done Create Project');
+    Navigator.pop(context);
   }
 
   bool fieldValidation() {
@@ -243,9 +244,11 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
         );
         setState(() {
           if (getMedia != null) {
-            listMediaPickerFile = getMedia;
+            listMediaPickerFile.addAll(getMedia);
+            // listMediaPickerFile = getMedia;
           } else {
-            listMediaPickerFile = [];
+            listMediaPickerFile.clear();
+            // listMediaPickerFile = [];
           }
         });
       } else {
@@ -277,9 +280,11 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
         );
         setState(() {
           if (getMedia != null) {
-            listMediaPickerFile = getMedia;
+            listMediaPickerFile.addAll(getMedia);
+            // listMediaPickerFile = getMedia;
           } else {
-            listMediaPickerFile = [];
+            listMediaPickerFile.clear();
+            // listMediaPickerFile = [];
           }
         });
       } else {

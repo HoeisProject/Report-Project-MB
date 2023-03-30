@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
@@ -36,7 +37,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final passwordCtl = TextEditingController();
 
   bool isAdmin = false;
-  String role = "employee";
+  String role = UserRoleEnum.employee.name;
 
   File? mediaFile;
 
@@ -75,20 +76,22 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       return;
     }
 
-    if (user.role == "admin") {
+    if (user.role == UserRoleEnum.admin.name) {
       setState(() {
         isLoading = false;
       });
       showSnackBar(context, Icons.done, Colors.greenAccent, "Login Success",
           Colors.greenAccent);
       Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
+      return;
     } else {
       setState(() {
         isLoading = false;
       });
       showSnackBar(context, Icons.done, Colors.greenAccent, "Login Success",
           Colors.greenAccent);
-      Navigator.popAndPushNamed(context, employeeHomeScreen.routeName);
+      Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
+      return;
     }
   }
 
@@ -106,6 +109,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       });
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
+      return;
     }
     final isSuccess =
         await ref.read(authControllerProvider.notifier).registerUser(
@@ -122,6 +126,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       });
       showSnackBar(context, Icons.error_outline, Colors.red, "Register Failed",
           Colors.red);
+      return;
     }
     showSnackBar(context, Icons.done, Colors.greenAccent, "Register Success",
         Colors.greenAccent);
@@ -303,9 +308,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               setState(() {
                 isAdmin = value;
                 if (isAdmin) {
-                  role = "admin";
+                  role = UserRoleEnum.admin.name;
                 } else {
-                  role = "employee";
+                  role = UserRoleEnum.employee.name;
                 }
               });
             }),

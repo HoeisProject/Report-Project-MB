@@ -3,6 +3,7 @@ import 'package:report_project/admin/screens/admin_detail_report.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
+import 'package:report_project/common/models/project_report_model.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
@@ -19,12 +20,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           builder: (context) => const LoginRegisterScreen());
     case UserProfileScreen.routeName:
       return MaterialPageRoute(builder: (context) => const UserProfileScreen());
-    case employeeHomeScreen.routeName:
-      return MaterialPageRoute(builder: (context) => const employeeHomeScreen());
+    case EmployeeHomeScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const EmployeeHomeScreen());
     case CreateReportScreen.routeName:
-      return MaterialPageRoute(builder: (context) => const CreateReportScreen());
+      return MaterialPageRoute(
+          builder: (context) => const CreateReportScreen());
     case DetailReportScreen.routeName:
-      return MaterialPageRoute(builder: (context) => const DetailReportScreen());
+      final projectReport = routeSettings.arguments as ProjectReportModel;
+      return MaterialPageRoute(
+          builder: (context) =>
+              DetailReportScreen(projectReport: projectReport));
     case AdminHomeScreen.routeName:
       return MaterialPageRoute(builder: (context) => const AdminHomeScreen());
     case AdminDetailReportScreen.routeName:
