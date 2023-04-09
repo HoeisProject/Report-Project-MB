@@ -27,7 +27,6 @@ class UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     username = widget.userModel.username;
     userImage = widget.userModel.userImage;

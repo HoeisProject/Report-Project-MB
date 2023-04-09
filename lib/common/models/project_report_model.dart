@@ -6,6 +6,12 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import 'package:report_project/common/models/user_model.dart';
 
+enum ProjectReportStatusEnum {
+  pending, // 0
+  approve, // 1
+  reject, // 2
+}
+
 enum ProjectReportEnum {
   objectId,
   projectTitle,

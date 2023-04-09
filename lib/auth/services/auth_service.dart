@@ -1,12 +1,15 @@
 import 'dart:io';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/models/user_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final authServiceProvider = Provider((ref) {
+part 'auth_service.g.dart';
+
+@Riverpod(keepAlive: true)
+AuthService authService(AuthServiceRef ref) {
   return AuthService();
-});
+}
 
 class AuthService {
   Future<ParseResponse> register(

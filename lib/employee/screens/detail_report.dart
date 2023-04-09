@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:report_project/common/models/project_report_model.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
-import 'package:report_project/employee/controllers/project_report_controller.dart';
+import 'package:report_project/employee/controllers/report_media_controller.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,6 +25,9 @@ class DetailReportScreen extends ConsumerWidget {
   }
 
   Widget _body(context, WidgetRef ref) {
+    final reportsMedia = ref.watch(getReportMediaProvider(
+      reportId: projectReport.objectId,
+    ));
     return Container(
       margin: const EdgeInsets.all(10.0),
       child: Card(
@@ -47,7 +50,7 @@ class DetailReportScreen extends ConsumerWidget {
                     projectReport.projectPosition.toString()),
                 viewTextField(
                     context, "Project Description", projectReport.projectDesc),
-                ref.watch(getReportsMediaProvider(projectReport.objectId)).when(
+                reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =
                         data.map((e) => e.reportAttachment).toList();

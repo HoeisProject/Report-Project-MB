@@ -36,13 +36,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
               DetailReportScreen(projectReport: projectReport));
     case AdminHomeScreen.routeName:
       return MaterialPageRoute(builder: (context) => const AdminHomeScreen());
-    case AdminDetailReportScreen.routeName:
-      final arguments = routeSettings.arguments as Map<String, dynamic>;
-      final reportObject = arguments['reportObject'];
-      return MaterialPageRoute(
-          builder: (context) => AdminDetailReportScreen(
-                reportObject: reportObject ?? "",
-              ));
+    // TODO HERE
+    // case AdminDetailReportScreen.routeName:
+    //   final arguments = routeSettings.arguments as Map<String, dynamic>;
+    //   final reportObject = arguments['reportObject'];
+    //   return MaterialPageRoute(
+    //       builder: (context) => AdminDetailReportScreen(
+    //             reportObject: reportObject ?? "",
+    //           ));
     default:
       return MaterialPageRoute(builder: (context) {
         return Scaffold(

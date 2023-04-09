@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:report_project/auth/screens/login_register.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
-import 'package:report_project/auth/services/auth_service.dart';
 
 import '../models/user_model.dart';
 
-Widget showDrawer(context, UserModel user) {
+Widget showDrawer(context, WidgetRef ref, UserModel user) {
   return Container(
     color: Colors.white,
     width: MediaQuery.of(context).size.width / 1.5,
@@ -21,11 +21,11 @@ Widget showDrawer(context, UserModel user) {
               }));
             }),
             drawerItemNavigate(context, Icons.logout, "Logout", () async {
-              await AuthService().logout();
-              Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  LoginRegisterScreen.routeName,
-                  (Route<dynamic> route) => false);
+              ref.read(authControllerProvider).logout();
+              // Navigator.pushNamedAndRemoveUntil(
+              //     context,
+              //     LoginRegisterScreen.routeName,
+              //     (Route<dynamic> route) => false);
             }),
           ],
         ),

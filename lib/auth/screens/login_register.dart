@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/auth/controllers/profile_controller.dart';
+import 'package:report_project/auth/view_model/login_register_view_model.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
+import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
@@ -36,61 +39,26 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final emailCtl = TextEditingController();
   final passwordCtl = TextEditingController();
 
-  bool isAdmin = false;
-  String role = UserRoleEnum.employee.name;
-
-  File? mediaFile;
-
-  bool isLoading = false;
-  bool isLoginScreen = true;
-
-  Color loginSwitchColor = Colors.black;
-  Color registerSwitchColor = Colors.lightBlue;
-
   void userLogin(context) async {
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    setState(() {
-      isLoading = true;
-    });
+    ref.read(loginRegisterLoadingProvider.notifier).state = true;
     if (!fieldValidation()) {
-      setState(() {
-        isLoading = false;
-      });
+      ref.read(loginRegisterLoadingProvider.notifier).state = false;
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
       return;
     }
-    final user = await ref.read(authControllerProvider.notifier).loginUser(
+    final isLoginSuccess = await ref.read(authControllerProvider).loginUser(
           username: usernameCtl.text.trim(),
           password: passwordCtl.text.trim(),
         );
-    if (user == null) {
-      setState(() {
-        isLoading = false;
-      });
+    if (!isLoginSuccess) {
+      ref.read(loginRegisterLoadingProvider.notifier).state = false;
       showSnackBar(
           context, Icons.error_outline, Colors.red, "Login Failed", Colors.red);
-      return;
-    }
-
-    if (user.role == UserRoleEnum.admin.name) {
-      setState(() {
-        isLoading = false;
-      });
-      showSnackBar(context, Icons.done, Colors.greenAccent, "Login Success",
-          Colors.greenAccent);
-      Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-      return;
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      showSnackBar(context, Icons.done, Colors.greenAccent, "Login Success",
-          Colors.greenAccent);
-      Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
       return;
     }
   }
@@ -100,48 +68,41 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    setState(() {
-      isLoading = true;
-    });
+    ref.read(loginRegisterLoadingProvider.notifier).state = true;
     if (!fieldValidation()) {
-      setState(() {
-        isLoading = false;
-      });
+      ref.read(loginRegisterLoadingProvider.notifier).state = false;
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
       return;
     }
-    final isSuccess =
-        await ref.read(authControllerProvider.notifier).registerUser(
-              imagePath: mediaFile!.path,
+    final isRegisterSuccess =
+        await ref.read(authControllerProvider).registerUser(
+              imagePath: ref.read(loginRegisterMediaFileProvider)!.path,
               username: usernameCtl.text.trim(),
               password: passwordCtl.text.trim(),
               email: emailCtl.text.trim(),
               nik: nikCtl.text.trim(),
-              role: role,
+              role: ref.read(loginRegisterRoleProvider),
             );
-    if (!isSuccess) {
-      setState(() {
-        isLoading = false;
-      });
+    if (!isRegisterSuccess) {
+      ref.read(loginRegisterLoadingProvider.notifier).state = false;
       showSnackBar(context, Icons.error_outline, Colors.red, "Register Failed",
           Colors.red);
       return;
+    } else {
+      showSnackBar(context, Icons.done, Colors.greenAccent, "Register Success",
+          Colors.greenAccent);
+      ref.read(loginRegisterIsLoginProvider.notifier).state = true;
+      ref.read(loginRegisterLoginColorProvider.notifier).state = Colors.black;
+      ref.read(loginRegisterRegisterColorProvider.notifier).state =
+          Colors.lightBlue;
     }
-    showSnackBar(context, Icons.done, Colors.greenAccent, "Register Success",
-        Colors.greenAccent);
-    setState(() {
-      isLoading = false;
-    });
-    setState(() {
-      isLoginScreen = true;
-      loginSwitchColor = Colors.black;
-      registerSwitchColor = Colors.lightBlue;
-    });
+
+    ref.read(loginRegisterLoadingProvider.notifier).state = false;
   }
 
   bool fieldValidation() {
-    if (isLoginScreen) {
+    if (ref.read(loginRegisterIsLoginProvider)) {
       if (usernameCtl.text.trim().isNotEmpty &&
           passwordCtl.text.trim().isNotEmpty) {
         return true;
@@ -153,7 +114,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           nikCtl.text.trim().isNotEmpty &&
           emailCtl.text.trim().isNotEmpty &&
           passwordCtl.text.trim().isNotEmpty &&
-          mediaFile != null) {
+          ref.read(loginRegisterMediaFileProvider) != null) {
         return true;
       } else {
         return false;
@@ -171,9 +132,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       );
       if (getMedia != null) {
         String? imagePath = getMedia[0].thumbPath;
-        setState(() {
-          mediaFile = File(imagePath!);
-        });
+        ref.read(loginRegisterMediaFileProvider.notifier).state =
+            File(imagePath!);
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -185,14 +145,14 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    if (isLoginScreen == false) {
-      setState(() {
-        usernameCtl.clear();
-        passwordCtl.clear();
-        loginSwitchColor = Colors.black;
-        registerSwitchColor = Colors.lightBlue;
-        isLoginScreen = true;
-      });
+    if (ref.read(loginRegisterIsLoginProvider) == false) {
+      ref.read(loginRegisterLoadingProvider.notifier).state = false;
+      ref.read(loginRegisterLoginColorProvider.notifier).state = Colors.black;
+      ref.read(loginRegisterRegisterColorProvider.notifier).state =
+          Colors.lightBlue;
+      ref.read(loginRegisterIsLoginProvider.notifier).state = true;
+      usernameCtl.clear();
+      passwordCtl.clear();
     }
   }
 
@@ -201,21 +161,32 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    if (isLoginScreen == true) {
-      setState(() {
-        usernameCtl.clear();
-        nikCtl.clear();
-        emailCtl.clear();
-        passwordCtl.clear();
-        loginSwitchColor = Colors.lightBlue;
-        registerSwitchColor = Colors.black;
-        isLoginScreen = false;
-      });
+    if (ref.read(loginRegisterIsLoginProvider) == true) {
+      ref.read(loginRegisterLoadingProvider.notifier).state = false;
+      ref.read(loginRegisterLoginColorProvider.notifier).state =
+          Colors.lightBlue;
+      ref.read(loginRegisterRegisterColorProvider.notifier).state =
+          Colors.black;
+      ref.read(loginRegisterIsLoginProvider.notifier).state = false;
+      usernameCtl.clear();
+      nikCtl.clear();
+      emailCtl.clear();
+      passwordCtl.clear();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Login Register Screen");
+    final currentUser = ref.watch(profileControllerProvider);
+    ref.listen(profileControllerProvider, (previous, next) {
+      if (!next.hasValue || next.value == null) return;
+      if (next.value!.role == 'admin') {
+        Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
+      } else if (next.value!.role == 'employee') {
+        Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
+      }
+    });
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -224,7 +195,24 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         }
       },
       child: Scaffold(
-        body: _body(),
+        body: currentUser.when(
+          data: (user) {
+            debugPrint(user.toString());
+            if (user == null) return _body();
+            // if (user.role == 'admin') {
+            //   Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
+            // } else if (user.role == 'employee') {
+            //   Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
+            // }
+            return const Text('Debug Testing');
+          },
+          error: (error, stackTrace) {
+            return const ErrorScreen(text: 'Call developer');
+          },
+          loading: () {
+            return const CircularProgressIndicator();
+          },
+        ),
       ),
     );
   }
@@ -242,14 +230,16 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           child: Padding(
             padding: const EdgeInsets.only(
                 top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
-            child: isLoginScreen ? _loginCard(context) : _registerCard(context),
+            child: ref.watch(loginRegisterIsLoginProvider)
+                ? _loginCard(context)
+                : _registerCard(context),
           ),
         ),
       ),
     );
   }
 
-  Widget _loginCard(BuildContext context) {
+  Widget _loginCard(context) {
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -265,7 +255,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             sizedSpacer(height: 5.0),
             customButton(
               context,
-              isLoading,
+              ref.watch(loginRegisterLoadingProvider),
               "LOGIN",
               Colors.lightBlue,
               () => userLogin(context),
@@ -274,8 +264,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             _logRegSwitchLink(
               "Login",
               "Register",
-              loginSwitchColor,
-              registerSwitchColor,
+              ref.watch(loginRegisterLoginColorProvider),
+              ref.watch(loginRegisterRegisterColorProvider),
               changeToLoginCard,
               changeToRegisterCard,
             ),
@@ -286,7 +276,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     );
   }
 
-  Widget _registerCard(BuildContext context) {
+  Widget _registerCard(context) {
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -294,9 +284,14 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             sizedSpacer(height: 10.0),
             titleContext("REGISTER"),
             sizedSpacer(height: 5.0),
-            inputMediaField(context, "Profile Image", mediaFile, () {
-              getMediaFromCamera();
-            }),
+            inputMediaField(
+              context,
+              "Profile Image",
+              ref.watch(loginRegisterMediaFileProvider),
+              () {
+                getMediaFromCamera();
+              },
+            ),
             sizedSpacer(height: 5.0),
             inputTextField(context, keyUsernameField, "Username", usernameCtl,
                 TextInputType.text, false, false, 1, (value) {}),
@@ -304,15 +299,20 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             inputTextField(context, keyNikField, "Nik", nikCtl,
                 TextInputType.text, false, false, 1, (value) {}),
             sizedSpacer(height: 5.0),
-            roleSwitch(context, "Set as admin", isAdmin, (value) {
-              setState(() {
-                isAdmin = value;
-                if (isAdmin) {
-                  role = UserRoleEnum.admin.name;
-                } else {
-                  role = UserRoleEnum.employee.name;
-                }
-              });
+            roleSwitch(
+                context,
+                "Set as admin",
+                ref.watch(
+                  loginRegisterIsAdminProvider,
+                ), (value) {
+              ref.read(loginRegisterIsAdminProvider.notifier).state = value;
+              if (value) {
+                ref.read(loginRegisterRoleProvider.notifier).state =
+                    UserRoleEnum.admin.name;
+              } else {
+                ref.read(loginRegisterRoleProvider.notifier).state =
+                    UserRoleEnum.employee.name;
+              }
             }),
             sizedSpacer(height: 5.0),
             inputTextField(context, keyEmailField, "Email", emailCtl,
@@ -323,7 +323,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             sizedSpacer(height: 5.0),
             customButton(
               context,
-              isLoading,
+              ref.watch(loginRegisterLoadingProvider),
               "REGISTER",
               Colors.lightBlue,
               () => userRegister(context),
@@ -332,8 +332,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             _logRegSwitchLink(
               "Login",
               "Register",
-              loginSwitchColor,
-              registerSwitchColor,
+              ref.watch(loginRegisterLoginColorProvider),
+              ref.watch(loginRegisterRegisterColorProvider),
               changeToLoginCard,
               changeToRegisterCard,
             ),

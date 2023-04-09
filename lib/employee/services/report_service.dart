@@ -13,9 +13,6 @@ final reportServiceProvider = Provider((ref) {
 });
 
 class ReportService {
-  static const reportProjectClassName = 'ProjectReport';
-  static const reportMediaClassName = 'ReportMedia';
-
   Future<ParseResponse> create(
     String projectTitle,
     DateTime projectDateTime,
@@ -24,7 +21,7 @@ class ReportService {
     ParseUser currentUser,
     List<Media> listMediaFile,
   ) async {
-    final newReport = ParseObject(reportProjectClassName)
+    final newReport = ParseObject('ProjectReport')
       ..set(ProjectReportEnum.projectTitle.name, projectTitle)
       ..set(ProjectReportEnum.projectDateTime.name, projectDateTime)
       ..set(
@@ -42,7 +39,7 @@ class ReportService {
     for (var media in listMediaFile) {
       ParseFile parseReportMedia = ParseFile(File(media.path));
 
-      final newReportMedia = ParseObject(reportMediaClassName);
+      final newReportMedia = ParseObject('ReportMedia');
       newReportMedia.set(ReportMediaEnum.reportId.name, newReport.objectId);
       newReportMedia.set(
           ReportMediaEnum.reportAttachment.name, parseReportMedia);
@@ -58,8 +55,8 @@ class ReportService {
     return projectReport;
   }
 
-  Future<List<ParseObject>> getReports(ParseUser currentUser) async {
-    ParseObject? getPostObject = ParseObject(reportProjectClassName);
+  Future<List<ParseObject>> getReport(ParseUser currentUser) async {
+    ParseObject? getPostObject = ParseObject('ProjectReport');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
       ..whereEqualTo(ProjectReportEnum.uploadBy.name, currentUser);
     final ParseResponse response = await queryPosts.query();
@@ -71,11 +68,11 @@ class ReportService {
     }
   }
 
-  Future<List<ParseObject>> getReportsMedia(String reportObjectId) async {
-    ParseObject? getPostObject = ParseObject(reportMediaClassName);
+  Future<List<ParseObject>> getReportMedia(String reportId) async {
+    ParseObject? getPostObject = ParseObject('ReportMedia');
     QueryBuilder<ParseObject> queryPosts =
         QueryBuilder<ParseObject>(getPostObject)
-          ..whereEqualTo(ReportMediaEnum.reportId.name, reportObjectId);
+          ..whereEqualTo(ReportMediaEnum.reportId.name, reportId);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {
@@ -92,8 +89,8 @@ class ReportService {
   ) async {
     ParseObject updateReport = ParseObject("ProjectReport")
       ..objectId = objectId
-      ..set('projectTitle', projectTitle)
-      ..set('projectDesc', projectDesc);
+      ..set(ProjectReportEnum.projectTitle.name, projectTitle)
+      ..set(ProjectReportEnum.projectDesc.name, projectDesc);
 
     return updateReport.save();
   }

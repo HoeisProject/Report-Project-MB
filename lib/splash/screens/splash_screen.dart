@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
+import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -46,19 +47,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         Permission.microphone,
       ].request();
 
-      Timer(const Duration(seconds: 2), () async {
-        final currentUser =
-            await ref.read(authControllerProvider.notifier).checkCurrentUser();
-        if (currentUser == null) {
-          Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
-          return;
-        }
-        if (currentUser.role == 'admin') {
-          Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-          return;
-        }
-        Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
-      });
+      // Timer(const Duration(seconds: 2), () async {
+      //   final currentUser =
+      //       await ref.read(authControllerProvider.notifier).checkCurrentUser();
+      //   if (currentUser == null) {
+      //     Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
+      //     return;
+      //   }
+      //   if (currentUser.role == 'admin') {
+      //     Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
+      //     return;
+      //   }
+      //   Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
+      // });
     }
     // else if (Platform.isIOS) {
     //   Map<Permission, PermissionStatus> reqPermission = await [
@@ -72,39 +73,71 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Splash Screen");
+    final currentUser = ref.watch(profileControllerProvider);
+    ref.listen(profileControllerProvider, (previous, next) {
+      debugPrint("Splash Screen - ref listen profileControllerProvider");
+      if (!next.hasValue || next.value == null) {
+        Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
+        return;
+      }
+      Timer(const Duration(seconds: 2), () {
+        if (next.value!.role == 'admin') {
+          Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
+        } else if (next.value!.role == 'employee') {
+          Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
+        }
+      });
+    });
     return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: SizedBox(
-                width: 200.0,
-                height: 200.0,
-                child: Image.asset(
-                  "assets/images/app_ic_launch.png",
-                ),
+      body: currentUser.when(
+        data: (user) {
+          debugPrint(user.toString());
+          return _splashWidget();
+        },
+        error: (error, stackTrace) {
+          // Asumsikan aja server back4apps meledak / kena meteor ??
+          return const ErrorScreen(text: 'Splash Screen - Call Developer');
+        },
+        loading: () {
+          return _splashWidget();
+        },
+      ),
+    );
+  }
+
+  Widget _splashWidget() {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: 200.0,
+              height: 200.0,
+              child: Image.asset(
+                "assets/images/app_ic_launch.png",
               ),
             ),
-            const Text('from',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 14.0,
-                )),
-            const Text(
-              "HOEI's",
+          ),
+          const Text('from',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.deepPurpleAccent,
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-            )
-          ],
-        ),
+                color: Colors.black54,
+                fontSize: 14.0,
+              )),
+          const Text(
+            "HOEI's",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.deepPurpleAccent,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+            ),
+          )
+        ],
       ),
     );
   }

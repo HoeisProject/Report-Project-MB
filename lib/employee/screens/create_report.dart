@@ -17,6 +17,7 @@ import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/controllers/project_report_controller.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
+import 'package:report_project/employee/view_model/create_report_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/employee/widgets/report_attach_media.dart';
 import 'package:report_project/employee/widgets/select_media_dialog.dart';
@@ -41,15 +42,9 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
 
   bool isLoading = false;
 
-  DateTime? projectCreated;
-
   Position? position;
 
-  String locationAddress = 'Getting location...';
-
   // ImagePicker picker = ImagePicker();
-
-  final List<Media> listMediaPickerFile = [];
 
   @override
   void initState() {
@@ -118,13 +113,10 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     Placemark place = placeMarks[0];
 
     DateTime getNtpDateTime = await NTP.now();
-
-    setState(() {
-      projectCreated = getNtpDateTime;
-
-      locationAddress =
-          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-    });
+    ref.read(createReportProjectCreatedProvider.notifier).state =
+        getNtpDateTime;
+    ref.read(createReportLocationAddressProvider.notifier).state =
+        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
   }
 
   @override
@@ -144,6 +136,10 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   }
 
   Widget _body(context) {
+    final projectCreated = ref.watch(createReportProjectCreatedProvider);
+    final locationAddress = ref.watch(createReportLocationAddressProvider);
+    final listMediaPickerFile =
+        ref.watch(createReportListMediaPickerFileProvider);
     return Container(
       margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
@@ -164,7 +160,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                 context,
                 "Time and Date",
                 projectCreated != null
-                    ? DateFormat.yMMMEd().format(projectCreated!)
+                    ? DateFormat.yMMMEd().format(projectCreated)
                     : "getting network time..."),
             viewTextField(context, "Location", locationAddress),
             inputTextField(context, keyProjectDesc, "Project Description",
@@ -203,12 +199,14 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   }
 
   void createDataReport(context) async {
+    final listMediaPickerFile =
+        ref.read(createReportListMediaPickerFileProvider);
     showLoadingDialog(context);
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    if (!fieldValidation()) {
+    if (!fieldValidation(listMediaPickerFile)) {
       Navigator.pop(context);
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
@@ -217,7 +215,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     final response =
         await ref.read(projectReportControllerProvider.notifier).createProject(
               projectTitle: projectTitleCtl.text.trim(),
-              projectDateTime: projectCreated!,
+              projectDateTime: ref.read(createReportProjectCreatedProvider)!,
               projectPosition: position!,
               projectDesc: projectDescCtl.text.trim(),
               listMediaFile: listMediaPickerFile,
@@ -227,19 +225,20 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
       Navigator.pop(context);
       showSnackBar(context, Icons.done, Colors.greenAccent, "Report Created",
           Colors.greenAccent);
-      Navigator.pushNamedAndRemoveUntil(context, EmployeeHomeScreen.routeName,
-          (Route<dynamic> route) => false);
-    } else {
+      // Navigator.pushNamedAndRemoveUntil(context, EmployeeHomeScreen.routeName,
+      //     (Route<dynamic> route) => false);
       Navigator.pop(context);
+    } else {
+      // Navigator.pop(context);
       showSnackBar(context, Icons.error_outline, Colors.red,
           "Failed, please try again!", Colors.red);
     }
   }
 
-  bool fieldValidation() {
+  bool fieldValidation(listMediaPickerFile) {
     if (projectTitleCtl.text.trim().isNotEmpty &&
         projectDescCtl.text.trim().isNotEmpty &&
-        projectCreated != null &&
+        ref.read(createReportProjectCreatedProvider) != null &&
         position != null &&
         listMediaPickerFile.isNotEmpty) {
       return true;
@@ -249,33 +248,30 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   }
 
   void getMediaFromGallery() async {
+    final listMediaPickerFile =
+        ref.read(createReportListMediaPickerFileProvider.notifier);
     try {
-      if (listMediaPickerFile.isEmpty) {
-        List<Media>? getMedia = await ImagesPicker.pick(
-          count: 5,
-          pickType: PickType.image,
-          language: Language.English,
-        );
-        setState(() {
-          if (getMedia != null) {
-            listMediaPickerFile.addAll(getMedia);
-            // listMediaPickerFile = getMedia;
-          } else {
-            listMediaPickerFile.clear();
-            // listMediaPickerFile = [];
-          }
-        });
+      List<Media>? getMedia = await ImagesPicker.pick(
+        count: 5,
+        pickType: PickType.image,
+        language: Language.English,
+      );
+      if (listMediaPickerFile.state.isEmpty) {
+        if (getMedia != null) {
+          // listMediaPickerFile.addAll(getMedia);
+          listMediaPickerFile.state = getMedia;
+        } else {
+          // listMediaPickerFile.clear();
+          listMediaPickerFile.state = [];
+        }
       } else {
-        List<Media>? getMedia = await ImagesPicker.pick(
-          count: 5,
-          pickType: PickType.image,
-          language: Language.English,
-        );
-        setState(() {
-          if (getMedia != null) {
-            listMediaPickerFile.addAll(getMedia);
-          } else {}
-        });
+        if (getMedia != null) {
+          // listMediaPickerFile.addAll(getMedia);
+          listMediaPickerFile.state = [
+            ...listMediaPickerFile.state,
+            ...getMedia
+          ];
+        } else {}
       }
     } catch (e) {
       showSnackBar(
@@ -284,35 +280,28 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   }
 
   void getMediaFromCamera() async {
+    final listMediaPickerFile =
+        ref.read(createReportListMediaPickerFileProvider.notifier);
     try {
-      if (listMediaPickerFile.isEmpty) {
-        List<Media>? getMedia = await ImagesPicker.openCamera(
-          pickType: PickType.image,
-          quality: 0.8,
-          maxSize: 800,
-          language: Language.English,
-        );
-        setState(() {
-          if (getMedia != null) {
-            listMediaPickerFile.addAll(getMedia);
-            // listMediaPickerFile = getMedia;
-          } else {
-            listMediaPickerFile.clear();
-            // listMediaPickerFile = [];
-          }
-        });
+      List<Media>? getMedia = await ImagesPicker.openCamera(
+        pickType: PickType.image,
+        quality: 0.8,
+        maxSize: 800,
+        language: Language.English,
+      );
+      if (listMediaPickerFile.state.isEmpty) {
+        if (getMedia != null) {
+          listMediaPickerFile.state = getMedia;
+        } else {
+          listMediaPickerFile.state = [];
+        }
       } else {
-        List<Media>? getMedia = await ImagesPicker.openCamera(
-          pickType: PickType.image,
-          quality: 0.8,
-          maxSize: 800,
-          language: Language.English,
-        );
-        setState(() {
-          if (getMedia != null) {
-            listMediaPickerFile.addAll(getMedia);
-          } else {}
-        });
+        if (getMedia != null) {
+          listMediaPickerFile.state = [
+            ...listMediaPickerFile.state,
+            ...getMedia
+          ];
+        } else {}
       }
     } catch (e) {
       showSnackBar(

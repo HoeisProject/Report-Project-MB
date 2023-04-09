@@ -1,29 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/admin/controllers/admin_project_report_controller.dart';
+import 'package:report_project/admin/controllers/admin_report_media_controller.dart';
+import 'package:report_project/admin/screens/admin_home.dart';
+import 'package:report_project/common/models/project_report_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
+import 'package:report_project/common/widgets/show_loading_dialog.dart';
+import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AdminDetailReportScreen extends StatefulWidget {
+class AdminDetailReportScreen extends ConsumerStatefulWidget {
   static const routeName = '/admin_report_detail_screen';
 
-  final ParseObject reportObject;
+  final ProjectReportModel report;
 
-  const AdminDetailReportScreen({super.key, required this.reportObject});
+  const AdminDetailReportScreen({super.key, required this.report});
 
   @override
-  State<StatefulWidget> createState() => AdminDetailReportScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      AdminDetailReportScreenState();
 }
 
-class AdminDetailReportScreenState extends State<AdminDetailReportScreen> {
-  List<String?> listMediaFilePath = [];
+class AdminDetailReportScreenState
+    extends ConsumerState<AdminDetailReportScreen> {
+  bool isLoadingReject = false;
+  bool isLoadingApprove = false;
 
-  bool? isLoadingReject = false;
-  bool? isLoadingApprove = false;
+  ProjectReportModel get report => widget.report;
 
   @override
   Widget build(BuildContext context) {
+    widget.report;
     return Scaffold(
       appBar: customAppbar("Detail Report"),
       body: _body(),
@@ -31,6 +40,9 @@ class AdminDetailReportScreenState extends State<AdminDetailReportScreen> {
   }
 
   Widget _body() {
+    final reportsMedia = ref.watch(getAdminReportMediaProvider(
+      reportId: report.objectId,
+    ));
     return Container(
       margin: const EdgeInsets.all(10.0),
       child: Card(
@@ -45,13 +57,31 @@ class AdminDetailReportScreenState extends State<AdminDetailReportScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(context, "Project Title", "Project Title"),
+                viewTextField(context, "Project Title", report.projectTitle),
                 viewTextField(context, "Report by", "Report by"),
-                viewTextField(context, "Time and Date", "Time and Date"),
-                viewTextField(context, "Location", "Location"),
+                viewTextField(context, "Time and Date",
+                    report.projectDateTime.toString()),
                 viewTextField(
-                    context, "Project Description", "Project Description"),
-                viewMediaField(context, "Attach Media", listMediaFilePath),
+                    context, "Location", report.projectPosition.toString()),
+                viewTextField(
+                    context, "Project Description", report.projectDesc),
+                reportsMedia.when(
+                  data: (data) {
+                    final listMediaFilePath =
+                        data.map((e) => e.reportAttachment).toList();
+                    return viewMediaField(
+                      context,
+                      "Attach Media",
+                      listMediaFilePath,
+                    );
+                  },
+                  error: (error, stackTrace) {
+                    return Text('${error.toString()} occured');
+                  },
+                  loading: () {
+                    return const CircularProgressIndicator();
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -70,36 +100,48 @@ class AdminDetailReportScreenState extends State<AdminDetailReportScreen> {
   }
 
   void rejectReport() {
-    // showLoadingDialog(context);
-    // AdminService().updateReportStatus(reportObjectId, 2).then((value) {
-    //   if (value.success) {
-    //     Navigator.pop(context);
-    //     showSnackBar(context, Icons.done, Colors.greenAccent,
-    //         "Rejection Success", Colors.greenAccent);
-    //     Navigator.pushNamedAndRemoveUntil(context, AdminHomeScreen.routeName,
-    //         (Route<dynamic> route) => false);
-    //   } else {
-    //     Navigator.pop(context);
-    //     showSnackBar(context, Icons.error_outline, Colors.red,
-    //         "Rejection Failed", Colors.red);
-    //   }
-    // });
+    showLoadingDialog(context);
+    ref
+        .read(adminProjectReportControllerProvider.notifier)
+        .updateReportStatus(
+          objectId: report.objectId,
+          projectStatus: ProjectReportStatusEnum.reject.index,
+        )
+        .then((value) {
+      Navigator.pop(context);
+      if (value) {
+        showSnackBar(context, Icons.done, Colors.greenAccent,
+            "Rejection Success", Colors.greenAccent);
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context, AdminHomeScreen.routeName, (route) => false);
+        Navigator.pop(context);
+      } else {
+        showSnackBar(context, Icons.error_outline, Colors.red,
+            "Rejection Failed", Colors.red);
+      }
+    });
   }
 
   void approveReport() {
-    //   showLoadingDialog(context);
-    //   AdminService().updateReportStatus(reportObjectId, 1).then((value) {
-    //     if (value.success) {
-    //       Navigator.pop(context);
-    //       showSnackBar(context, Icons.done, Colors.greenAccent,
-    //           "Approval Success", Colors.greenAccent);
-    //       Navigator.pushNamedAndRemoveUntil(context, AdminHomeScreen.routeName,
-    //           (Route<dynamic> route) => false);
-    //     } else {
-    //       Navigator.pop(context);
-    //       showSnackBar(context, Icons.error_outline, Colors.red,
-    //           "Approval Failed", Colors.red);
-    //     }
-    //   });
+    showLoadingDialog(context);
+    ref
+        .read(adminProjectReportControllerProvider.notifier)
+        .updateReportStatus(
+          objectId: report.objectId,
+          projectStatus: ProjectReportStatusEnum.approve.index,
+        )
+        .then((value) {
+      Navigator.pop(context);
+      if (value) {
+        showSnackBar(context, Icons.done, Colors.greenAccent,
+            "Approval Success", Colors.greenAccent);
+        // Navigator.pushNamedAndRemoveUntil(context, AdminHomeScreen.routeName,
+        //     (Route<dynamic> route) => false);
+        Navigator.pop(context);
+      } else {
+        showSnackBar(context, Icons.error_outline, Colors.red,
+            "Approval Failed", Colors.red);
+      }
+    });
   }
 }

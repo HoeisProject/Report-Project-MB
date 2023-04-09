@@ -1,28 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/admin/controllers/admin_project_report_controller.dart';
+import 'package:report_project/auth/controllers/profile_controller.dart';
+import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/admin/screens/admin_detail_report.dart';
+import 'package:report_project/common/widgets/error_screen.dart';
+import 'package:report_project/common/widgets/show_drawer.dart';
+import 'package:report_project/employee/screens/employee_home.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AdminHomeScreen extends StatefulWidget {
+class AdminHomeScreen extends ConsumerStatefulWidget {
   static const routeName = '/admin_home_screen';
 
   const AdminHomeScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => AdminHomeScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => AdminHomeScreenState();
 }
 
-class AdminHomeScreenState extends State<AdminHomeScreen> {
+class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   Future<List<ParseObject>>? getReportList;
+
+  late final UserModel admin;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppbar("HOME"),
-      body: _body(),
-      // drawer: showDrawer(context),
+    debugPrint("Admin Home Screen");
+    debugPrint(ProjectReportStatusEnum.approve.index.toString());
+    ref.listen(profileControllerProvider, (previous, next) {
+      debugPrint('Admin Home Screen - ref listen profileControllerProvider');
+      if (!next.hasValue || next.value == null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, LoginRegisterScreen.routeName, (route) => false);
+        return;
+      }
+      if (next.value!.role != 'admin') {
+        Navigator.pushNamedAndRemoveUntil(
+            context, EmployeeHomeScreen.routeName, (route) => false);
+      }
+    });
+
+    final admin = ref.watch(profileControllerProvider);
+    debugPrint("build scaffold");
+
+    return admin.when(
+      data: (data) {
+        if (data == null) return Container();
+        return Scaffold(
+          appBar: customAppbar("HOME"),
+          body: _body(),
+          drawer: showDrawer(context, ref, data),
+        );
+      },
+      error: (error, stackTrace) {
+        return const ErrorScreen(text: 'Admin Home Screen - Call Developer');
+      },
+      loading: () {
+        return const CircularProgressIndicator();
+      },
     );
   }
 
@@ -43,6 +83,8 @@ class AdminHomeScreenState extends State<AdminHomeScreen> {
   }
 
   Widget _listProjectView() {
+    final projectReports = ref.watch(adminProjectReportControllerProvider);
+
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
       child: Card(
@@ -51,33 +93,28 @@ class AdminHomeScreenState extends State<AdminHomeScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
         elevation: 5.0,
-        child: FutureBuilder<List<ParseObject>>(
-          initialData: const [],
-          future: getReportList,
-          builder: (ctx, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    '${snapshot.error} occurred',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                );
-              } else if (snapshot.hasData) {
-                if (snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text('NO DATA', style: TextStyle(fontSize: 36.0)),
-                  );
-                }
-                final data = snapshot.data;
-                return ListView.builder(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    itemCount: snapshot.hasData ? snapshot.data!.length : 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _projectViewItem(data![index]);
-                    });
-              }
+        child: projectReports.when(
+          data: (data) {
+            if (data.isEmpty) {
+              return const Center(
+                  child: Text('NO DATA', style: TextStyle(fontSize: 36.0)));
             }
+            return ListView.builder(
+              padding: const EdgeInsets.only(top: 10.0),
+              itemCount: data.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _projectViewItem(data[index]);
+              },
+            );
+          },
+          error: (error, stackTrace) {
+            return Center(
+                child: Text(
+              '${error.toString()} occurred',
+              style: const TextStyle(fontSize: 18),
+            ));
+          },
+          loading: () {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -87,7 +124,7 @@ class AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ParseObject data) {
+  Widget _projectViewItem(ProjectReportModel report) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -101,9 +138,7 @@ class AdminHomeScreenState extends State<AdminHomeScreen> {
           child: InkWell(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return AdminDetailReportScreen(
-                  reportObject: data,
-                );
+                return AdminDetailReportScreen(report: report);
               }));
             },
             child: Padding(
@@ -115,23 +150,23 @@ class AdminHomeScreenState extends State<AdminHomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            "Project Title",
+                            report.projectTitle,
                             style: kTitleReportItem,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(0)
+                        reportStatus(report.projectStatus)
                       ],
                     ),
                   ),
-                  reportItemContent("username", false),
+                  reportItemContent(report.uploadBy.username, false),
                   reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
                   reportItemContent("Project Location", false),
-                  reportItemContent("Project Description", true),
+                  reportItemContent(report.projectDesc, true),
                 ],
               ),
             ),
@@ -158,8 +193,8 @@ class AdminHomeScreenState extends State<AdminHomeScreen> {
   }
 
   Widget reportStatus(int status) {
-    IconData? statusIcon;
-    Color? iconColor;
+    IconData statusIcon;
+    Color iconColor;
     switch (status) {
       case 0:
         statusIcon = Icons.timelapse;
@@ -179,10 +214,11 @@ class AdminHomeScreenState extends State<AdminHomeScreen> {
         break;
     }
     return Center(
-        child: Icon(
-      statusIcon,
-      size: 20.0,
-      color: iconColor,
-    ));
+      child: Icon(
+        statusIcon,
+        size: 20.0,
+        color: iconColor,
+      ),
+    );
   }
 }
