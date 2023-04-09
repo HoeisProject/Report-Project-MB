@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/models/project_report_model.dart';
-import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
@@ -22,8 +21,6 @@ class EmployeeHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeEmployeeState extends ConsumerState<EmployeeHomeScreen> {
-  late final UserModel employee;
-
   @override
   void initState() {
     super.initState();

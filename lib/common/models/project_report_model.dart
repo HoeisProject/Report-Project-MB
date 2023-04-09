@@ -22,6 +22,11 @@ enum ProjectReportEnum {
   uploadBy
 }
 
+// class ReportModel {
+//   final String objectId;
+//   final String title;
+// }
+
 @immutable
 class ProjectReportModel {
   final String objectId;

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/admin/controllers/admin_project_report_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/models/project_report_model.dart';
-import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/admin/screens/admin_detail_report.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
@@ -24,14 +22,9 @@ class AdminHomeScreen extends ConsumerStatefulWidget {
 }
 
 class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
-  Future<List<ParseObject>>? getReportList;
-
-  late final UserModel admin;
-
   @override
   Widget build(BuildContext context) {
     debugPrint("Admin Home Screen");
-    debugPrint(ProjectReportStatusEnum.approve.index.toString());
     ref.listen(profileControllerProvider, (previous, next) {
       debugPrint('Admin Home Screen - ref listen profileControllerProvider');
       if (!next.hasValue || next.value == null) {
