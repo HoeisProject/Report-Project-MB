@@ -15,7 +15,7 @@ import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
-import 'package:report_project/employee/controllers/project_report_controller.dart';
+import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 import 'package:report_project/employee/view_model/create_report_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
@@ -213,11 +213,11 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
       return;
     }
     final response =
-        await ref.read(projectReportControllerProvider.notifier).createProject(
-              projectTitle: projectTitleCtl.text.trim(),
-              projectDateTime: ref.read(createReportProjectCreatedProvider)!,
-              projectPosition: position!,
-              projectDesc: projectDescCtl.text.trim(),
+        await ref.read(reportControllerProvider.notifier).createProject(
+              title: projectTitleCtl.text.trim(),
+              dateTime: ref.read(createReportProjectCreatedProvider)!,
+              position: position!,
+              desc: projectDescCtl.text.trim(),
               listMediaFile: listMediaPickerFile,
             );
     if (response) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:report_project/admin/controllers/admin_project_report_controller.dart';
+import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/admin/screens/admin_detail_report.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
@@ -76,7 +76,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   }
 
   Widget _listProjectView() {
-    final projectReports = ref.watch(adminProjectReportControllerProvider);
+    final projectReports = ref.watch(adminReportControllerProvider);
 
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
@@ -117,7 +117,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ProjectReportModel report) {
+  Widget _projectViewItem(ReportModel report) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -145,13 +145,13 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            report.projectTitle,
+                            report.title,
                             style: kTitleReportItem,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(report.projectStatus)
+                        reportStatus(report.status)
                       ],
                     ),
                   ),
@@ -159,7 +159,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                   reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
                   reportItemContent("Project Location", false),
-                  reportItemContent(report.projectDesc, true),
+                  reportItemContent(report.desc, true),
                 ],
               ),
             ),

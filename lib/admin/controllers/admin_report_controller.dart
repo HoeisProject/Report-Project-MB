@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/admin/services/admin_report_service.dart';
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'admin_project_report_controller.g.dart';
+part 'admin_report_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-class AdminProjectReportController extends _$AdminProjectReportController {
-  late final AdminReportService _adminProjectReportService;
+class AdminReportController extends _$AdminReportController {
+  late final AdminReportService _adminReportService;
 
-  FutureOr<List<ProjectReportModel>> _getProjectReport() async {
-    final res = await _adminProjectReportService.getReport();
-    return res.map((e) => ProjectReportModel.fromParseObject(e)).toList();
+  FutureOr<List<ReportModel>> _getProjectReport() async {
+    final res = await _adminReportService.getReport();
+    return res.map((e) => ReportModel.fromParseObject(e)).toList();
   }
 
   @override
-  FutureOr<List<ProjectReportModel>> build() {
-    _adminProjectReportService = ref.watch(adminReportServiceProvider);
+  FutureOr<List<ReportModel>> build() {
+    _adminReportService = ref.watch(adminReportServiceProvider);
     return _getProjectReport();
   }
 
@@ -25,7 +25,7 @@ class AdminProjectReportController extends _$AdminProjectReportController {
     required int projectStatus,
   }) async {
     state = const AsyncValue.loading();
-    final res = await _adminProjectReportService.updateReportStatus(
+    final res = await _adminReportService.updateReportStatus(
       objectId,
       projectStatus,
     );
@@ -34,7 +34,7 @@ class AdminProjectReportController extends _$AdminProjectReportController {
     }
     final projectReportList = state.value!.map((e) {
       if (e.objectId != objectId) return e;
-      return e.copyWith(projectStatus: projectStatus);
+      return e.copyWith(status: projectStatus);
     }).toList();
     state = AsyncValue.data(projectReportList);
     for (int i = 0; i < projectReportList.length; i++) {

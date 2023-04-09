@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/report_media_model.dart';
 
 final reportServiceProvider = Provider((ref) {
@@ -14,25 +14,25 @@ final reportServiceProvider = Provider((ref) {
 
 class ReportService {
   Future<ParseResponse> create(
-    String projectTitle,
-    DateTime projectDateTime,
-    Position projectPosition,
-    String projectDesc,
+    String title,
+    DateTime dateTime,
+    Position position,
+    String desc,
     ParseUser currentUser,
     List<Media> listMediaFile,
   ) async {
     final newReport = ParseObject('ProjectReport')
-      ..set(ProjectReportEnum.projectTitle.name, projectTitle)
-      ..set(ProjectReportEnum.projectDateTime.name, projectDateTime)
+      ..set(ReportEnum.projectTitle.name, title)
+      ..set(ReportEnum.projectDateTime.name, dateTime)
       ..set(
-          ProjectReportEnum.projectPosition.name,
+          ReportEnum.projectPosition.name,
           ParseGeoPoint(
-            latitude: projectPosition.latitude,
-            longitude: projectPosition.longitude,
+            latitude: position.latitude,
+            longitude: position.longitude,
           ))
-      ..set(ProjectReportEnum.projectDesc.name, projectDesc)
-      ..set(ProjectReportEnum.uploadBy.name, currentUser)
-      ..set(ProjectReportEnum.projectStatus.name, 0);
+      ..set(ReportEnum.projectDesc.name, desc)
+      ..set(ReportEnum.uploadBy.name, currentUser)
+      ..set(ReportEnum.projectStatus.name, 0);
 
     final projectReport = await newReport.save();
     int i = 0;
@@ -58,7 +58,7 @@ class ReportService {
   Future<List<ParseObject>> getReport(ParseUser currentUser) async {
     ParseObject? getPostObject = ParseObject('ProjectReport');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..whereEqualTo(ProjectReportEnum.uploadBy.name, currentUser);
+      ..whereEqualTo(ReportEnum.uploadBy.name, currentUser);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {
@@ -89,8 +89,8 @@ class ReportService {
   ) async {
     ParseObject updateReport = ParseObject("ProjectReport")
       ..objectId = objectId
-      ..set(ProjectReportEnum.projectTitle.name, projectTitle)
-      ..set(ProjectReportEnum.projectDesc.name, projectDesc);
+      ..set(ReportEnum.projectTitle.name, projectTitle)
+      ..set(ReportEnum.projectDesc.name, projectDesc);
 
     return updateReport.save();
   }

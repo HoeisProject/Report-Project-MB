@@ -1,41 +1,41 @@
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/employee/services/report_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'project_report_controller.g.dart';
+part 'report_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-class ProjectReportController extends _$ProjectReportController {
+class ReportController extends _$ReportController {
   late final ReportService _reportService;
   late final ProfileService _profileService;
 
-  FutureOr<List<ProjectReportModel>> _getProjectReport() async {
+  FutureOr<List<ReportModel>> _getReport() async {
     debugPrint('ProjectReportController - _getProjectReport');
     final parseUser = await _profileService.currentUser();
     if (parseUser == null) return [];
     final res = await _reportService.getReport(parseUser);
     final projectReports =
-        res.map((e) => ProjectReportModel.fromParseObject(e)).toList();
+        res.map((e) => ReportModel.fromParseObject(e)).toList();
     return projectReports;
   }
 
   @override
-  FutureOr<List<ProjectReportModel>> build() {
+  FutureOr<List<ReportModel>> build() {
     debugPrint('ProjectReportController - build');
     _reportService = ref.watch(reportServiceProvider);
     _profileService = ref.watch(profileServiceProvider);
-    return _getProjectReport();
+    return _getReport();
   }
 
   Future<bool> createProject({
-    required String projectTitle,
-    required DateTime projectDateTime,
-    required Position projectPosition,
-    required String projectDesc,
+    required String title,
+    required DateTime dateTime,
+    required Position position,
+    required String desc,
     required List<Media> listMediaFile,
   }) async {
     debugPrint('ProjectReportController - createProject');
@@ -43,17 +43,17 @@ class ProjectReportController extends _$ProjectReportController {
     final parseUser = await _profileService.currentUser();
     if (parseUser == null) return false;
     final res = await _reportService.create(
-      projectTitle,
-      projectDateTime,
-      projectPosition,
-      projectDesc,
+      title,
+      dateTime,
+      position,
+      desc,
       parseUser,
       listMediaFile,
     );
     if (!res.success || res.results == null) {
       return false;
     }
-    final projectReport = ProjectReportModel.fromParseObject(res.results![0]);
+    final projectReport = ReportModel.fromParseObject(res.results![0]);
     state = AsyncValue.data([...state.value!, projectReport]);
     return true;
   }

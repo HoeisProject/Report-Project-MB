@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'project_report_controller.dart';
+part of 'admin_report_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$projectReportControllerHash() =>
-    r'2cfded88155dd34d8a586c9b1ee28bf9f33c3cf6';
+String _$adminReportControllerHash() =>
+    r'9c47d04cac8496540b400382032f560d118f95e4';
 
-/// See also [ProjectReportController].
-@ProviderFor(ProjectReportController)
-final projectReportControllerProvider = AsyncNotifierProvider<
-    ProjectReportController, List<ProjectReportModel>>.internal(
-  ProjectReportController.new,
-  name: r'projectReportControllerProvider',
+/// See also [AdminReportController].
+@ProviderFor(AdminReportController)
+final adminReportControllerProvider =
+    AsyncNotifierProvider<AdminReportController, List<ReportModel>>.internal(
+  AdminReportController.new,
+  name: r'adminReportControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$projectReportControllerHash,
+      : _$adminReportControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ProjectReportController = AsyncNotifier<List<ProjectReportModel>>;
+typedef _$AdminReportController = AsyncNotifier<List<ReportModel>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

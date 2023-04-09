@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/controllers/report_media_controller.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class DetailReportScreen extends ConsumerWidget {
   static const routeName = '/report_detail_screen';
 
-  final ProjectReportModel projectReport;
+  final ReportModel projectReport;
 
   const DetailReportScreen({
     super.key,
@@ -42,14 +42,13 @@ class DetailReportScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(
-                    context, "Project Title", projectReport.projectTitle),
+                viewTextField(context, "Project Title", projectReport.title),
                 viewTextField(context, "Time and Date",
-                    projectReport.projectDateTime.toString()),
-                viewTextField(context, "Location",
-                    projectReport.projectPosition.toString()),
+                    projectReport.dateTime.toString()),
                 viewTextField(
-                    context, "Project Description", projectReport.projectDesc),
+                    context, "Location", projectReport.position.toString()),
+                viewTextField(
+                    context, "Project Description", projectReport.desc),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =

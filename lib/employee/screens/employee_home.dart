@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
-import 'package:report_project/employee/controllers/project_report_controller.dart';
+import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
@@ -17,10 +17,10 @@ class EmployeeHomeScreen extends ConsumerStatefulWidget {
   const EmployeeHomeScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomeEmployeeState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _EmployeeHomeState();
 }
 
-class _HomeEmployeeState extends ConsumerState<EmployeeHomeScreen> {
+class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   @override
   void initState() {
     super.initState();
@@ -125,7 +125,7 @@ class _HomeEmployeeState extends ConsumerState<EmployeeHomeScreen> {
   }
 
   Widget _listProjectView() {
-    final projectReports = ref.watch(projectReportControllerProvider);
+    final projectReports = ref.watch(reportControllerProvider);
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
       child: Card(
@@ -161,7 +161,7 @@ class _HomeEmployeeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ProjectReportModel data) {
+  Widget _projectViewItem(ReportModel data) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -191,19 +191,19 @@ class _HomeEmployeeState extends ConsumerState<EmployeeHomeScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            data.projectTitle,
+                            data.title,
                             style: kTitleReportItem,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(data.projectStatus)
+                        reportStatus(data.status)
                       ],
                     ),
                   ),
-                  reportItemContent(data.projectDateTime.toString(), false),
-                  reportItemContent(data.projectPosition.toString(), false),
-                  reportItemContent(data.projectDesc, true),
+                  reportItemContent(data.dateTime.toString(), false),
+                  reportItemContent(data.position.toString(), false),
+                  reportItemContent(data.desc, true),
                 ],
               ),
             ),

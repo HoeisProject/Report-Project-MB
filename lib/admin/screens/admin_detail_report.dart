@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:report_project/admin/controllers/admin_project_report_controller.dart';
+import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/admin/controllers/admin_report_media_controller.dart';
-import 'package:report_project/admin/screens/admin_home.dart';
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
@@ -14,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class AdminDetailReportScreen extends ConsumerStatefulWidget {
   static const routeName = '/admin_report_detail_screen';
 
-  final ProjectReportModel report;
+  final ReportModel report;
 
   const AdminDetailReportScreen({super.key, required this.report});
 
@@ -28,7 +27,7 @@ class AdminDetailReportScreenState
   bool isLoadingReject = false;
   bool isLoadingApprove = false;
 
-  ProjectReportModel get report => widget.report;
+  ReportModel get report => widget.report;
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +56,12 @@ class AdminDetailReportScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(context, "Project Title", report.projectTitle),
+                viewTextField(context, "Project Title", report.title),
                 viewTextField(context, "Report by", "Report by"),
-                viewTextField(context, "Time and Date",
-                    report.projectDateTime.toString()),
                 viewTextField(
-                    context, "Location", report.projectPosition.toString()),
-                viewTextField(
-                    context, "Project Description", report.projectDesc),
+                    context, "Time and Date", report.dateTime.toString()),
+                viewTextField(context, "Location", report.position.toString()),
+                viewTextField(context, "Project Description", report.desc),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =
@@ -102,7 +99,7 @@ class AdminDetailReportScreenState
   void rejectReport() {
     showLoadingDialog(context);
     ref
-        .read(adminProjectReportControllerProvider.notifier)
+        .read(adminReportControllerProvider.notifier)
         .updateReportStatus(
           objectId: report.objectId,
           projectStatus: ProjectReportStatusEnum.reject.index,
@@ -125,7 +122,7 @@ class AdminDetailReportScreenState
   void approveReport() {
     showLoadingDialog(context);
     ref
-        .read(adminProjectReportControllerProvider.notifier)
+        .read(adminReportControllerProvider.notifier)
         .updateReportStatus(
           objectId: report.objectId,
           projectStatus: ProjectReportStatusEnum.approve.index,

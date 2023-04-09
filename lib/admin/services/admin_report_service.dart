@@ -1,4 +1,4 @@
-import 'package:report_project/common/models/project_report_model.dart';
+import 'package:report_project/common/models/report_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
@@ -39,7 +39,7 @@ class AdminReportService {
   ) async {
     ParseObject updateReport = ParseObject("ProjectReport")
       ..objectId = objectId
-      ..set(ProjectReportEnum.projectStatus.name, projectStatus);
+      ..set(ReportEnum.projectStatus.name, projectStatus);
 
     return updateReport.save();
   }
