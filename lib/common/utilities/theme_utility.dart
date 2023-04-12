@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,9 +17,11 @@ Future<ThemeUtility> themeUtility(ThemeUtilityRef ref) async {
 
 class ThemeUtility {
   final SharedPreferences preferences;
+
   ThemeUtility({
     required this.preferences,
   });
+
   static const String keySelectedTheme = 'keySelectedTheme';
 
   Future<bool> saveTheme(AppTheme selectedTheme) async {
@@ -28,8 +31,9 @@ class ThemeUtility {
 
   AppTheme? getTheme() {
     String? theme = preferences.getString(keySelectedTheme);
+    debugPrint('getTheme');
     if (null == theme) {
-      return AppTheme.darkTheme;
+      return AppTheme.lightTheme;
     }
     return getThemeFromString(jsonDecode(theme));
   }

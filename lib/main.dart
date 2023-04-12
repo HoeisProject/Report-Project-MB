@@ -10,7 +10,6 @@ import 'package:report_project/router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Back4appConfig.initialize();
-  // await Utility.initPref();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ProviderScope(child: MyApp()));
 }

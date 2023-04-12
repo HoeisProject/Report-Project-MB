@@ -7,6 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/common/controller/theme_controller.dart';
+import 'package:report_project/common/utilities/theme_utility.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 
@@ -23,10 +25,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    requestPermission(context);
+    _loadTheme();
+    _requestPermission(context);
   }
 
-  void requestPermission(context) async {
+  void _loadTheme() {
+    final themeUtility = ref.read(themeUtilityProvider);
+    debugPrint('theme in');
+    // ref.read(switchThemeProvider.notifier).state =
+    //     themeUtility.value!.getTheme()!;
+    themeUtility.when(
+        data: (data) {
+          debugPrint('theme : $data');
+          ref.read(switchThemeProvider.notifier).state = data.getTheme()!;
+        },
+        error: (error, trace) => debugPrint('Error : $error'),
+        loading: () {});
+  }
+
+  void _requestPermission(context) async {
     if (Platform.isAndroid) {
       if (await Permission.location.isPermanentlyDenied) {
         Permission.location.request();
@@ -46,20 +63,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         Permission.camera,
         Permission.microphone,
       ].request();
-
-      // Timer(const Duration(seconds: 2), () async {
-      //   final currentUser =
-      //       await ref.read(authControllerProvider.notifier).checkCurrentUser();
-      //   if (currentUser == null) {
-      //     Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
-      //     return;
-      //   }
-      //   if (currentUser.role == 'admin') {
-      //     Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-      //     return;
-      //   }
-      //   Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
-      // });
     }
     // else if (Platform.isIOS) {
     //   Map<Permission, PermissionStatus> reqPermission = await [
