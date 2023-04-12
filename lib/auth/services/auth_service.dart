@@ -19,15 +19,18 @@ class AuthService {
     String email,
     String nik,
     String role,
+    String phoneNumber,
   ) async {
     ParseFile parseUserImage = ParseFile(File(imagePath));
 
     await parseUserImage.save();
 
-    final newUser = ParseUser.createUser(username, password, email)
+    final newUser = ParseUser.createUser(email, password, email)
+      ..set(UserModelEnum.nickname.name, username)
       ..set(UserModelEnum.userImage.name, parseUserImage)
       ..set(UserModelEnum.nik.name, nik)
-      ..set(UserModelEnum.role.name, role);
+      ..set(UserModelEnum.role.name, role)
+      ..set(UserModelEnum.phoneNumber.name, phoneNumber);
 
     return newUser.signUp();
   }

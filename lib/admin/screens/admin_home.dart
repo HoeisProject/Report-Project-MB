@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
+import 'package:report_project/admin/widgets/admin_home_filter.dart';
+import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/models/report_model.dart';
@@ -22,6 +24,8 @@ class AdminHomeScreen extends ConsumerStatefulWidget {
 }
 
 class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
+  final _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Admin Home Screen");
@@ -67,11 +71,69 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              _menuBar(),
               _listProjectView(),
+              _searchAndFilter(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _menuBar() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20.0, bottom: 15.0),
+      width: MediaQuery.of(context).size.width,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _menuBarItem(Icons.assignment, "Employee", () {}),
+            _menuBarItem(Icons.question_mark, "Project", () {}),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _menuBarItem(IconData icon, String label, void Function()? onPressed) {
+    return SizedBox(
+      height: 85.0,
+      width: 85.0,
+      child: Card(
+        elevation: 5.0,
+        child: Material(
+          child: InkWell(
+            onTap: onPressed,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Icon(
+                  icon,
+                  size: 35.0,
+                ),
+                Text(label),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _searchAndFilter() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: adminHomeSearchBar(context, ref, _searchController),
+        ),
+        Expanded(
+          child: adminHomeFilterMenu(context, ref),
+        ),
+      ],
     );
   }
 

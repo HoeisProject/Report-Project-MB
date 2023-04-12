@@ -9,7 +9,10 @@ import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
+import 'package:report_project/employee/view_model/employee_home_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
+import 'package:report_project/employee/widgets/employee_home_filter.dart';
+import 'package:report_project/employee/widgets/employee_home_search_bar.dart';
 
 class EmployeeHomeScreen extends ConsumerStatefulWidget {
   static const routeName = '/home_employee_screen';
@@ -21,9 +24,12 @@ class EmployeeHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
+  final _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    ref.read(reportControllerProvider);
     // employee = ref.read(profileControllerProvider.future);
     // final a = ref.read(profileControllerProvider).asData!.value;
     // ref.read(projectReportControllerProvider.notifier).getProjectReports();
@@ -72,6 +78,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _menuBar(),
+              _searchAndFilter(),
               _listProjectView(),
             ],
           ),
@@ -92,7 +99,6 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
             _menuBarItem(Icons.assignment, "Report", () {
               Navigator.pushNamed(context, CreateReportScreen.routeName);
             }),
-            _menuBarItem(Icons.question_mark, "???", () {}),
           ],
         ),
       ),
@@ -124,8 +130,22 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
+  Widget _searchAndFilter() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: employeeHomeSearchBar(context, ref, _searchController),
+        ),
+        Expanded(
+          child: employeeHomeFilterMenu(context, ref),
+        ),
+      ],
+    );
+  }
+
   Widget _listProjectView() {
-    final projectReports = ref.watch(reportControllerProvider);
+    final projectReports = ref.watch(employeeHomeFutureFilteredList);
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
       child: Card(

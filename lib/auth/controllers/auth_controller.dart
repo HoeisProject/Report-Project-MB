@@ -33,10 +33,11 @@ class AuthController {
     required String email,
     required String nik,
     required String role,
+    required String phoneNumber,
   }) async {
     debugPrint('AuthController - registerUser');
     final res = await authService.register(
-        imagePath, username, password, email, nik, role);
+        imagePath, username, password, email, nik, role, phoneNumber);
 
     if (!res.success) return false;
     return true;

@@ -5,7 +5,6 @@ import 'package:images_picker/images_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/login_register_view_model.dart';
-import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
@@ -15,7 +14,6 @@ import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/title_context.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/auth/controllers/auth_controller.dart';
-import 'package:report_project/auth/widgets/role_switch.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 
 class LoginRegisterScreen extends ConsumerStatefulWidget {
@@ -30,20 +28,20 @@ class LoginRegisterScreen extends ConsumerStatefulWidget {
 
 class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final keyUsernameField = GlobalKey<FormState>();
-  final keyNikField = GlobalKey<FormState>();
+
+  // final keyNikField = GlobalKey<FormState>();
   final keyEmailField = GlobalKey<FormState>();
   final keyPasswordField = GlobalKey<FormState>();
+  final keyPhoneNumberField = GlobalKey<FormState>();
 
   final usernameCtl = TextEditingController();
-  final nikCtl = TextEditingController();
+
+  // final nikCtl = TextEditingController();
   final emailCtl = TextEditingController();
   final passwordCtl = TextEditingController();
+  final phoneNumberCtl = TextEditingController();
 
   void userLogin(context) async {
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
     ref.read(loginRegisterLoadingProvider.notifier).state = true;
     if (!fieldValidation()) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
@@ -52,7 +50,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       return;
     }
     final isLoginSuccess = await ref.read(authControllerProvider).loginUser(
-          username: usernameCtl.text.trim(),
+          username: emailCtl.text.trim(),
           password: passwordCtl.text.trim(),
         );
     if (!isLoginSuccess) {
@@ -64,10 +62,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   }
 
   void userRegister(context) async {
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
     ref.read(loginRegisterLoadingProvider.notifier).state = true;
     if (!fieldValidation()) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
@@ -81,8 +75,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               username: usernameCtl.text.trim(),
               password: passwordCtl.text.trim(),
               email: emailCtl.text.trim(),
-              nik: nikCtl.text.trim(),
+              nik: "-",
               role: ref.read(loginRegisterRoleProvider),
+              phoneNumber: phoneNumberCtl.text.trim(),
             );
     if (!isRegisterSuccess) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
@@ -102,8 +97,12 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   }
 
   bool fieldValidation() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
     if (ref.read(loginRegisterIsLoginProvider)) {
-      if (usernameCtl.text.trim().isNotEmpty &&
+      if (emailCtl.text.trim().isNotEmpty &&
           passwordCtl.text.trim().isNotEmpty) {
         return true;
       } else {
@@ -111,9 +110,10 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     } else {
       if (usernameCtl.text.trim().isNotEmpty &&
-          nikCtl.text.trim().isNotEmpty &&
+          // nikCtl.text.trim().isNotEmpty &&
           emailCtl.text.trim().isNotEmpty &&
           passwordCtl.text.trim().isNotEmpty &&
+          phoneNumberCtl.text.trim().isNotEmpty &&
           ref.read(loginRegisterMediaFileProvider) != null) {
         return true;
       } else {
@@ -151,7 +151,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       ref.read(loginRegisterRegisterColorProvider.notifier).state =
           Colors.lightBlue;
       ref.read(loginRegisterIsLoginProvider.notifier).state = true;
-      usernameCtl.clear();
+      emailCtl.clear();
       passwordCtl.clear();
     }
   }
@@ -169,9 +169,10 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           Colors.black;
       ref.read(loginRegisterIsLoginProvider.notifier).state = false;
       usernameCtl.clear();
-      nikCtl.clear();
+      // nikCtl.clear();
       emailCtl.clear();
       passwordCtl.clear();
+      phoneNumberCtl.clear();
     }
   }
 
@@ -247,7 +248,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             sizedSpacer(height: 10.0),
             titleContext("LOGIN"),
             sizedSpacer(height: 5.0),
-            inputTextField(context, keyUsernameField, "Username", usernameCtl,
+            inputTextField(context, keyEmailField, "Email", emailCtl,
                 TextInputType.text, false, false, 1, (value) {}),
             sizedSpacer(height: 5.0),
             inputTextField(context, keyPasswordField, "Password", passwordCtl,
@@ -296,24 +297,35 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             inputTextField(context, keyUsernameField, "Username", usernameCtl,
                 TextInputType.text, false, false, 1, (value) {}),
             sizedSpacer(height: 5.0),
-            inputTextField(context, keyNikField, "Nik", nikCtl,
-                TextInputType.text, false, false, 1, (value) {}),
-            sizedSpacer(height: 5.0),
-            roleSwitch(
+            inputTextField(
                 context,
-                "Set as admin",
-                ref.watch(
-                  loginRegisterIsAdminProvider,
-                ), (value) {
-              ref.read(loginRegisterIsAdminProvider.notifier).state = value;
-              if (value) {
-                ref.read(loginRegisterRoleProvider.notifier).state =
-                    UserRoleEnum.admin.name;
-              } else {
-                ref.read(loginRegisterRoleProvider.notifier).state =
-                    UserRoleEnum.employee.name;
-              }
-            }),
+                keyPhoneNumberField,
+                "Phone Number",
+                phoneNumberCtl,
+                TextInputType.phone,
+                false,
+                false,
+                1,
+                (value) {}),
+            // sizedSpacer(height: 5.0),
+            // inputTextField(context, keyNikField, "Nik", nikCtl,
+            //     TextInputType.text, false, false, 1, (value) {}),
+            // sizedSpacer(height: 5.0),
+            // roleSwitch(
+            //     context,
+            //     "Set as admin",
+            //     ref.watch(
+            //       loginRegisterIsAdminProvider,
+            //     ), (value) {
+            //   ref.read(loginRegisterIsAdminProvider.notifier).state = value;
+            //   if (value) {
+            //     ref.read(loginRegisterRoleProvider.notifier).state =
+            //         UserRoleEnum.admin.name;
+            //   } else {
+            //     ref.read(loginRegisterRoleProvider.notifier).state =
+            //         UserRoleEnum.employee.name;
+            //   }
+            // }),
             sizedSpacer(height: 5.0),
             inputTextField(context, keyEmailField, "Email", emailCtl,
                 TextInputType.emailAddress, false, false, 1, (value) {}),
