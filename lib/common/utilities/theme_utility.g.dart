@@ -6,11 +6,11 @@ part of 'theme_utility.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$themeUtilityHash() => r'3269854e6ec6d84b547b8d24885c23cbd3e0da5b';
+String _$themeUtilityHash() => r'a6d4ce780642b839bbae1c618819f7f80536efe2';
 
 /// See also [themeUtility].
 @ProviderFor(themeUtility)
-final themeUtilityProvider = AutoDisposeFutureProvider<ThemeUtility>.internal(
+final themeUtilityProvider = FutureProvider<ThemeUtility>.internal(
   themeUtility,
   name: r'themeUtilityProvider',
   debugGetCreateSourceHash:
@@ -19,5 +19,5 @@ final themeUtilityProvider = AutoDisposeFutureProvider<ThemeUtility>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef ThemeUtilityRef = AutoDisposeFutureProviderRef<ThemeUtility>;
+typedef ThemeUtilityRef = FutureProviderRef<ThemeUtility>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

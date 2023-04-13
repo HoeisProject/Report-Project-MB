@@ -26,7 +26,7 @@ class DetailReportScreen extends ConsumerWidget {
 
   Widget _body(context, WidgetRef ref) {
     final reportsMedia = ref.watch(getReportMediaProvider(
-      reportId: projectReport.objectId,
+      reportId: projectReport.id,
     ));
     return Container(
       margin: const EdgeInsets.all(10.0),
@@ -44,11 +44,11 @@ class DetailReportScreen extends ConsumerWidget {
               children: [
                 viewTextField(context, "Project Title", projectReport.title),
                 viewTextField(context, "Time and Date",
-                    projectReport.dateTime.toString()),
+                    projectReport.updatedAt.toString()),
                 viewTextField(
                     context, "Location", projectReport.position.toString()),
                 viewTextField(
-                    context, "Project Description", projectReport.desc),
+                    context, "Project Description", projectReport.description),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =

@@ -33,7 +33,6 @@ class ReportController extends _$ReportController {
 
   Future<bool> createProject({
     required String title,
-    required DateTime dateTime,
     required Position position,
     required String desc,
     required List<Media> listMediaFile,
@@ -44,7 +43,6 @@ class ReportController extends _$ReportController {
     if (parseUser == null) return false;
     final res = await _reportService.create(
       title,
-      dateTime,
       position,
       desc,
       parseUser,

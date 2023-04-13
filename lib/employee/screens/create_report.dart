@@ -215,7 +215,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     final response =
         await ref.read(reportControllerProvider.notifier).createProject(
               title: projectTitleCtl.text.trim(),
-              dateTime: ref.read(createReportProjectCreatedProvider)!,
+              // dateTime: ref.read(createReportProjectCreatedProvider)!,
               position: position!,
               desc: projectDescCtl.text.trim(),
               listMediaFile: listMediaPickerFile,

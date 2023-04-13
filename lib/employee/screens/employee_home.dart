@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
@@ -146,6 +147,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
 
   Widget _listProjectView() {
     final projectReports = ref.watch(employeeHomeFutureFilteredList);
+    final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
       child: Card(
@@ -160,7 +162,10 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                 padding: const EdgeInsets.only(top: 10.0),
                 itemCount: data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return _projectViewItem(data[index]);
+                  return _projectViewItem(
+                    data[index],
+                    reportStatus.findIndexById(data[index].id),
+                  );
                 });
           },
           error: (error, stackTrace) {
@@ -181,7 +186,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ReportModel data) {
+  Widget _projectViewItem(ReportModel data, int status) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -217,13 +222,13 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(data.status)
+                        reportStatus(status)
                       ],
                     ),
                   ),
-                  reportItemContent(data.dateTime.toString(), false),
+                  reportItemContent(data.updatedAt.toString(), false),
                   reportItemContent(data.position.toString(), false),
-                  reportItemContent(data.desc, true),
+                  reportItemContent(data.description, true),
                 ],
               ),
             ),

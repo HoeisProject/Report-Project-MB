@@ -7,7 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/controller/theme_controller.dart';
+import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/utilities/theme_utility.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
@@ -84,10 +86,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
         return;
       }
+      final roleController = ref.read(roleControllerProvider.notifier);
+      final currentRole = roleController.findById(next.value!.roleId);
       Timer(const Duration(seconds: 2), () {
-        if (next.value!.role == 'admin') {
+        if (currentRole.name == RoleModelEnum.admin.name) {
           Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-        } else if (next.value!.role == 'employee') {
+        } else if (currentRole.name == RoleModelEnum.employee.name) {
           Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
         }
       });

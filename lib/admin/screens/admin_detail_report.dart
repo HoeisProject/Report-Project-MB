@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/admin/controllers/admin_report_media_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
+import 'package:report_project/common/models/report_status_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
@@ -40,7 +41,7 @@ class AdminDetailReportScreenState
 
   Widget _body() {
     final reportsMedia = ref.watch(getAdminReportMediaProvider(
-      reportId: report.objectId,
+      reportId: report.id,
     ));
     return Container(
       margin: const EdgeInsets.all(10.0),
@@ -59,9 +60,10 @@ class AdminDetailReportScreenState
                 viewTextField(context, "Project Title", report.title),
                 viewTextField(context, "Report by", "Report by"),
                 viewTextField(
-                    context, "Time and Date", report.dateTime.toString()),
+                    context, "Time and Date", report.updatedAt.toString()),
                 viewTextField(context, "Location", report.position.toString()),
-                viewTextField(context, "Project Description", report.desc),
+                viewTextField(
+                    context, "Project Description", report.description),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =
@@ -101,8 +103,8 @@ class AdminDetailReportScreenState
     ref
         .read(adminReportControllerProvider.notifier)
         .updateReportStatus(
-          objectId: report.objectId,
-          projectStatus: ProjectReportStatusEnum.reject.index,
+          id: report.id,
+          status: ReportStatusEnum.reject.index,
         )
         .then((value) {
       Navigator.pop(context);
@@ -124,8 +126,8 @@ class AdminDetailReportScreenState
     ref
         .read(adminReportControllerProvider.notifier)
         .updateReportStatus(
-          objectId: report.objectId,
-          projectStatus: ProjectReportStatusEnum.approve.index,
+          id: report.id,
+          status: ReportStatusEnum.approve.index,
         )
         .then((value) {
       Navigator.pop(context);

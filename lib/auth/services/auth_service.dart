@@ -29,7 +29,7 @@ class AuthService {
       ..set(UserModelEnum.nickname.name, username)
       ..set(UserModelEnum.userImage.name, parseUserImage)
       ..set(UserModelEnum.nik.name, nik)
-      ..set(UserModelEnum.role.name, role)
+      ..set(UserModelEnum.roleId.name, role)
       ..set(UserModelEnum.phoneNumber.name, phoneNumber);
 
     return newUser.signUp();

@@ -1,112 +1,116 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
-
-enum UserRoleEnum { admin, employee }
 
 enum UserModelEnum {
   objectId,
+  roleId,
   username,
+  nickname,
   email,
   nik,
-  role,
-  userImage,
   phoneNumber,
+  isUserVerified,
+  userImage,
   ktpImage,
-  nickname,
 }
 
 @immutable
 class UserModel {
-  final String objectId;
+  final String id;
+  final String roleId;
   final String username;
-  final String email;
-  final String nik;
-  final String role;
-  final String userImage;
-  final String phoneNumber;
-  final String ktpImage;
   final String nickname;
+  final String email;
+  final String? nik;
+  final String phoneNumber;
+  final bool isUserVerified;
+  final String userImage;
+  final String? ktpImage;
 
-  const UserModel({
-    required this.objectId,
-    required this.username,
-    required this.email,
-    required this.role,
-    required this.nik,
-    required this.userImage,
-    required this.phoneNumber,
-    required this.ktpImage,
-    required this.nickname,
-  });
-
-  factory UserModel.fromParseUser(ParseUser parseUser) {
+  factory UserModel.fromParseUser(ParseUser parse) {
     return UserModel(
-      objectId: parseUser.get<String>(UserModelEnum.objectId.name) ?? '',
-      username: parseUser.get<String>(UserModelEnum.username.name) ?? '',
-      email: parseUser.get<String>(UserModelEnum.email.name) ?? '',
-      nik: parseUser.get<String>(UserModelEnum.nik.name) ?? '',
-      role: parseUser.get<String>(UserModelEnum.role.name) ?? '',
-      userImage:
-          parseUser.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
-      phoneNumber: parseUser.get<String>(UserModelEnum.phoneNumber.name) ?? '',
-      ktpImage:
-          parseUser.get<ParseFile>(UserModelEnum.ktpImage.name)?.url ?? '',
-      nickname: parseUser.get<String>(UserModelEnum.nickname.name) ?? '',
+      id: parse.get<String>(UserModelEnum.objectId.name)!,
+      roleId: parse.get<String>(UserModelEnum.roleId.name)!,
+      username: parse.get<String>(UserModelEnum.username.name)!,
+      nickname: parse.get<String>(UserModelEnum.nickname.name)!,
+      email: parse.get<String>(UserModelEnum.email.name)!,
+      nik: parse.get<String>(UserModelEnum.objectId.name),
+      phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
+      isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
+      userImage: parse.get<String>(UserModelEnum.userImage.name)!,
+      ktpImage: parse.get<String>(UserModelEnum.objectId.name),
     );
   }
 
+  const UserModel({
+    required this.id,
+    required this.roleId,
+    required this.username,
+    required this.nickname,
+    required this.email,
+    this.nik,
+    required this.phoneNumber,
+    required this.isUserVerified,
+    required this.userImage,
+    this.ktpImage,
+  });
+
   UserModel copyWith({
-    String? objectId,
+    String? id,
+    String? roleId,
     String? username,
+    String? nickname,
     String? email,
     String? nik,
-    String? role,
-    String? userImage,
     String? phoneNumber,
+    bool? isUserVerified,
+    String? userImage,
     String? ktpImage,
-    String? nickname,
   }) {
     return UserModel(
-      objectId: objectId ?? this.objectId,
+      id: id ?? this.id,
+      roleId: roleId ?? this.roleId,
       username: username ?? this.username,
+      nickname: nickname ?? this.nickname,
       email: email ?? this.email,
       nik: nik ?? this.nik,
-      role: role ?? this.role,
-      userImage: userImage ?? this.userImage,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      isUserVerified: isUserVerified ?? this.isUserVerified,
+      userImage: userImage ?? this.userImage,
       ktpImage: ktpImage ?? this.ktpImage,
-      nickname: nickname ?? this.nickname,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'objectId': objectId,
+      'id': id,
+      'roleId': roleId,
       'username': username,
+      'nickname': nickname,
       'email': email,
       'nik': nik,
-      'role': role,
-      'userImage': userImage,
       'phoneNumber': phoneNumber,
+      'isUserVerified': isUserVerified,
+      'userImage': userImage,
       'ktpImage': ktpImage,
-      'nickname': nickname
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      objectId: map['objectId'] as String,
+      id: map['id'] as String,
+      roleId: map['roleId'] as String,
       username: map['username'] as String,
-      email: map['email'] as String,
-      nik: map['nik'] as String,
-      role: map['role'] as String,
-      userImage: map['userImage'] as String,
-      phoneNumber: map['phoneNumber'] as String,
-      ktpImage: map['ktpImage'] as String,
       nickname: map['nickname'] as String,
+      email: map['email'] as String,
+      nik: map['nik'] != null ? map['nik'] as String : null,
+      phoneNumber: map['phoneNumber'] as String,
+      isUserVerified: map['isUserVerified'] as bool,
+      userImage: map['userImage'] as String,
+      ktpImage: map['ktpImage'] != null ? map['ktpImage'] as String : null,
     );
   }
 
@@ -117,34 +121,36 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(objectId: $objectId, username: $username, email: $email, nik: $nik, role : $role, userImage: $userImage), phoneNumber: $phoneNumber), ktpImage: $ktpImage), nickname: $nickname)';
+    return 'UserModel(id: $id, roleId: $roleId, username: $username, nickname: $nickname, email: $email, nik: $nik, phoneNumber: $phoneNumber, isUserVerified: $isUserVerified, userImage: $userImage, ktpImage: $ktpImage)';
   }
 
   @override
   bool operator ==(covariant UserModel other) {
     if (identical(this, other)) return true;
 
-    return other.objectId == objectId &&
+    return other.id == id &&
+        other.roleId == roleId &&
         other.username == username &&
+        other.nickname == nickname &&
         other.email == email &&
         other.nik == nik &&
-        other.role == role &&
-        other.userImage == userImage &&
         other.phoneNumber == phoneNumber &&
-        other.ktpImage == ktpImage &&
-        other.nickname == nickname;
+        other.isUserVerified == isUserVerified &&
+        other.userImage == userImage &&
+        other.ktpImage == ktpImage;
   }
 
   @override
   int get hashCode {
-    return objectId.hashCode ^
+    return id.hashCode ^
+        roleId.hashCode ^
         username.hashCode ^
+        nickname.hashCode ^
         email.hashCode ^
         nik.hashCode ^
-        role.hashCode ^
-        userImage.hashCode ^
         phoneNumber.hashCode ^
-        ktpImage.hashCode ^
-        nickname.hashCode;
+        isUserVerified.hashCode ^
+        userImage.hashCode ^
+        ktpImage.hashCode;
   }
 }

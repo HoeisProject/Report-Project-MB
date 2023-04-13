@@ -22,7 +22,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
   String username = "Username";
   String userImage =
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
-  String nik = "User Nik";
+  String? nik = "User Nik";
   String email = "User Email";
 
   @override
@@ -48,7 +48,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
               width: 200,
             ),
             ViewIconField(
-              text: nik,
+              text: nik ?? '',
               icon: Icons.credit_card,
               onPressed: () {},
             ),

@@ -1,145 +1,129 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
-
-import 'package:report_project/common/models/user_model.dart';
-
-enum ProjectReportStatusEnum {
-  pending, // 0
-  approve, // 1
-  reject, // 2
-}
 
 enum ReportEnum {
   objectId,
-  projectTitle,
-  projectDesc,
-  projectStatus,
-  projectPosition,
-  projectDateTime,
-  uploadBy,
+  projectId,
+  userId,
+  reportStatusId,
+  title,
+  description,
+  position,
+  updatedAt,
 }
-
-// class ReportModel {
-//   final String objectId;
-//   final String title;
-// }
 
 @immutable
 class ReportModel {
-  final String objectId;
+  final String id;
+  final String projectId;
+  final String userId;
+  final String reportStatusId;
   final String title;
-  final String desc;
-  final int status;
+  final String description;
   final ParseGeoPoint position;
-  final DateTime dateTime;
-  final UserModel uploadBy;
+  final DateTime updatedAt;
 
   const ReportModel({
-    required this.objectId,
+    required this.id,
+    required this.projectId,
+    required this.userId,
+    required this.reportStatusId,
     required this.title,
-    required this.desc,
-    required this.status,
+    required this.description,
     required this.position,
-    required this.dateTime,
-    required this.uploadBy,
+    required this.updatedAt,
   });
 
-  factory ReportModel.fromParseObject(ParseObject parseObject) {
+  factory ReportModel.fromParseObject(ParseObject parse) {
     return ReportModel(
-      objectId: parseObject.get<String>(ReportEnum.objectId.name)!,
-      title: parseObject.get<String>(ReportEnum.projectTitle.name)!,
-      desc: parseObject.get<String>(ReportEnum.projectDesc.name)!,
-      status: parseObject.get<int>(ReportEnum.projectStatus.name)!,
-      position:
-          parseObject.get<ParseGeoPoint>(ReportEnum.projectPosition.name)!,
-      dateTime: parseObject.get<DateTime>(ReportEnum.projectDateTime.name)!,
-      // projectDateTime: DateTime.fromMillisecondsSinceEpoch(
-      //     parseObject['projectDateTime'] as int),
-      uploadBy: UserModel.fromParseUser(
-          parseObject.get<ParseUser>(ReportEnum.uploadBy.name)!),
+      id: parse.get<String>(ReportEnum.objectId.name)!,
+      projectId: parse.get<String>(ReportEnum.projectId.name)!,
+      userId: parse.get<String>(ReportEnum.userId.name)!,
+      reportStatusId: parse.get<String>(ReportEnum.reportStatusId.name)!,
+      title: parse.get<String>(ReportEnum.title.name)!,
+      description: parse.get<String>(ReportEnum.description.name)!,
+      position: parse.get<ParseGeoPoint>(ReportEnum.position.name)!,
+      updatedAt: parse.get<DateTime>(ReportEnum.updatedAt.name)!,
     );
   }
 
   ReportModel copyWith({
-    String? objectId,
+    String? id,
+    String? projectId,
+    String? userId,
+    String? reportStatusId,
     String? title,
-    String? desc,
-    int? status,
+    String? description,
     ParseGeoPoint? position,
-    DateTime? dateTime,
-    UserModel? uploadBy,
+    DateTime? updatedAt,
   }) {
     return ReportModel(
-      objectId: objectId ?? this.objectId,
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      userId: userId ?? this.userId,
+      reportStatusId: reportStatusId ?? this.reportStatusId,
       title: title ?? this.title,
-      desc: desc ?? this.desc,
-      status: status ?? this.status,
+      description: description ?? this.description,
       position: position ?? this.position,
-      dateTime: dateTime ?? this.dateTime,
-      uploadBy: uploadBy ?? this.uploadBy,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'objectId': objectId,
-      'title': title,
-      'desc': desc,
-      'status': status,
-      'position': position,
-      'dateTime': dateTime.millisecondsSinceEpoch,
-      'uploadBy': uploadBy.toMap(),
-    };
-  }
+  // Map<String, dynamic> toMap() {
+  //   return <String, dynamic>{
+  //     'id': id,
+  //     'projectId': projectId,
+  //     'userId': userId,
+  //     'reportStatusId': reportStatusId,
+  //     'title': title,
+  //     'description': description,
+  //     'position': position.toMap(),
+  //   };
+  // }
 
   // factory ReportModel.fromMap(Map<String, dynamic> map) {
   //   return ReportModel(
-  //     objectId: map['objectId'] as String,
-  //     projectTitle: map['projectTitle'] as String,
-  //     projectDesc: map['projectDesc'] as String,
-  //     projectStatus: map['projectStatus'] as int,
-  //     projectPosition:
-  //         Position.fromMap(map['projectPosition'] as Map<String, dynamic>),
-  //     projectDateTime:
-  //         DateTime.fromMillisecondsSinceEpoch(map['projectDateTime'] as int),
-  //     uploadBy: UserModel.fromMap(map['uploadBy'] as Map<String, dynamic>),
+  //     id: map['id'] as String,
+  //     projectId: map['projectId'] as String,
+  //     userId: map['userId'] as String,
+  //     reportStatusId: map['reportStatusId'] as int,
+  //     title: map['title'] as String,
+  //     description: map['description'] as String,
+  //     position: ParseGeoPoint.fromMap(map['position'] as Map<String,dynamic>),
   //   );
   // }
 
-  String toJson() => json.encode(toMap());
+  // String toJson() => json.encode(toMap());
 
-  // factory ReportModel.fromJson(String source) =>
-  //     ReportModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory ReportModel.fromJson(String source) => ReportModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'ReportModel(objectId: $objectId, title: $title, desc: $desc, status: $status, position: $position, dateTime: $dateTime, uploadBy: $uploadBy)';
+    return 'ReportModel(id: $id, projectId: $projectId, userId: $userId, reportStatusId: $reportStatusId, title: $title, description: $description, position: $position)';
   }
 
   @override
   bool operator ==(covariant ReportModel other) {
     if (identical(this, other)) return true;
 
-    return other.objectId == objectId &&
+    return other.id == id &&
+        other.projectId == projectId &&
+        other.userId == userId &&
+        other.reportStatusId == reportStatusId &&
         other.title == title &&
-        other.desc == desc &&
-        other.status == status &&
-        other.position == position &&
-        other.dateTime == dateTime &&
-        other.uploadBy == uploadBy;
+        other.description == description &&
+        other.position == position;
   }
 
   @override
   int get hashCode {
-    return objectId.hashCode ^
+    return id.hashCode ^
+        projectId.hashCode ^
+        userId.hashCode ^
+        reportStatusId.hashCode ^
         title.hashCode ^
-        desc.hashCode ^
-        status.hashCode ^
-        position.hashCode ^
-        dateTime.hashCode ^
-        uploadBy.hashCode;
+        description.hashCode ^
+        position.hashCode;
   }
 }

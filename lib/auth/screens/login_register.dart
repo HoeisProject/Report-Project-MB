@@ -5,6 +5,8 @@ import 'package:images_picker/images_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/login_register_view_model.dart';
+import 'package:report_project/common/controller/role_controller.dart';
+import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
@@ -182,9 +184,12 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     final currentUser = ref.watch(profileControllerProvider);
     ref.listen(profileControllerProvider, (previous, next) {
       if (!next.hasValue || next.value == null) return;
-      if (next.value!.role == 'admin') {
+      final currentRole = ref
+          .read(roleControllerProvider.notifier)
+          .findById(next.value!.roleId);
+      if (currentRole.name == RoleModelEnum.admin.name) {
         Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-      } else if (next.value!.role == 'employee') {
+      } else if (currentRole.name == RoleModelEnum.employee.name) {
         Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
       }
     });

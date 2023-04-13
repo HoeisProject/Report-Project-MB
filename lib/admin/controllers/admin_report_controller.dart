@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/admin/services/admin_report_service.dart';
+import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,20 +22,21 @@ class AdminReportController extends _$AdminReportController {
   }
 
   Future<bool> updateReportStatus({
-    required String objectId,
-    required int projectStatus,
+    required String id,
+    required int status,
   }) async {
     state = const AsyncValue.loading();
     final res = await _adminReportService.updateReportStatus(
-      objectId,
-      projectStatus,
+      id,
+      status,
     );
     if (!res.success || res.results == null) {
       return false;
     }
+    final reportStatus = ref.read(reportStatusControllerProvider);
     final projectReportList = state.value!.map((e) {
-      if (e.objectId != objectId) return e;
-      return e.copyWith(status: projectStatus);
+      if (e.id != id) return e;
+      return e.copyWith(reportStatusId: reportStatus[status].id);
     }).toList();
     state = AsyncValue.data(projectReportList);
     for (int i = 0; i < projectReportList.length; i++) {

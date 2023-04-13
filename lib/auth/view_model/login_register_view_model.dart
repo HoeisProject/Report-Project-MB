@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:report_project/common/models/user_model.dart';
+import 'package:report_project/common/models/role_model.dart';
 
 final loginRegisterLoadingProvider = StateProvider.autoDispose<bool>((ref) {
   return false;
@@ -26,7 +26,7 @@ final loginRegisterIsAdminProvider = StateProvider.autoDispose<bool>((ref) {
 });
 
 final loginRegisterRoleProvider = StateProvider.autoDispose<String>((ref) {
-  return UserRoleEnum.employee.name;
+  return RoleModelEnum.employee.name;
 });
 
 final loginRegisterMediaFileProvider = StateProvider.autoDispose<File?>((ref) {

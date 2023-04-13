@@ -5,7 +5,10 @@ import 'package:report_project/admin/widgets/admin_home_filter.dart';
 import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/common/controller/report_status_controller.dart';
+import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
+import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/admin/screens/admin_detail_report.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
@@ -36,7 +39,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
             context, LoginRegisterScreen.routeName, (route) => false);
         return;
       }
-      if (next.value!.role != 'admin') {
+      final roleController = ref.read(roleControllerProvider.notifier);
+      final currentRole = roleController.findById(next.value!.roleId);
+      if (currentRole.name != RoleModelEnum.admin.name) {
         Navigator.pushNamedAndRemoveUntil(
             context, EmployeeHomeScreen.routeName, (route) => false);
       }
@@ -139,7 +144,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
 
   Widget _listProjectView() {
     final projectReports = ref.watch(adminReportControllerProvider);
-
+    final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
       child: Card(
@@ -158,7 +163,10 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
               padding: const EdgeInsets.only(top: 10.0),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
-                return _projectViewItem(data[index]);
+                return _projectViewItem(
+                  data[index],
+                  reportStatus.findIndexById(data[index].id),
+                );
               },
             );
           },
@@ -179,7 +187,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ReportModel report) {
+  Widget _projectViewItem(ReportModel report, int status) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -213,15 +221,16 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(report.status)
+                        reportStatus(status)
                       ],
                     ),
                   ),
-                  reportItemContent(report.uploadBy.username, false),
+                  // TODO
+                  // reportItemContent(report.uploadBy.username, false),
                   reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
                   reportItemContent("Project Location", false),
-                  reportItemContent(report.desc, true),
+                  reportItemContent(report.description, true),
                 ],
               ),
             ),

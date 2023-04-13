@@ -1,62 +1,61 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 enum ReportMediaEnum {
   objectId,
-  reportAttachment,
   reportId,
+  reportAttachment,
 }
 
 @immutable
 class ReportMediaModel {
-  final String objectId;
-  final String reportAttachment;
+  final String id;
   final String reportId;
+  final String reportAttachment;
   const ReportMediaModel({
-    required this.objectId,
-    required this.reportAttachment,
+    required this.id,
     required this.reportId,
+    required this.reportAttachment,
   });
 
-  factory ReportMediaModel.fromParseObject(ParseObject parseObject) {
+  factory ReportMediaModel.fromParseObject(ParseObject parse) {
     return ReportMediaModel(
-      objectId: parseObject.get<String>(ReportMediaEnum.objectId.name)!,
-      reportAttachment: parseObject
-              .get<ParseFile>(ReportMediaEnum.reportAttachment.name)!
-              .url ??
-          '',
-      reportId: parseObject.get<String>(ReportMediaEnum.reportId.name)!,
+      id: parse.get<String>(ReportMediaEnum.objectId.name)!,
+      reportId: parse.get<String>(ReportMediaEnum.reportId.name)!,
+      reportAttachment:
+          parse.get<ParseFile>(ReportMediaEnum.reportAttachment.name)!.url ??
+              '',
     );
   }
 
   ReportMediaModel copyWith({
-    String? objectId,
-    String? reportAttachment,
+    String? id,
     String? reportId,
+    String? reportAttachment,
   }) {
     return ReportMediaModel(
-      objectId: objectId ?? this.objectId,
-      reportAttachment: reportAttachment ?? this.reportAttachment,
+      id: id ?? this.id,
       reportId: reportId ?? this.reportId,
+      reportAttachment: reportAttachment ?? this.reportAttachment,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'objectId': objectId,
-      'reportAttachment': reportAttachment,
+      'id': id,
       'reportId': reportId,
+      'reportAttachment': reportAttachment,
     };
   }
 
   factory ReportMediaModel.fromMap(Map<String, dynamic> map) {
     return ReportMediaModel(
-      objectId: map['objectId'] as String,
-      reportAttachment: map['reportAttachment'] as String,
+      id: map['id'] as String,
       reportId: map['reportId'] as String,
+      reportAttachment: map['reportAttachment'] as String,
     );
   }
 
@@ -67,18 +66,18 @@ class ReportMediaModel {
 
   @override
   String toString() =>
-      'ReportMediaModel(objectId: $objectId, reportAttachment: $reportAttachment, reportId: $reportId)';
+      'ReportMediaModel(id: $id, reportId: $reportId, reportAttachment: $reportAttachment)';
 
   @override
   bool operator ==(covariant ReportMediaModel other) {
     if (identical(this, other)) return true;
 
-    return other.objectId == objectId &&
-        other.reportAttachment == reportAttachment &&
-        other.reportId == reportId;
+    return other.id == id &&
+        other.reportId == reportId &&
+        other.reportAttachment == reportAttachment;
   }
 
   @override
   int get hashCode =>
-      objectId.hashCode ^ reportAttachment.hashCode ^ reportId.hashCode;
+      id.hashCode ^ reportId.hashCode ^ reportAttachment.hashCode;
 }

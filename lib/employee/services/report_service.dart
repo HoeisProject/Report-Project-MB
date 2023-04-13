@@ -1,38 +1,47 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/report_media_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final reportServiceProvider = Provider((ref) {
-  return ReportService();
-});
+part 'report_service.g.dart';
+
+@Riverpod(keepAlive: true)
+ReportService reportService(ReportServiceRef ref) {
+  return ReportService(ref: ref);
+}
 
 class ReportService {
+  final ProviderRef ref;
+  ReportService({required this.ref});
+
   Future<ParseResponse> create(
     String title,
-    DateTime dateTime,
     Position position,
     String desc,
     ParseUser currentUser,
     List<Media> listMediaFile,
   ) async {
+    final reportStatus = ref.read(reportStatusControllerProvider);
     final newReport = ParseObject('ProjectReport')
-      ..set(ReportEnum.projectTitle.name, title)
-      ..set(ReportEnum.projectDateTime.name, dateTime)
+      ..set(ReportEnum.title.name, title)
       ..set(
-          ReportEnum.projectPosition.name,
+          ReportEnum.position.name,
           ParseGeoPoint(
             latitude: position.latitude,
             longitude: position.longitude,
           ))
-      ..set(ReportEnum.projectDesc.name, desc)
-      ..set(ReportEnum.uploadBy.name, currentUser)
-      ..set(ReportEnum.projectStatus.name, 0);
+      ..set(ReportEnum.description.name, desc)
+      ..set(ReportEnum.userId.name, currentUser)
+      ..set(
+        ReportEnum.reportStatusId.name,
+        ParseObject('ReportStatus')..objectId = reportStatus[0].id,
+      );
 
     final projectReport = await newReport.save();
     int i = 0;
@@ -58,7 +67,7 @@ class ReportService {
   Future<List<ParseObject>> getReport(ParseUser currentUser) async {
     ParseObject? getPostObject = ParseObject('ProjectReport');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..whereEqualTo(ReportEnum.uploadBy.name, currentUser);
+      ..whereEqualTo(ReportEnum.userId.name, currentUser);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {
@@ -89,8 +98,8 @@ class ReportService {
   ) async {
     ParseObject updateReport = ParseObject("ProjectReport")
       ..objectId = objectId
-      ..set(ReportEnum.projectTitle.name, projectTitle)
-      ..set(ReportEnum.projectDesc.name, projectDesc);
+      ..set(ReportEnum.title.name, projectTitle)
+      ..set(ReportEnum.description.name, projectDesc);
 
     return updateReport.save();
   }

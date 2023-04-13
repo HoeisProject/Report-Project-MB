@@ -9,7 +9,7 @@ import 'package:report_project/common/styles/theme.dart';
 
 part 'theme_utility.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<ThemeUtility> themeUtility(ThemeUtilityRef ref) async {
   final preferences = await SharedPreferences.getInstance();
   return ThemeUtility(preferences: preferences);
