@@ -187,9 +187,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       final currentRole = ref
           .read(roleControllerProvider.notifier)
           .findById(next.value!.roleId);
-      if (currentRole.name == RoleModelEnum.admin.name) {
+      if (currentRole.name == RoleModelNameEnum.admin.name) {
         Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-      } else if (currentRole.name == RoleModelEnum.employee.name) {
+      } else if (currentRole.name == RoleModelNameEnum.employee.name) {
         Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
       }
     });
@@ -205,15 +205,10 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           data: (user) {
             debugPrint(user.toString());
             if (user == null) return _body();
-            // if (user.role == 'admin') {
-            //   Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-            // } else if (user.role == 'employee') {
-            //   Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
-            // }
             return const Text('Debug Testing');
           },
           error: (error, stackTrace) {
-            return const ErrorScreen(text: 'Call developer');
+            return const ErrorScreen(text: 'Login Register Call developer');
           },
           loading: () {
             return const CircularProgressIndicator();

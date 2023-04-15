@@ -52,6 +52,13 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     _getDateTimeLoc(context);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    projectTitleCtl.dispose();
+    projectDescCtl.dispose();
+  }
+
   Future<void> _getDateTimeLoc(context) async {
     bool serviceEnabled;
     LocationPermission permission;

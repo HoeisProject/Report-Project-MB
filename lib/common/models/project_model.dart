@@ -7,6 +7,7 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 enum ProjectModelEnum {
   objectId,
   name,
+  description,
   startDate,
   endDate,
 }
@@ -15,11 +16,13 @@ enum ProjectModelEnum {
 class ProjectModel {
   final String id;
   final String name;
+  final String description;
   final DateTime startDate;
   final DateTime endDate;
   const ProjectModel({
     required this.id,
     required this.name,
+    required this.description,
     required this.startDate,
     required this.endDate,
   });
@@ -27,7 +30,8 @@ class ProjectModel {
   factory ProjectModel.fromParseObject(ParseObject parse) {
     return ProjectModel(
       id: parse.get<String>(ProjectModelEnum.objectId.name)!,
-      name: parse.get<String>(ProjectModelEnum.name.name)!,
+      name: parse.get<String>(ProjectModelEnum.description.name)!,
+      description: parse.get<String>(ProjectModelEnum.name.name)!,
       startDate: parse.get<DateTime>(ProjectModelEnum.startDate.name)!,
       endDate: parse.get<DateTime>(ProjectModelEnum.endDate.name)!,
     );
@@ -36,12 +40,14 @@ class ProjectModel {
   ProjectModel copyWith({
     String? id,
     String? name,
+    String? description,
     DateTime? startDate,
     DateTime? endDate,
   }) {
     return ProjectModel(
       id: id ?? this.id,
       name: name ?? this.name,
+      description: description ?? this.description,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
     );
@@ -60,6 +66,7 @@ class ProjectModel {
     return ProjectModel(
       id: map['id'] as String,
       name: map['name'] as String,
+      description: map['description'] as String,
       startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int),
       endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate'] as int),
     );
@@ -72,7 +79,7 @@ class ProjectModel {
 
   @override
   String toString() {
-    return 'ProjectModel(id: $id, name: $name, startDate: $startDate, endDate: $endDate)';
+    return 'ProjectModel(id: $id, name: $name, description: $description, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -81,12 +88,17 @@ class ProjectModel {
 
     return other.id == id &&
         other.name == name &&
+        other.description == description &&
         other.startDate == startDate &&
         other.endDate == endDate;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ name.hashCode ^ startDate.hashCode ^ endDate.hashCode;
+    return id.hashCode ^
+        name.hashCode ^
+        description.hashCode ^
+        startDate.hashCode ^
+        endDate.hashCode;
   }
 }

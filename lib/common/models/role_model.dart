@@ -1,8 +1,14 @@
 import 'package:flutter/foundation.dart';
 
-enum RoleModelEnum {
+enum RoleModelNameEnum {
   admin,
   employee,
+}
+
+enum RoleModelEnum {
+  objectId,
+  name,
+  description,
 }
 
 @immutable

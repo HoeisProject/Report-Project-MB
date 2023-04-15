@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
+import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/controller/role_controller.dart';
@@ -89,9 +90,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       final roleController = ref.read(roleControllerProvider.notifier);
       final currentRole = roleController.findById(next.value!.roleId);
       Timer(const Duration(seconds: 2), () {
-        if (currentRole.name == RoleModelEnum.admin.name) {
+        if (currentRole.name == RoleModelNameEnum.admin.name) {
           Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
-        } else if (currentRole.name == RoleModelEnum.employee.name) {
+        } else if (currentRole.name == RoleModelNameEnum.employee.name) {
           Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
         }
       });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
+import 'package:report_project/admin/screens/admin_project_home.dart';
 import 'package:report_project/admin/widgets/admin_home_filter.dart';
 import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
@@ -41,7 +42,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
       }
       final roleController = ref.read(roleControllerProvider.notifier);
       final currentRole = roleController.findById(next.value!.roleId);
-      if (currentRole.name != RoleModelEnum.admin.name) {
+      if (currentRole.name != RoleModelNameEnum.admin.name) {
         Navigator.pushNamedAndRemoveUntil(
             context, EmployeeHomeScreen.routeName, (route) => false);
       }
@@ -95,6 +96,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            _menuBarItem(Icons.polyline_rounded, 'Project', () {
+              Navigator.pushNamed(context, AdminProjectHomeScreen.routeName);
+            }),
             _menuBarItem(Icons.assignment, "Employee", () {}),
             _menuBarItem(Icons.question_mark, "Project", () {}),
           ],

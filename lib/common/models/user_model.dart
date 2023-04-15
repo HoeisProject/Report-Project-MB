@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/common/models/role_model.dart';
 
 enum UserModelEnum {
   objectId,
@@ -31,16 +32,19 @@ class UserModel {
   final String? ktpImage;
 
   factory UserModel.fromParseUser(ParseUser parse) {
+    debugPrint(parse.toString());
     return UserModel(
       id: parse.get<String>(UserModelEnum.objectId.name)!,
-      roleId: parse.get<String>(UserModelEnum.roleId.name)!,
+      roleId: parse
+          .get<ParseObject>(UserModelEnum.roleId.name)!
+          .get(RoleModelEnum.objectId.name),
       username: parse.get<String>(UserModelEnum.username.name)!,
       nickname: parse.get<String>(UserModelEnum.nickname.name)!,
       email: parse.get<String>(UserModelEnum.email.name)!,
       nik: parse.get<String>(UserModelEnum.objectId.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
-      userImage: parse.get<String>(UserModelEnum.userImage.name)!,
+      userImage: parse.get<String>(UserModelEnum.userImage.name) ?? '',
       ktpImage: parse.get<String>(UserModelEnum.objectId.name),
     );
   }

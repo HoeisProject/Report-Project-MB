@@ -26,7 +26,7 @@ final loginRegisterIsAdminProvider = StateProvider.autoDispose<bool>((ref) {
 });
 
 final loginRegisterRoleProvider = StateProvider.autoDispose<String>((ref) {
-  return RoleModelEnum.employee.name;
+  return RoleModelNameEnum.employee.name;
 });
 
 final loginRegisterMediaFileProvider = StateProvider.autoDispose<File?>((ref) {
