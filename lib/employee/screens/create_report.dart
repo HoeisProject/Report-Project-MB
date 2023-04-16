@@ -8,6 +8,7 @@ import 'package:images_picker/images_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
@@ -23,7 +24,7 @@ import 'package:report_project/employee/widgets/report_attach_media.dart';
 import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
 class CreateReportScreen extends ConsumerStatefulWidget {
-  static const routeName = '/report_create_screen';
+  static const routeName = '/report-create';
 
   const CreateReportScreen({super.key});
 
@@ -32,19 +33,15 @@ class CreateReportScreen extends ConsumerStatefulWidget {
 }
 
 class _ReportCreateState extends ConsumerState<CreateReportScreen> {
-  final keyProjectTitle = GlobalKey<FormState>();
-  final keyProjectDesc = GlobalKey<FormState>();
+  final _keyProjectTitle = GlobalKey<FormState>();
+  final _keyProjectDesc = GlobalKey<FormState>();
 
-  final projectTitleCtl = TextEditingController();
-  final projectDescCtl = TextEditingController();
-
-  List<File?> listMediaFile = [];
-
-  bool isLoading = false;
+  final _projectTitleCtl = TextEditingController();
+  final _projectDescCtl = TextEditingController();
 
   Position? position;
 
-  // ImagePicker picker = ImagePicker();
+  String _projectCategorySelected = '';
 
   @override
   void initState() {
@@ -55,8 +52,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   @override
   void dispose() {
     super.dispose();
-    projectTitleCtl.dispose();
-    projectDescCtl.dispose();
+    _projectTitleCtl.dispose();
+    _projectDescCtl.dispose();
   }
 
   Future<void> _getDateTimeLoc(context) async {
@@ -122,7 +119,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     DateTime getNtpDateTime = await NTP.now();
     ref.read(createReportProjectCreatedProvider.notifier).state =
         getNtpDateTime;
-    ref.read(createReportLocationAddressProvider.notifier).state =
+    ref.read(createReportPositionProvider.notifier).state =
         '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
   }
 
@@ -144,9 +141,13 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
 
   Widget _body(context) {
     final projectCreated = ref.watch(createReportProjectCreatedProvider);
-    final locationAddress = ref.watch(createReportLocationAddressProvider);
+    final locationAddress = ref.watch(createReportPositionProvider);
     final listMediaPickerFile =
         ref.watch(createReportListMediaPickerFileProvider);
+
+    /// Used for Dropdown Category
+    final projects = ref.watch(adminProjectControllerProvider);
+
     return Container(
       margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
@@ -154,24 +155,56 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             inputTextField(
-                context,
-                keyProjectTitle,
-                "Project Title",
-                projectTitleCtl,
-                TextInputType.text,
-                false,
-                false,
-                1,
-                (value) {}),
+              context,
+              _keyProjectTitle,
+              "Project Title",
+              _projectTitleCtl,
+              TextInputType.text,
+              false,
+              false,
+              1,
+              (value) {},
+            ),
+
+            /// TODO Wink - UI nya menggigil
+            const Text('Project Category'),
+            projects.when(
+              data: (data) {
+                return DropdownButton<String>(
+                  items: data.map((e) {
+                    return DropdownMenuItem(value: e.id, child: Text(e.name));
+                  }).toList(),
+                  onChanged: (value) {
+                    debugPrint(value);
+                    _projectCategorySelected = value ?? '';
+                  },
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                );
+              },
+              error: (error, stackTrace) {
+                return const Text('Error Happen');
+              },
+              loading: () {
+                return const CircularProgressIndicator();
+              },
+            ),
             viewTextField(
                 context,
                 "Time and Date",
                 projectCreated != null
                     ? DateFormat.yMMMEd().format(projectCreated)
                     : "getting network time..."),
-            viewTextField(context, "Location", locationAddress),
-            inputTextField(context, keyProjectDesc, "Project Description",
-                projectDescCtl, TextInputType.text, false, true, 6, (value) {}),
+            viewTextField(context, "Position", locationAddress),
+            inputTextField(
+                context,
+                _keyProjectDesc,
+                "Project Description",
+                _projectDescCtl,
+                TextInputType.text,
+                false,
+                true,
+                3,
+                (value) {}),
             reportAttachMedia(context, "Attach Media", listMediaPickerFile,
                 () async {
               await showSelectMediaDialog(
@@ -191,9 +224,11 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                   });
             }),
             sizedSpacer(height: 30.0),
+
+            /// TODO riverpod loading
             customButton(
               context,
-              isLoading,
+              false,
               "SEND",
               Colors.lightBlue,
               () => createDataReport(context),
@@ -221,10 +256,10 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     }
     final response =
         await ref.read(reportControllerProvider.notifier).createProject(
-              title: projectTitleCtl.text.trim(),
-              // dateTime: ref.read(createReportProjectCreatedProvider)!,
+              projectId: _projectCategorySelected,
+              title: _projectTitleCtl.text.trim(),
               position: position!,
-              desc: projectDescCtl.text.trim(),
+              description: _projectDescCtl.text.trim(),
               listMediaFile: listMediaPickerFile,
             );
     if (response) {
@@ -232,8 +267,6 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
       Navigator.pop(context);
       showSnackBar(context, Icons.done, Colors.greenAccent, "Report Created",
           Colors.greenAccent);
-      // Navigator.pushNamedAndRemoveUntil(context, EmployeeHomeScreen.routeName,
-      //     (Route<dynamic> route) => false);
       Navigator.pop(context);
     } else {
       // Navigator.pop(context);
@@ -243,8 +276,9 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   }
 
   bool fieldValidation(listMediaPickerFile) {
-    if (projectTitleCtl.text.trim().isNotEmpty &&
-        projectDescCtl.text.trim().isNotEmpty &&
+    if (_projectTitleCtl.text.trim().isNotEmpty &&
+        _projectDescCtl.text.trim().isNotEmpty &&
+        _projectCategorySelected.isNotEmpty &&
         ref.read(createReportProjectCreatedProvider) != null &&
         position != null &&
         listMediaPickerFile.isNotEmpty) {
@@ -265,15 +299,12 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
       );
       if (listMediaPickerFile.state.isEmpty) {
         if (getMedia != null) {
-          // listMediaPickerFile.addAll(getMedia);
           listMediaPickerFile.state = getMedia;
         } else {
-          // listMediaPickerFile.clear();
           listMediaPickerFile.state = [];
         }
       } else {
         if (getMedia != null) {
-          // listMediaPickerFile.addAll(getMedia);
           listMediaPickerFile.state = [
             ...listMediaPickerFile.state,
             ...getMedia

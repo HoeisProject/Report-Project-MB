@@ -19,7 +19,7 @@ import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AdminHomeScreen extends ConsumerStatefulWidget {
-  static const routeName = '/admin_home_screen';
+  static const routeName = '/admin-home';
 
   const AdminHomeScreen({super.key});
 

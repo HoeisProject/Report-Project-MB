@@ -7,7 +7,7 @@ part of 'report_status_controller.dart';
 // **************************************************************************
 
 String _$reportStatusControllerHash() =>
-    r'c126b3f07b37efd24e2a089697057d122aa92613';
+    r'f7fdeac1da2271ab443a9e922e06816e5ecd91d6';
 
 /// See also [ReportStatusController].
 @ProviderFor(ReportStatusController)

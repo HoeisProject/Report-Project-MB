@@ -12,7 +12,7 @@ import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AdminDetailReportScreen extends ConsumerStatefulWidget {
-  static const routeName = '/admin_report_detail_screen';
+  static const routeName = '/admin-report-detail';
 
   final ReportModel report;
 

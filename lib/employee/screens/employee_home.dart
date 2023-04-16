@@ -16,7 +16,7 @@ import 'package:report_project/employee/widgets/employee_home_filter.dart';
 import 'package:report_project/employee/widgets/employee_home_search_bar.dart';
 
 class EmployeeHomeScreen extends ConsumerStatefulWidget {
-  static const routeName = '/home_employee_screen';
+  static const routeName = '/home-employee';
 
   const EmployeeHomeScreen({super.key});
 

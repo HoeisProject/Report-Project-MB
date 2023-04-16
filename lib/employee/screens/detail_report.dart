@@ -7,7 +7,7 @@ import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailReportScreen extends ConsumerWidget {
-  static const routeName = '/report_detail_screen';
+  static const routeName = '/report-detail';
 
   final ReportModel report;
 

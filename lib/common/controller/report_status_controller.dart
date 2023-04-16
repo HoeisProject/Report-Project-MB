@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:report_project/common/models/report_status_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,5 +34,9 @@ class ReportStatusController extends _$ReportStatusController {
 
   int findIndexById(String id) {
     return state.indexWhere((element) => element.id == id);
+  }
+
+  String findIdForStatusPending() {
+    return state.firstWhere((element) => element.name == 'pending').id;
   }
 }

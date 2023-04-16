@@ -6,8 +6,7 @@ final createReportProjectCreatedProvider =
   return null;
 });
 
-final createReportLocationAddressProvider =
-    StateProvider.autoDispose<String>((ref) {
+final createReportPositionProvider = StateProvider.autoDispose<String>((ref) {
   return 'Getting location';
 });
 

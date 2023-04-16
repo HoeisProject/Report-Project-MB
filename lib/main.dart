@@ -22,12 +22,6 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   @override
-  void initState() {
-    super.initState();
-    // ref.read(switchThemeProvider.notifier).state = Utility.getTheme()!;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = ref.watch(appThemeProvider);
     return MaterialApp(

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/employee/services/report_service.dart';
@@ -31,22 +32,21 @@ class ReportController extends _$ReportController {
   }
 
   Future<bool> createProject({
+    required String projectId,
     required String title,
     required Position position,
-    required String desc,
+    required String description,
     required List<Media> listMediaFile,
   }) async {
     debugPrint('ReportController - createProject');
-    final parseUser = await _profileService.currentUser();
-    if (parseUser == null) return false;
+    final currentUser = await _profileService.currentUser();
+    if (currentUser == null) return false;
+    final reportStatusId = ref
+        .read(reportStatusControllerProvider.notifier)
+        .findIdForStatusPending();
     state = const AsyncValue.loading();
-    final res = await _reportService.create(
-      title,
-      position,
-      desc,
-      parseUser,
-      listMediaFile,
-    );
+    final res = await _reportService.create(projectId, currentUser,
+        reportStatusId, title, description, position, listMediaFile);
     if (!res.success || res.results == null) {
       return false;
     }

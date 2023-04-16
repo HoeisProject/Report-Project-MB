@@ -21,26 +21,32 @@ class ReportService {
   ReportService({required this.ref});
 
   Future<ParseResponse> create(
+    String projectId,
+    ParseUser currentUser, // userId
+    String reportStatusId,
     String title,
+    String description,
     Position position,
-    String desc,
-    ParseUser currentUser,
     List<Media> listMediaFile,
   ) async {
-    final reportStatus = ref.read(reportStatusControllerProvider);
     final newReport = ParseObject('Report')
-      ..set(ReportEnum.title.name, title)
       ..set(
-          ReportEnum.position.name,
-          ParseGeoPoint(
-            latitude: position.latitude,
-            longitude: position.longitude,
-          ))
-      ..set(ReportEnum.description.name, desc)
+        ReportEnum.projectId.name,
+        ParseObject('Project')..objectId = projectId,
+      )
       ..set(ReportEnum.userId.name, currentUser)
       ..set(
         ReportEnum.reportStatusId.name,
-        ParseObject('ReportStatus')..objectId = reportStatus[0].id,
+        ParseObject('ReportStatus')..objectId = reportStatusId,
+      )
+      ..set(ReportEnum.title.name, title)
+      ..set(ReportEnum.description.name, description)
+      ..set(
+        ReportEnum.position.name,
+        ParseGeoPoint(
+          latitude: position.latitude,
+          longitude: position.longitude,
+        ),
       );
 
     final report = await newReport.save();
