@@ -147,7 +147,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   }
 
   Widget _listProjectView() {
-    final projectReports = ref.watch(adminReportControllerProvider);
+    final reports = ref.watch(adminReportControllerProvider);
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
@@ -157,7 +157,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
         elevation: 5.0,
-        child: projectReports.when(
+        child: reports.when(
           data: (data) {
             if (data.isEmpty) {
               return const Center(

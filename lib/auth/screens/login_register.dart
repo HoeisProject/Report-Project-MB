@@ -31,14 +31,12 @@ class LoginRegisterScreen extends ConsumerStatefulWidget {
 class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final keyUsernameField = GlobalKey<FormState>();
 
-  // final keyNikField = GlobalKey<FormState>();
   final keyEmailField = GlobalKey<FormState>();
   final keyPasswordField = GlobalKey<FormState>();
   final keyPhoneNumberField = GlobalKey<FormState>();
 
   final usernameCtl = TextEditingController();
 
-  // final nikCtl = TextEditingController();
   final emailCtl = TextEditingController();
   final passwordCtl = TextEditingController();
   final phoneNumberCtl = TextEditingController();
@@ -73,13 +71,11 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     }
     final isRegisterSuccess =
         await ref.read(authControllerProvider).registerUser(
-              imagePath: ref.read(loginRegisterMediaFileProvider)!.path,
               username: usernameCtl.text.trim(),
-              password: passwordCtl.text.trim(),
               email: emailCtl.text.trim(),
-              nik: "-",
-              role: ref.read(loginRegisterRoleProvider),
               phoneNumber: phoneNumberCtl.text.trim(),
+              password: passwordCtl.text.trim(),
+              userImage: ref.read(loginRegisterMediaFileProvider)!.path,
             );
     if (!isRegisterSuccess) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
@@ -112,7 +108,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     } else {
       if (usernameCtl.text.trim().isNotEmpty &&
-          // nikCtl.text.trim().isNotEmpty &&
           emailCtl.text.trim().isNotEmpty &&
           passwordCtl.text.trim().isNotEmpty &&
           phoneNumberCtl.text.trim().isNotEmpty &&
@@ -171,7 +166,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           Colors.black;
       ref.read(loginRegisterIsLoginProvider.notifier).state = false;
       usernameCtl.clear();
-      // nikCtl.clear();
       emailCtl.clear();
       passwordCtl.clear();
       phoneNumberCtl.clear();
@@ -307,25 +301,6 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                 false,
                 1,
                 (value) {}),
-            // sizedSpacer(height: 5.0),
-            // inputTextField(context, keyNikField, "Nik", nikCtl,
-            //     TextInputType.text, false, false, 1, (value) {}),
-            // sizedSpacer(height: 5.0),
-            // roleSwitch(
-            //     context,
-            //     "Set as admin",
-            //     ref.watch(
-            //       loginRegisterIsAdminProvider,
-            //     ), (value) {
-            //   ref.read(loginRegisterIsAdminProvider.notifier).state = value;
-            //   if (value) {
-            //     ref.read(loginRegisterRoleProvider.notifier).state =
-            //         UserRoleEnum.admin.name;
-            //   } else {
-            //     ref.read(loginRegisterRoleProvider.notifier).state =
-            //         UserRoleEnum.employee.name;
-            //   }
-            // }),
             sizedSpacer(height: 5.0),
             inputTextField(context, keyEmailField, "Email", emailCtl,
                 TextInputType.emailAddress, false, false, 1, (value) {}),

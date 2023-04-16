@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:report_project/common/controller/role_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:report_project/auth/controllers/profile_controller.dart';
@@ -11,33 +12,36 @@ part 'auth_controller.g.dart';
 AuthController authController(AuthControllerRef ref) {
   final authService = ref.watch(authServiceProvider);
   final profileController = ref.watch(profileControllerProvider.notifier);
+  final roleController = ref.watch(roleControllerProvider.notifier);
   return AuthController(
     authService: authService,
     profileController: profileController,
+    roleController: roleController,
   );
 }
 
 class AuthController {
   final AuthService authService;
   final ProfileController profileController;
+  final RoleController roleController;
 
-  AuthController({
-    required this.authService,
-    required this.profileController,
-  });
+  AuthController(
+      {required this.authService,
+      required this.profileController,
+      required this.roleController});
 
   Future<bool> registerUser({
-    required String imagePath,
     required String username,
-    required String password,
     required String email,
-    required String nik,
-    required String role,
     required String phoneNumber,
+    required String password,
+    required String userImage,
   }) async {
     debugPrint('AuthController - registerUser');
+    final roleId = roleController.findIdForRoleEmployee();
+
     final res = await authService.register(
-        imagePath, username, password, email, nik, role, phoneNumber);
+        roleId, username, email, phoneNumber, password, userImage);
 
     if (!res.success) return false;
     return true;

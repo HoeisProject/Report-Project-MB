@@ -6,7 +6,7 @@ part of 'role_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$roleControllerHash() => r'31fe817294f022698eb9e3d7ff77f4b54966e572';
+String _$roleControllerHash() => r'e61e9a839cf9d66c60c7c0b6e4464b2ff7546ef6';
 
 /// See also [RoleController].
 @ProviderFor(RoleController)

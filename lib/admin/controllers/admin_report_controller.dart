@@ -10,7 +10,8 @@ part 'admin_report_controller.g.dart';
 class AdminReportController extends _$AdminReportController {
   late final AdminReportService _adminReportService;
 
-  FutureOr<List<ReportModel>> _getProjectReport() async {
+  FutureOr<List<ReportModel>> _getReport() async {
+    debugPrint('AdminReportController - _getReport');
     final res = await _adminReportService.getReport();
     return res.map((e) => ReportModel.fromParseObject(e)).toList();
   }
@@ -18,13 +19,14 @@ class AdminReportController extends _$AdminReportController {
   @override
   FutureOr<List<ReportModel>> build() {
     _adminReportService = ref.watch(adminReportServiceProvider);
-    return _getProjectReport();
+    return _getReport();
   }
 
   Future<bool> updateReportStatus({
     required String id,
     required int status,
   }) async {
+    debugPrint('AdminReportController - updateReportStatus');
     state = const AsyncValue.loading();
     final res = await _adminReportService.updateReportStatus(
       id,
@@ -34,13 +36,13 @@ class AdminReportController extends _$AdminReportController {
       return false;
     }
     final reportStatus = ref.read(reportStatusControllerProvider);
-    final projectReportList = state.value!.map((e) {
+    final reportList = state.value!.map((e) {
       if (e.id != id) return e;
       return e.copyWith(reportStatusId: reportStatus[status].id);
     }).toList();
-    state = AsyncValue.data(projectReportList);
-    for (int i = 0; i < projectReportList.length; i++) {
-      debugPrint(projectReportList[i].toString());
+    state = AsyncValue.data(reportList);
+    for (int i = 0; i < reportList.length; i++) {
+      debugPrint(reportList[i].toString());
     }
     return true;
   }

@@ -14,18 +14,17 @@ class ReportController extends _$ReportController {
   late final ProfileService _profileService;
 
   FutureOr<List<ReportModel>> _getReport() async {
-    debugPrint('ProjectReportController - _getProjectReport');
+    debugPrint('ReportController - _getReport');
     final parseUser = await _profileService.currentUser();
     if (parseUser == null) return [];
     final res = await _reportService.getReport(parseUser);
-    final projectReports =
-        res.map((e) => ReportModel.fromParseObject(e)).toList();
-    return projectReports;
+    final reports = res.map((e) => ReportModel.fromParseObject(e)).toList();
+    return reports;
   }
 
   @override
   FutureOr<List<ReportModel>> build() {
-    debugPrint('ProjectReportController - build');
+    debugPrint('ReportController - build');
     _reportService = ref.watch(reportServiceProvider);
     _profileService = ref.watch(profileServiceProvider);
     return _getReport();
@@ -37,10 +36,10 @@ class ReportController extends _$ReportController {
     required String desc,
     required List<Media> listMediaFile,
   }) async {
-    debugPrint('ProjectReportController - createProject');
-    state = const AsyncValue.loading();
+    debugPrint('ReportController - createProject');
     final parseUser = await _profileService.currentUser();
     if (parseUser == null) return false;
+    state = const AsyncValue.loading();
     final res = await _reportService.create(
       title,
       position,
@@ -51,83 +50,8 @@ class ReportController extends _$ReportController {
     if (!res.success || res.results == null) {
       return false;
     }
-    final projectReport = ReportModel.fromParseObject(res.results![0]);
-    state = AsyncValue.data([...state.value!, projectReport]);
+    final report = ReportModel.fromParseObject(res.results![0]);
+    state = AsyncValue.data([...state.value!, report]);
     return true;
   }
 }
-
-// final projectReportControllerProvider =
-//     StateNotifierProvider<ProjectReportController, List<ProjectReportModel>>(
-//         (ref) {
-//   final reportService = ref.watch(reportServiceProvider);
-//   final profileService = ref.watch(profileServiceProvider);
-//   return ProjectReportController(
-//     reportService: reportService,
-//     profileService: profileService,
-//   );
-// });
-
-// final getProjectReportsProvider =
-//     FutureProvider<List<ProjectReportModel>>((ref) {
-//   return ref.watch(projectReportControllerProvider);
-// });
-
-// final getReportsMediaProvider =
-//     FutureProvider.family((ref, String reportObjectId) async {
-//   final reportService = ref.watch(reportServiceProvider);
-//   final res = await reportService.getReportsMedia(reportObjectId);
-//   final reportsMedia =
-//       res.map((e) => ReportMediaModel.fromParseObject(e)).toList();
-//   return reportsMedia;
-// });
-
-// class ProjectReportController extends StateNotifier<List<ProjectReportModel>> {
-//   final ReportService reportService;
-//   final ProfileService profileService;
-
-//   ProjectReportController({
-//     required this.reportService,
-//     required this.profileService,
-//   }) : super([]);
-
-//   Future<bool> createProject({
-//     required String projectTitle,
-//     required DateTime projectDateTime,
-//     required Position projectPosition,
-//     required String projectDesc,
-//     required List<Media> listMediaFile,
-//   }) async {
-//     debugPrint('project report - controller - createProject');
-//     final user = await profileService.currentUser();
-//     if (user == null) return false;
-//     final res = await reportService.create(
-//       projectTitle,
-//       projectDateTime,
-//       projectPosition,
-//       projectDesc,
-//       user,
-//       listMediaFile,
-//     );
-//     if (!res.success || res.results == null) {
-//       return false;
-//     }
-
-//     final projectReport = ProjectReportModel.fromParseObject(res.results![0]);
-//     state = [...state, projectReport];
-//     return true;
-//   }
-
-//   Future<List<ProjectReportModel>> getProjectReports() async {
-//     debugPrint('project report - controller - getProjectReports');
-//     final user = await profileService.currentUser();
-//     if (user == null) return [];
-
-//     final res = await reportService.getReports(user);
-//     final projectReports =
-//         res.map((e) => ProjectReportModel.fromParseObject(e)).toList();
-//     state = projectReports;
-
-//     return projectReports;
-//   }
-// }

@@ -9,11 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class DetailReportScreen extends ConsumerWidget {
   static const routeName = '/report_detail_screen';
 
-  final ReportModel projectReport;
+  final ReportModel report;
 
   const DetailReportScreen({
     super.key,
-    required this.projectReport,
+    required this.report,
   });
 
   @override
@@ -26,7 +26,7 @@ class DetailReportScreen extends ConsumerWidget {
 
   Widget _body(context, WidgetRef ref) {
     final reportsMedia = ref.watch(getReportMediaProvider(
-      reportId: projectReport.id,
+      reportId: report.id,
     ));
     return Container(
       margin: const EdgeInsets.all(10.0),
@@ -42,13 +42,12 @@ class DetailReportScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(context, "Project Title", projectReport.title),
-                viewTextField(context, "Time and Date",
-                    projectReport.updatedAt.toString()),
+                viewTextField(context, "Project Title", report.title),
                 viewTextField(
-                    context, "Location", projectReport.position.toString()),
+                    context, "Time and Date", report.updatedAt.toString()),
+                viewTextField(context, "Location", report.position.toString()),
                 viewTextField(
-                    context, "Project Description", projectReport.description),
+                    context, "Project Description", report.description),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =
@@ -82,70 +81,3 @@ class DetailReportScreen extends ConsumerWidget {
     );
   }
 }
-
-// class DetailReportScreen extends StatefulWidget {
-//   static const routeName = '/report_detail_screen';
-
-//   final ProjectReportModel projectReport;
-
-//   const DetailReportScreen({
-//     super.key,
-//     required this.projectReport,
-//   });
-
-//   @override
-//   State<StatefulWidget> createState() => DetailReportScreenState();
-// }
-
-// class DetailReportScreenState extends State<DetailReportScreen> {
-//   List<String?> listMediaFilePath = [];
-
-//   late final ProjectReportModel projectReport;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     debugPrint(widget.projectReport.toString());
-//     projectReport = widget.projectReport;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: customAppbar("Detail Report"),
-//       body: _body(),
-//     );
-//   }
-
-//   Widget _body() {
-//     return Container(
-//       margin: const EdgeInsets.all(10.0),
-//       child: Card(
-//         elevation: 5.0,
-//         clipBehavior: Clip.hardEdge,
-//         shape: const RoundedRectangleBorder(
-//           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//         ),
-//         child: SingleChildScrollView(
-//           child: Padding(
-//             padding: const EdgeInsets.all(10.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 viewTextField(
-//                     context, "Project Title", projectReport.projectTitle),
-//                 viewTextField(context, "Time and Date",
-//                     projectReport.projectDateTime.toString()),
-//                 viewTextField(context, "Location",
-//                     projectReport.projectPosition.toString()),
-//                 viewTextField(
-//                     context, "Project Description", projectReport.projectDesc),
-//                 viewMediaField(context, "Attach Media", listMediaFilePath),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

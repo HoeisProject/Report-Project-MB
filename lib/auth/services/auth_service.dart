@@ -13,30 +13,29 @@ AuthService authService(AuthServiceRef ref) {
 
 class AuthService {
   Future<ParseResponse> register(
-    String imagePath,
+    String roleId,
     String username,
-    String password,
     String email,
-    String nik,
-    String role,
     String phoneNumber,
+    String password,
+    String userImage,
   ) async {
-    ParseFile parseUserImage = ParseFile(File(imagePath));
+    ParseFile parseUserImage = ParseFile(File(userImage));
 
     await parseUserImage.save();
 
-    final newUser = ParseUser.createUser(email, password, email)
+    final newUser = ParseUser.createUser(username, password, email)
+      ..set(UserModelEnum.roleId.name, ParseObject('_Role')..objectId = roleId)
       ..set(UserModelEnum.nickname.name, username)
-      ..set(UserModelEnum.userImage.name, parseUserImage)
-      ..set(UserModelEnum.nik.name, nik)
-      ..set(UserModelEnum.roleId.name, role)
-      ..set(UserModelEnum.phoneNumber.name, phoneNumber);
+      ..set(UserModelEnum.phoneNumber.name, phoneNumber)
+      ..set(UserModelEnum.isUserVerified.name, false)
+      ..set(UserModelEnum.userImage.name, parseUserImage);
 
     return newUser.signUp();
   }
 
-  Future<ParseResponse> login(String username, String password) async {
-    final user = ParseUser.createUser(username, password, null);
+  Future<ParseResponse> login(String email, String password) async {
+    final user = ParseUser.createUser(email, password, null);
     return user.login();
   }
 

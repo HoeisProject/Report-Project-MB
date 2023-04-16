@@ -44,7 +44,7 @@ class UserModel {
       nik: parse.get<String>(UserModelEnum.objectId.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
-      userImage: parse.get<String>(UserModelEnum.userImage.name) ?? '',
+      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)!.url ?? '',
       ktpImage: parse.get<String>(UserModelEnum.objectId.name),
     );
   }

@@ -11,7 +11,7 @@ AdminReportService adminReportService(AdminReportServiceRef ref) {
 
 class AdminReportService {
   Future<List<ParseObject>> getReport() async {
-    ParseObject? getPostObject = ParseObject('ProjectReport');
+    ParseObject? getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject);
     final ParseResponse response = await queryPosts.query();
 
@@ -37,7 +37,7 @@ class AdminReportService {
     String objectId,
     int projectStatus,
   ) async {
-    ParseObject updateReport = ParseObject("ProjectReport")
+    ParseObject updateReport = ParseObject("Report")
       ..objectId = objectId
       ..set(ReportEnum.reportStatusId.name, projectStatus);
 

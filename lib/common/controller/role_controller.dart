@@ -22,4 +22,8 @@ class RoleController extends _$RoleController {
   RoleModel findById(String id) {
     return state.firstWhere((element) => element.id == id);
   }
+
+  String findIdForRoleEmployee() {
+    return state.firstWhere((element) => element.name == 'employee').id;
+  }
 }

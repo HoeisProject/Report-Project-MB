@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
+import 'package:report_project/admin/screens/admin_project_create.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
@@ -32,10 +33,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
           builder: (context) => const CreateReportScreen());
     case DetailReportScreen.routeName:
-      final projectReport = routeSettings.arguments as ReportModel;
+      final report = routeSettings.arguments as ReportModel;
       return MaterialPageRoute(
-          builder: (context) =>
-              DetailReportScreen(projectReport: projectReport));
+          builder: (context) => DetailReportScreen(report: report));
 
     /// ADMIN
     case AdminHomeScreen.routeName:
@@ -43,6 +43,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AdminProjectHomeScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const AdminProjectHomeScreen());
+    case AdminProjectCreateScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const AdminProjectCreateScreen());
     // TODO HERE
     // case AdminDetailReportScreen.routeName:
     //   final arguments = routeSettings.arguments as Map<String, dynamic>;

@@ -31,9 +31,6 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   void initState() {
     super.initState();
     ref.read(reportControllerProvider);
-    // employee = ref.read(profileControllerProvider.future);
-    // final a = ref.read(profileControllerProvider).asData!.value;
-    // ref.read(projectReportControllerProvider.notifier).getProjectReports();
   }
 
   @override
@@ -146,7 +143,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   }
 
   Widget _listProjectView() {
-    final projectReports = ref.watch(employeeHomeFutureFilteredList);
+    final reports = ref.watch(employeeHomeFutureFilteredList);
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
@@ -156,7 +153,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
           borderRadius: BorderRadius.all(Radius.circular(15.0)),
         ),
         elevation: 5.0,
-        child: projectReports.when(
+        child: reports.when(
           data: (data) {
             return ListView.builder(
                 padding: const EdgeInsets.only(top: 10.0),

@@ -28,7 +28,7 @@ class ReportService {
     List<Media> listMediaFile,
   ) async {
     final reportStatus = ref.read(reportStatusControllerProvider);
-    final newReport = ParseObject('ProjectReport')
+    final newReport = ParseObject('Report')
       ..set(ReportEnum.title.name, title)
       ..set(
           ReportEnum.position.name,
@@ -43,7 +43,7 @@ class ReportService {
         ParseObject('ReportStatus')..objectId = reportStatus[0].id,
       );
 
-    final projectReport = await newReport.save();
+    final report = await newReport.save();
     int i = 0;
     for (var media in listMediaFile) {
       ParseFile parseReportMedia = ParseFile(File(media.path));
@@ -61,11 +61,11 @@ class ReportService {
         break;
       }
     }
-    return projectReport;
+    return report;
   }
 
   Future<List<ParseObject>> getReport(ParseUser currentUser) async {
-    ParseObject? getPostObject = ParseObject('ProjectReport');
+    ParseObject? getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
       ..whereEqualTo(ReportEnum.userId.name, currentUser);
     final ParseResponse response = await queryPosts.query();
@@ -96,7 +96,7 @@ class ReportService {
     String projectTitle,
     String projectDesc,
   ) async {
-    ParseObject updateReport = ParseObject("ProjectReport")
+    ParseObject updateReport = ParseObject("Report")
       ..objectId = objectId
       ..set(ReportEnum.title.name, projectTitle)
       ..set(ReportEnum.description.name, projectDesc);
@@ -105,8 +105,7 @@ class ReportService {
   }
 
   Future<ParseResponse> deletePost(String objectId) async {
-    ParseObject deleteReport = ParseObject("ProjectReport")
-      ..objectId = objectId;
+    ParseObject deleteReport = ParseObject("Report")..objectId = objectId;
     return deleteReport.delete();
   }
 }
