@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:report_project/auth/widgets/account_verify.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
@@ -22,16 +23,22 @@ class UserProfileScreenState extends State<UserProfileScreen> {
   String username = "Username";
   String userImage =
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
+  String? ktpImage =
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
+  String phoneNumber = "User Phone Number";
   String? nik = "User Nik";
   String email = "User Email";
+  bool isUserVerified = false;
 
   @override
   void initState() {
     super.initState();
     username = widget.userModel.username;
     userImage = widget.userModel.userImage;
+    ktpImage = widget.userModel.ktpImage;
     nik = widget.userModel.nik;
     email = widget.userModel.email;
+    isUserVerified = widget.userModel.isUserVerified;
   }
 
   @override
@@ -48,8 +55,8 @@ class UserProfileScreenState extends State<UserProfileScreen> {
               width: 200,
             ),
             ViewIconField(
-              text: nik ?? '',
-              icon: Icons.credit_card,
+              text: phoneNumber,
+              icon: Icons.phone,
               onPressed: () {},
             ),
             ViewIconField(
@@ -85,4 +92,72 @@ class UserProfileScreenState extends State<UserProfileScreen> {
       ],
     );
   }
+}
+
+Widget accountVerify(BuildContext context) {
+  return Container(
+    margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+    child: Center(
+      child: SizedBox(
+        height: 50.0,
+        width: 150.0,
+        child: ElevatedButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext dialogContext) {
+                return const AccountVerify();
+              },
+            );
+          },
+          child: const Center(
+            child: Text('Verify Account', style: kButtonTextStyle),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget ktpField(
+  Color color,
+  String? nik,
+  String? imagePath,
+  bool isUserVerified,
+) {
+  return !isUserVerified
+      ? SizedBox(
+          width: 150.0,
+          height: 75.0,
+          child: ElevatedButton(
+              onPressed: () {},
+              child: const Text(
+                "Account Verification",
+                style: kButtonTextStyle,
+              )),
+        )
+      : Column(
+          children: [
+            Center(
+              child: SizedBox(
+                width: 125.0,
+                height: 150.0,
+                child: imagePath != null
+                    ? InkWell(
+                        onTap: () {},
+                        child: Image.network(imagePath ?? ''),
+                      )
+                    : InkWell(
+                        onTap: () {},
+                        child: const Icon(Icons.add_a_photo, size: 50.0),
+                      ),
+              ),
+            ),
+            Text(
+              nik ?? '-',
+              style: kTitleContextStyle,
+            ),
+          ],
+        );
 }
