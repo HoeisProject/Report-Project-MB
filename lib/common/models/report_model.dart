@@ -1,8 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
-enum ReportEnum {
+import 'package:report_project/common/models/project_model.dart';
+import 'package:report_project/common/models/report_status_model.dart';
+import 'package:report_project/common/models/user_model.dart';
+
+enum ReportModelEnum {
   objectId,
   projectId,
   userId,
@@ -10,6 +13,7 @@ enum ReportEnum {
   title,
   description,
   position,
+  createdAt,
   updatedAt,
 }
 
@@ -22,6 +26,7 @@ class ReportModel {
   final String title;
   final String description;
   final ParseGeoPoint position;
+  final DateTime createdAt;
   final DateTime updatedAt;
 
   const ReportModel({
@@ -32,19 +37,29 @@ class ReportModel {
     required this.title,
     required this.description,
     required this.position,
+    required this.createdAt,
     required this.updatedAt,
   });
 
   factory ReportModel.fromParseObject(ParseObject parse) {
+    debugPrint(parse.toString());
     return ReportModel(
-      id: parse.get<String>(ReportEnum.objectId.name)!,
-      projectId: parse.get<String>(ReportEnum.projectId.name)!,
-      userId: parse.get<String>(ReportEnum.userId.name)!,
-      reportStatusId: parse.get<String>(ReportEnum.reportStatusId.name)!,
-      title: parse.get<String>(ReportEnum.title.name)!,
-      description: parse.get<String>(ReportEnum.description.name)!,
-      position: parse.get<ParseGeoPoint>(ReportEnum.position.name)!,
-      updatedAt: parse.get<DateTime>(ReportEnum.updatedAt.name)!,
+      id: parse.get<String>(ReportModelEnum.objectId.name)!,
+      projectId: parse
+          .get<ParseObject>(ReportModelEnum.projectId.name)!
+          .get(ProjectModelEnum.objectId.name)!,
+      userId: parse
+          .get<ParseObject>(ReportModelEnum.userId.name)!
+          .get(UserModelEnum.objectId.name),
+      reportStatusId: parse
+          .get<ParseObject>(ReportModelEnum.reportStatusId.name)!
+          .get(ReportStatusModelEnum.objectId.name),
+      title: parse.get<String>(ReportModelEnum.title.name)!,
+      description: parse.get<String>(ReportModelEnum.description.name)!,
+      position: parse.get<ParseGeoPoint>(ReportModelEnum.position.name)!,
+      createdAt: parse.get<DateTime>(ReportModelEnum.createdAt.name)!,
+      updatedAt: parse.get<DateTime>(ReportModelEnum.updatedAt.name) ??
+          parse.get<DateTime>(ReportModelEnum.createdAt.name)!,
     );
   }
 
@@ -56,6 +71,7 @@ class ReportModel {
     String? title,
     String? description,
     ParseGeoPoint? position,
+    DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return ReportModel(
@@ -66,6 +82,7 @@ class ReportModel {
       title: title ?? this.title,
       description: description ?? this.description,
       position: position ?? this.position,
+      createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
@@ -79,6 +96,8 @@ class ReportModel {
   //     'title': title,
   //     'description': description,
   //     'position': position.toMap(),
+  //     'createdAt': createdAt.millisecondsSinceEpoch,
+  //     'updatedAt': updatedAt.millisecondsSinceEpoch,
   //   };
   // }
 
@@ -87,10 +106,12 @@ class ReportModel {
   //     id: map['id'] as String,
   //     projectId: map['projectId'] as String,
   //     userId: map['userId'] as String,
-  //     reportStatusId: map['reportStatusId'] as int,
+  //     reportStatusId: map['reportStatusId'] as String,
   //     title: map['title'] as String,
   //     description: map['description'] as String,
   //     position: ParseGeoPoint.fromMap(map['position'] as Map<String,dynamic>),
+  //     createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+  //     updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
   //   );
   // }
 
@@ -100,7 +121,7 @@ class ReportModel {
 
   @override
   String toString() {
-    return 'ReportModel(id: $id, projectId: $projectId, userId: $userId, reportStatusId: $reportStatusId, title: $title, description: $description, position: $position)';
+    return 'ReportModel(id: $id, projectId: $projectId, userId: $userId, reportStatusId: $reportStatusId, title: $title, description: $description, position: $position, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -113,7 +134,9 @@ class ReportModel {
         other.reportStatusId == reportStatusId &&
         other.title == title &&
         other.description == description &&
-        other.position == position;
+        other.position == position &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
   }
 
   @override
@@ -124,6 +147,8 @@ class ReportModel {
         reportStatusId.hashCode ^
         title.hashCode ^
         description.hashCode ^
-        position.hashCode;
+        position.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }

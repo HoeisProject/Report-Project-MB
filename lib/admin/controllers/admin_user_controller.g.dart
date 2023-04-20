@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'admin_project_controller.dart';
+part of 'admin_user_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$adminProjectControllerHash() =>
-    r'eb7e3d761e4b532abf168d6738c0bf774c3df2e1';
+String _$adminUserControllerHash() =>
+    r'deab69b024b8b2c09cc31eebec5deb614e843076';
 
-/// See also [AdminProjectController].
-@ProviderFor(AdminProjectController)
-final adminProjectControllerProvider =
-    AsyncNotifierProvider<AdminProjectController, List<ProjectModel>>.internal(
-  AdminProjectController.new,
-  name: r'adminProjectControllerProvider',
+/// See also [AdminUserController].
+@ProviderFor(AdminUserController)
+final adminUserControllerProvider =
+    AsyncNotifierProvider<AdminUserController, List<UserModel>>.internal(
+  AdminUserController.new,
+  name: r'adminUserControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$adminProjectControllerHash,
+      : _$adminUserControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AdminProjectController = AsyncNotifier<List<ProjectModel>>;
+typedef _$AdminUserController = AsyncNotifier<List<UserModel>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

@@ -44,7 +44,27 @@ class UserModel {
       nik: parse.get<String>(UserModelEnum.objectId.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
-      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)!.url ?? '',
+      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
+      ktpImage: parse.get<String>(UserModelEnum.objectId.name),
+    );
+  }
+
+  factory UserModel.fromParseObject(ParseObject parse) {
+    debugPrint("Debug PRINT : $parse");
+    final String? a = parse.get<String>('email');
+    debugPrint("EMAIL : $a");
+    return UserModel(
+      id: parse.get<String>(UserModelEnum.objectId.name)!,
+      roleId: parse
+          .get<ParseObject>(UserModelEnum.roleId.name)!
+          .get(RoleModelEnum.objectId.name),
+      username: parse.get<String>(UserModelEnum.username.name)!,
+      nickname: parse.get<String>(UserModelEnum.nickname.name)!,
+      email: parse.get<String>(UserModelEnum.email.name)!,
+      nik: parse.get<String>(UserModelEnum.objectId.name),
+      phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
+      isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
+      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
       ktpImage: parse.get<String>(UserModelEnum.objectId.name),
     );
   }

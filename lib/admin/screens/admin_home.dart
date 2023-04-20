@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
+import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
 import 'package:report_project/admin/widgets/admin_home_filter.dart';
 import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
@@ -99,7 +100,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
             _menuBarItem(Icons.polyline_rounded, 'Project', () {
               Navigator.pushNamed(context, AdminProjectHomeScreen.routeName);
             }),
-            _menuBarItem(Icons.assignment, "Employee", () {}),
+            _menuBarItem(Icons.assignment, "User", () {
+              Navigator.pushNamed(context, AdminUserHomeScreen.routeName);
+            }),
             _menuBarItem(Icons.question_mark, "Project", () {}),
           ],
         ),

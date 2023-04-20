@@ -41,9 +41,9 @@ class AdminReportController extends _$AdminReportController {
       return e.copyWith(reportStatusId: reportStatus[status].id);
     }).toList();
     state = AsyncValue.data(reportList);
-    for (int i = 0; i < reportList.length; i++) {
-      debugPrint(reportList[i].toString());
-    }
+    // for (int i = 0; i < reportList.length; i++) {
+    //   debugPrint(reportList[i].toString());
+    // }
     return true;
   }
 }

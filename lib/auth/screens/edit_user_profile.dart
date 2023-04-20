@@ -8,7 +8,7 @@ import 'package:report_project/common/widgets/view_with_icon.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class EditUserProfileScreen extends StatefulWidget {
-  static const routeName = '/edit_user_profile_screen';
+  static const routeName = '/edit-user-profile';
 
   final UserModel userModel;
 

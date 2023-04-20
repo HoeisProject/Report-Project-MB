@@ -39,8 +39,12 @@ class ReportController extends _$ReportController {
     required List<Media> listMediaFile,
   }) async {
     debugPrint('ReportController - createProject');
+
+    /// Check current user
     final currentUser = await _profileService.currentUser();
     if (currentUser == null) return false;
+
+    /// Find id for pending status as FK
     final reportStatusId = ref
         .read(reportStatusControllerProvider.notifier)
         .findIdForStatusPending();

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/controller/report_status_controller.dart';
+import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
-import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
+import 'package:report_project/employee/screens/not_verified.dart';
 import 'package:report_project/employee/view_model/employee_home_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/employee/widgets/employee_home_filter.dart';
@@ -28,12 +30,6 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   final _searchController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    ref.read(reportControllerProvider);
-  }
-
-  @override
   Widget build(BuildContext context) {
     debugPrint("Employee Home Screen");
 
@@ -45,15 +41,15 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
       }
     });
 
-    // final employee = ref.watch(profileControllerProvider).asData!.value!;
     final employee = ref.watch(profileControllerProvider);
     debugPrint('build scaffold');
+
     return employee.when(
       data: (data) {
         if (data == null) return Container();
         return Scaffold(
           appBar: customAppbar("HOME"),
-          body: _body(),
+          body: data.isUserVerified ? _body() : const NotVerifiedScreen(),
           drawer: showDrawer(context, ref, data),
         );
       },
@@ -145,6 +141,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   Widget _listProjectView() {
     final reports = ref.watch(employeeHomeFutureFilteredList);
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
+    final projects = ref.watch(adminProjectControllerProvider);
     return SizedBox(
       height: MediaQuery.of(context).size.height / 1.5,
       child: Card(
@@ -159,9 +156,13 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                 padding: const EdgeInsets.only(top: 10.0),
                 itemCount: data.length,
                 itemBuilder: (BuildContext context, int index) {
+                  final report = data[index];
+                  final project = projects.asData?.value
+                      .firstWhere((element) => element.id == report.projectId);
                   return _projectViewItem(
-                    data[index],
-                    reportStatus.findIndexById(data[index].id),
+                    report,
+                    project,
+                    reportStatus.findIndexById(report.id),
                   );
                 });
           },
@@ -183,7 +184,8 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ReportModel data, int status) {
+  /// TODO: Jika list sudah melebihi 4 item, content ke - 4 tidak terlihat
+  Widget _projectViewItem(ReportModel data, ProjectModel? project, int status) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -223,9 +225,12 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                       ],
                     ),
                   ),
+
                   reportItemContent(data.updatedAt.toString(), false),
                   reportItemContent(data.position.toString(), false),
                   reportItemContent(data.description, true),
+                  // reportItemContent(data.projectId, false),
+                  reportItemContent('From Project: ${project?.name}', false),
                 ],
               ),
             ),

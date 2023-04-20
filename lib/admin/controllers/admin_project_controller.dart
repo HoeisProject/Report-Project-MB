@@ -18,6 +18,7 @@ class AdminProjectController extends _$AdminProjectController {
 
   @override
   FutureOr<List<ProjectModel>> build() {
+    debugPrint('AdminProjectController - build');
     _adminProjectService = ref.watch(adminProjectServiceProvider);
     _profileService = ref.watch(profileServiceProvider);
     return _getProject();

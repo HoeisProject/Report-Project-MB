@@ -37,8 +37,8 @@ class ProjectModel {
       userId: parse
           .get<ParseUser>(ProjectModelEnum.userId.name)!
           .get(UserModelEnum.objectId.name),
-      name: parse.get<String>(ProjectModelEnum.description.name)!,
-      description: parse.get<String>(ProjectModelEnum.name.name)!,
+      name: parse.get<String>(ProjectModelEnum.name.name)!,
+      description: parse.get<String>(ProjectModelEnum.description.name)!,
       startDate: parse.get<DateTime>(ProjectModelEnum.startDate.name)!,
       endDate: parse.get<DateTime>(ProjectModelEnum.endDate.name)!,
     );

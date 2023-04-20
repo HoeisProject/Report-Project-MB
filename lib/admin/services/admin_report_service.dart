@@ -39,7 +39,7 @@ class AdminReportService {
   ) async {
     ParseObject updateReport = ParseObject("Report")
       ..objectId = objectId
-      ..set(ReportEnum.reportStatusId.name, projectStatus);
+      ..set(ReportModelEnum.reportStatusId.name, projectStatus);
 
     return updateReport.save();
   }

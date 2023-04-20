@@ -41,8 +41,6 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
 
   Position? position;
 
-  String _projectCategorySelected = '';
-
   @override
   void initState() {
     super.initState();
@@ -148,6 +146,9 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     /// Used for Dropdown Category
     final projects = ref.watch(adminProjectControllerProvider);
 
+    final projectCategorySelected =
+        ref.watch(createReportProjectCategorySelectedProvider);
+
     return Container(
       margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
@@ -170,13 +171,21 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
             const Text('Project Category'),
             projects.when(
               data: (data) {
-                return DropdownButton<String>(
-                  items: data.map((e) {
+                final projectCategories = [
+                  const DropdownMenuItem(value: '', child: Text('')),
+                  ...data.map((e) {
                     return DropdownMenuItem(value: e.id, child: Text(e.name));
-                  }).toList(),
+                  }).toList()
+                ];
+                return DropdownButton<String>(
+                  value: projectCategorySelected,
+                  items: projectCategories,
                   onChanged: (value) {
                     debugPrint(value);
-                    _projectCategorySelected = value ?? '';
+                    ref
+                        .read(createReportProjectCategorySelectedProvider
+                            .notifier)
+                        .state = value ?? '';
                   },
                   icon: const Icon(Icons.keyboard_arrow_down),
                 );
@@ -231,7 +240,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
               false,
               "SEND",
               Colors.lightBlue,
-              () => createDataReport(context),
+              () => submit(context),
             ),
             sizedSpacer(height: 30.0),
           ],
@@ -240,15 +249,17 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     );
   }
 
-  void createDataReport(context) async {
+  void submit(context) async {
     final listMediaPickerFile =
         ref.read(createReportListMediaPickerFileProvider);
+    final projectCategorySelected =
+        ref.read(createReportProjectCategorySelectedProvider);
     showLoadingDialog(context);
     FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-    if (!fieldValidation(listMediaPickerFile)) {
+    if (!fieldValidation(listMediaPickerFile, projectCategorySelected)) {
       Navigator.pop(context);
       showSnackBar(context, Icons.error_outline, Colors.red,
           "There is empty field!", Colors.red);
@@ -256,7 +267,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     }
     final response =
         await ref.read(reportControllerProvider.notifier).createProject(
-              projectId: _projectCategorySelected,
+              projectId: projectCategorySelected,
               title: _projectTitleCtl.text.trim(),
               position: position!,
               description: _projectDescCtl.text.trim(),
@@ -275,10 +286,13 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     }
   }
 
-  bool fieldValidation(listMediaPickerFile) {
+  bool fieldValidation(
+    List<Media> listMediaPickerFile,
+    String projectCategorySelected,
+  ) {
     if (_projectTitleCtl.text.trim().isNotEmpty &&
         _projectDescCtl.text.trim().isNotEmpty &&
-        _projectCategorySelected.isNotEmpty &&
+        projectCategorySelected.isNotEmpty &&
         ref.read(createReportProjectCreatedProvider) != null &&
         position != null &&
         listMediaPickerFile.isNotEmpty) {

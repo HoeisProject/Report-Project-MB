@@ -8,6 +8,12 @@ enum ReportStatusEnum {
   reject, // 2
 }
 
+enum ReportStatusModelEnum {
+  objectId,
+  name,
+  description,
+}
+
 @immutable
 class ReportStatusModel {
   final String id;

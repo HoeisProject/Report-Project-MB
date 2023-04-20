@@ -29,35 +29,41 @@ class ReportService {
     Position position,
     List<Media> listMediaFile,
   ) async {
+    debugPrint('ReportService - create');
     final newReport = ParseObject('Report')
       ..set(
-        ReportEnum.projectId.name,
+        ReportModelEnum.projectId.name,
         ParseObject('Project')..objectId = projectId,
       )
-      ..set(ReportEnum.userId.name, currentUser)
+      ..set(ReportModelEnum.userId.name, currentUser)
       ..set(
-        ReportEnum.reportStatusId.name,
+        ReportModelEnum.reportStatusId.name,
         ParseObject('ReportStatus')..objectId = reportStatusId,
       )
-      ..set(ReportEnum.title.name, title)
-      ..set(ReportEnum.description.name, description)
+      ..set(ReportModelEnum.title.name, title)
+      ..set(ReportModelEnum.description.name, description)
       ..set(
-        ReportEnum.position.name,
+        ReportModelEnum.position.name,
         ParseGeoPoint(
           latitude: position.latitude,
           longitude: position.longitude,
         ),
       );
-
+    debugPrint(newReport.toJson().toString());
     final report = await newReport.save();
+    debugPrint(report.toString());
+    debugPrint(report.results.toString());
+    if (!report.success || report.result == null) return report;
+
     int i = 0;
     for (var media in listMediaFile) {
       ParseFile parseReportMedia = ParseFile(File(media.path));
 
       final newReportMedia = ParseObject('ReportMedia');
-      newReportMedia.set(ReportMediaEnum.reportId.name, newReport.objectId);
       newReportMedia.set(
-          ReportMediaEnum.reportAttachment.name, parseReportMedia);
+          ReportMediaModelEnum.reportId.name, newReport.objectId);
+      newReportMedia.set(
+          ReportMediaModelEnum.reportAttachment.name, parseReportMedia);
 
       final response = await newReportMedia.save();
       if (response.success) {
@@ -73,7 +79,7 @@ class ReportService {
   Future<List<ParseObject>> getReport(ParseUser currentUser) async {
     ParseObject? getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..whereEqualTo(ReportEnum.userId.name, currentUser);
+      ..whereEqualTo(ReportModelEnum.userId.name, currentUser);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {
@@ -87,7 +93,7 @@ class ReportService {
     ParseObject? getPostObject = ParseObject('ReportMedia');
     QueryBuilder<ParseObject> queryPosts =
         QueryBuilder<ParseObject>(getPostObject)
-          ..whereEqualTo(ReportMediaEnum.reportId.name, reportId);
+          ..whereEqualTo(ReportMediaModelEnum.reportId.name, reportId);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {
@@ -104,8 +110,8 @@ class ReportService {
   ) async {
     ParseObject updateReport = ParseObject("Report")
       ..objectId = objectId
-      ..set(ReportEnum.title.name, projectTitle)
-      ..set(ReportEnum.description.name, projectDesc);
+      ..set(ReportModelEnum.title.name, projectTitle)
+      ..set(ReportModelEnum.description.name, projectDesc);
 
     return updateReport.save();
   }
