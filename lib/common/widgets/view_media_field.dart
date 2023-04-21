@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:report_project/common/styles/constant.dart';
 
 Widget viewMediaField(
@@ -40,9 +41,22 @@ Widget _attachMediaItem(
     width: 75.0,
     height: 75.0,
     child: mediaFilePath != null
-        ? Image.network(
-            mediaFilePath,
-            fit: BoxFit.cover,
+        ? PhotoView(
+            loadingBuilder: (context, event) => Center(
+              child: SizedBox(
+                width: 20.0,
+                height: 20.0,
+                child: CircularProgressIndicator(
+                  value: event == null
+                      ? 0
+                      : event.cumulativeBytesLoaded /
+                          (event.expectedTotalBytes ?? 1),
+                ),
+              ),
+            ),
+            imageProvider: NetworkImage(
+              mediaFilePath,
+            ),
           )
         : const Icon(Icons.add_a_photo, size: 50.0),
   );

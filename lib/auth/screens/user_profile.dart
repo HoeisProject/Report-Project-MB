@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:report_project/auth/widgets/account_verify.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
@@ -64,6 +65,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
               icon: Icons.email,
               onPressed: () {},
             ),
+            ktpField(context, nik, ktpImage, isUserVerified)
           ],
         ),
       ),
@@ -94,6 +96,67 @@ class UserProfileScreenState extends State<UserProfileScreen> {
   }
 }
 
+Widget ktpField(
+  BuildContext context,
+  String? nik,
+  String? imagePath,
+  bool isUserVerified,
+) {
+  return !isUserVerified
+      ? SizedBox(
+          width: 150.0,
+          height: 75.0,
+          child: ElevatedButton(
+              onPressed: () => accountVerify(context),
+              child: const Text(
+                "Account Verification",
+                style: kButtonTextStyle,
+              )),
+        )
+      : Column(
+          children: [
+            Center(
+              child: SizedBox(
+                width: 125.0,
+                height: 150.0,
+                child: imagePath != null
+                    ? PhotoView(
+                        loadingBuilder: (context, event) => Center(
+                          child: SizedBox(
+                            width: 20.0,
+                            height: 20.0,
+                            child: CircularProgressIndicator(
+                              value: event == null
+                                  ? 0
+                                  : event.cumulativeBytesLoaded /
+                                      (event.expectedTotalBytes ?? 1),
+                            ),
+                          ),
+                        ),
+                        errorBuilder: (context, error, stackTrace) => Center(
+                          child: SizedBox(
+                            width: 20.0,
+                            height: 20.0,
+                            child: Text("$error"),
+                          ),
+                        ),
+                        imageProvider: NetworkImage(imagePath),
+                      )
+                    : const InkWell(
+                        onTap: null,
+                        child: Icon(Icons.add_a_photo, size: 50.0),
+                      ),
+              ),
+            ),
+            ViewIconField(
+              text: nik ?? '-',
+              icon: Icons.credit_card,
+              onPressed: () {},
+            ),
+          ],
+        );
+}
+
 Widget accountVerify(BuildContext context) {
   return Container(
     margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -118,46 +181,4 @@ Widget accountVerify(BuildContext context) {
       ),
     ),
   );
-}
-
-Widget ktpField(
-  Color color,
-  String? nik,
-  String? imagePath,
-  bool isUserVerified,
-) {
-  return !isUserVerified
-      ? SizedBox(
-          width: 150.0,
-          height: 75.0,
-          child: ElevatedButton(
-              onPressed: () {},
-              child: const Text(
-                "Account Verification",
-                style: kButtonTextStyle,
-              )),
-        )
-      : Column(
-          children: [
-            Center(
-              child: SizedBox(
-                width: 125.0,
-                height: 150.0,
-                child: imagePath != null
-                    ? InkWell(
-                        onTap: () {},
-                        child: Image.network(imagePath ?? ''),
-                      )
-                    : InkWell(
-                        onTap: () {},
-                        child: const Icon(Icons.add_a_photo, size: 50.0),
-                      ),
-              ),
-            ),
-            Text(
-              nik ?? '-',
-              style: kTitleContextStyle,
-            ),
-          ],
-        );
 }

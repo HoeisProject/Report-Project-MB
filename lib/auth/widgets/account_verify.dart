@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:report_project/auth/view_model/account_verify_view_model.dart';
+import 'package:report_project/common/widgets/custom_button.dart';
+import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
+import 'package:report_project/common/widgets/sized_spacer.dart';
 
 class AccountVerify extends ConsumerStatefulWidget {
   const AccountVerify({super.key});
@@ -42,13 +48,31 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+            sizedSpacer(height: 5.0),
+            inputMediaField(
+                context, "ktp Image", ref.watch(accountVerifyMediaFileProvider),
+                () {
+              getMediaFromCamera();
+            }),
+            sizedSpacer(height: 5.0),
             inputTextField(context, keyNik, "Nik :", nikCtl,
                 TextInputType.number, false, true, 1, (value) {}),
+            sizedSpacer(height: 5.0),
+            customButton(
+              context,
+              ref.watch(accountVerifyLoadingProvider),
+              "SEND",
+              Colors.lightBlue,
+              () => sendVerifyRequest(),
+            ),
+            sizedSpacer(height: 5.0),
           ],
         ),
       ),
     );
   }
+
+  void sendVerifyRequest() {}
 
   void getMediaFromCamera() async {
     try {
@@ -60,6 +84,8 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
       );
       if (getMedia != null) {
         String? imagePath = getMedia[0].thumbPath;
+        ref.read(accountVerifyMediaFileProvider.notifier).state =
+            File(imagePath!);
       }
     } catch (e) {
       debugPrint(e.toString());
