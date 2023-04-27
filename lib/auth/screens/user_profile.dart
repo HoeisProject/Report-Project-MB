@@ -1,15 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:report_project/auth/widgets/account_verify.dart';
+import 'package:report_project/auth/widgets/user_profile_edit_image.dart';
+import 'package:report_project/auth/widgets/user_profile_edit_text.dart';
+import 'package:report_project/common/controller/role_controller.dart';
+import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_with_icon.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
-class UserProfileScreen extends StatefulWidget {
+class UserProfileScreen extends ConsumerStatefulWidget {
   static const routeName = '/user_profile_screen';
 
   final UserModel userModel;
@@ -17,10 +22,10 @@ class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key, required this.userModel});
 
   @override
-  State<StatefulWidget> createState() => UserProfileScreenState();
+  ConsumerState<UserProfileScreen> createState() => UserProfileScreenState();
 }
 
-class UserProfileScreenState extends State<UserProfileScreen> {
+class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   String username = "Username";
   String userImage =
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
@@ -28,6 +33,7 @@ class UserProfileScreenState extends State<UserProfileScreen> {
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
   String phoneNumber = "User Phone Number";
   String? nik = "User Nik";
+  String role = "employee";
   String email = "User Email";
   bool isUserVerified = false;
 
@@ -40,6 +46,11 @@ class UserProfileScreenState extends State<UserProfileScreen> {
     nik = widget.userModel.nik;
     email = widget.userModel.email;
     isUserVerified = widget.userModel.isUserVerified;
+
+    final currentRole = ref
+        .read(roleControllerProvider.notifier)
+        .findById(widget.userModel.roleId);
+    role = currentRole.name;
   }
 
   @override
@@ -55,17 +66,51 @@ class UserProfileScreenState extends State<UserProfileScreen> {
               height: 20,
               width: 200,
             ),
-            ViewIconField(
+            ViewWithIcon(
               text: phoneNumber,
-              icon: Icons.phone,
-              onPressed: () {},
+              iconLeading: Icons.phone,
+              iconTrailing: Icons.edit,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext dialogContext) {
+                    return UserProfileEditText(
+                      label: "phone number",
+                      oldValue: phoneNumber,
+                      iconLeading: Icons.phone,
+                      onPressed: () {},
+                      inputType: TextInputType.phone,
+                      obscureText: false,
+                    );
+                  },
+                );
+              },
             ),
-            ViewIconField(
+            ViewWithIcon(
               text: email,
-              icon: Icons.email,
-              onPressed: () {},
+              iconLeading: Icons.email,
+              iconTrailing: Icons.edit,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext dialogContext) {
+                    return UserProfileEditText(
+                      label: "email",
+                      oldValue: email,
+                      iconLeading: Icons.email,
+                      onPressed: () {},
+                      inputType: TextInputType.emailAddress,
+                      obscureText: false,
+                    );
+                  },
+                );
+              },
             ),
-            ktpField(context, nik, ktpImage, isUserVerified)
+            role == RoleModelNameEnum.employee.name
+                ? ktpField(context, nik, ktpImage, isUserVerified)
+                : Container()
           ],
         ),
       ),
@@ -79,13 +124,39 @@ class UserProfileScreenState extends State<UserProfileScreen> {
 
     return Column(
       children: [
-        CircleAvatar(
-          radius: 72,
-          backgroundColor: color,
-          child: CircleAvatar(
-            backgroundImage: image as ImageProvider,
-            radius: 70,
-          ),
+        Stack(
+          children: [
+            Positioned(
+              child: FloatingActionButton(
+                tooltip: "Change Image",
+                child: const Icon(
+                  Icons.edit,
+                  size: 15.0,
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext dialogContext) {
+                      return UserProfileEditImage(
+                        label: "profile image",
+                        oldImage: imagePath,
+                        onPressed: () {},
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            CircleAvatar(
+              radius: 72,
+              backgroundColor: color,
+              child: CircleAvatar(
+                backgroundImage: image as ImageProvider,
+                radius: 70,
+              ),
+            ),
+          ],
         ),
         Text(
           username,
@@ -105,7 +176,7 @@ Widget ktpField(
   return !isUserVerified
       ? SizedBox(
           width: 150.0,
-          height: 75.0,
+          height: 100.0,
           child: ElevatedButton(
               onPressed: () => accountVerify(context),
               child: const Text(
@@ -120,27 +191,54 @@ Widget ktpField(
                 width: 125.0,
                 height: 150.0,
                 child: imagePath != null
-                    ? PhotoView(
-                        loadingBuilder: (context, event) => Center(
-                          child: SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              value: event == null
-                                  ? 0
-                                  : event.cumulativeBytesLoaded /
-                                      (event.expectedTotalBytes ?? 1),
+                    ? Stack(
+                        children: [
+                          Positioned(
+                            child: FloatingActionButton(
+                              tooltip: "Change Image",
+                              child: const Icon(
+                                Icons.edit,
+                                size: 15.0,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext dialogContext) {
+                                    return UserProfileEditImage(
+                                      label: "ktp image",
+                                      oldImage: imagePath,
+                                      onPressed: () {},
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ),
-                        ),
-                        errorBuilder: (context, error, stackTrace) => Center(
-                          child: SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: Text("$error"),
+                          PhotoView(
+                            loadingBuilder: (context, event) => Center(
+                              child: SizedBox(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircularProgressIndicator(
+                                  value: event == null
+                                      ? 0
+                                      : event.cumulativeBytesLoaded /
+                                          (event.expectedTotalBytes ?? 1),
+                                ),
+                              ),
+                            ),
+                            errorBuilder: (context, error, stackTrace) =>
+                                Center(
+                              child: SizedBox(
+                                width: 20.0,
+                                height: 20.0,
+                                child: Text("$error"),
+                              ),
+                            ),
+                            imageProvider: NetworkImage(imagePath),
                           ),
-                        ),
-                        imageProvider: NetworkImage(imagePath),
+                        ],
                       )
                     : const InkWell(
                         onTap: null,
@@ -148,10 +246,26 @@ Widget ktpField(
                       ),
               ),
             ),
-            ViewIconField(
+            ViewWithIcon(
               text: nik ?? '-',
-              icon: Icons.credit_card,
-              onPressed: () {},
+              iconLeading: Icons.credit_card,
+              iconTrailing: Icons.edit,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext dialogContext) {
+                    return UserProfileEditText(
+                      label: "nik",
+                      oldValue: nik ?? '-',
+                      iconLeading: Icons.credit_card,
+                      onPressed: () {},
+                      inputType: TextInputType.number,
+                      obscureText: false,
+                    );
+                  },
+                );
+              },
             ),
           ],
         );

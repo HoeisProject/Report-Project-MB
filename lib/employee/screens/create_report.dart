@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
@@ -164,7 +165,6 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
               false,
               false,
               1,
-              (value) {},
             ),
 
             /// TODO Wink - UI nya menggigil
@@ -177,17 +177,33 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                     return DropdownMenuItem(value: e.id, child: Text(e.name));
                   }).toList()
                 ];
-                return DropdownButton<String>(
-                  value: projectCategorySelected,
-                  items: projectCategories,
-                  onChanged: (value) {
-                    debugPrint(value);
-                    ref
-                        .read(createReportProjectCategorySelectedProvider
-                            .notifier)
-                        .state = value ?? '';
-                  },
-                  icon: const Icon(Icons.keyboard_arrow_down),
+                return Container(
+                  margin: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 0.0),
+                        child: const Text(
+                          "Project Category : ",
+                          style: kHeaderTextStyle,
+                        ),
+                      ),
+                      DropdownButton<String>(
+                        value: projectCategorySelected,
+                        items: projectCategories,
+                        onChanged: (value) {
+                          debugPrint(value);
+                          ref
+                              .read(createReportProjectCategorySelectedProvider
+                                  .notifier)
+                              .state = value ?? '';
+                        },
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                      ),
+                    ],
+                  ),
                 );
               },
               error: (error, stackTrace) {
@@ -205,15 +221,15 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                     : "getting network time..."),
             viewTextField(context, "Position", locationAddress),
             inputTextField(
-                context,
-                _keyProjectDesc,
-                "Project Description",
-                _projectDescCtl,
-                TextInputType.text,
-                false,
-                true,
-                3,
-                (value) {}),
+              context,
+              _keyProjectDesc,
+              "Project Description",
+              _projectDescCtl,
+              TextInputType.text,
+              false,
+              true,
+              3,
+            ),
             reportAttachMedia(context, "Attach Media", listMediaPickerFile,
                 () async {
               await showSelectMediaDialog(

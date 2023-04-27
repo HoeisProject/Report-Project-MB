@@ -10,7 +10,6 @@ Widget inputTextField(
   bool obscureText,
   bool allBorder,
   int maxLine,
-  void Function(String)? onChange,
 ) {
   return Container(
     margin: const EdgeInsets.all(10.0),
@@ -44,7 +43,6 @@ Widget inputTextField(
             controller: controller,
             keyboardType: inputType,
             maxLines: maxLine,
-            onChanged: onChange,
           ),
         ],
       ),

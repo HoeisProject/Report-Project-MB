@@ -3,29 +3,27 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:images_picker/images_picker.dart';
-import 'package:report_project/auth/view_model/account_verify_view_model.dart';
+import 'package:report_project/auth/view_model/user_profile_edit_view_model.dart';
+import 'package:report_project/auth/widgets/view_image_field.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
-import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 
-class AccountVerify extends ConsumerStatefulWidget {
-  const AccountVerify({super.key});
+class UserProfileEditImage extends ConsumerWidget {
+  final String label;
+  final String oldImage;
+  final void Function() onPressed;
+
+  const UserProfileEditImage({
+    super.key,
+    required this.label,
+    required this.oldImage,
+    required this.onPressed,
+  });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AccountVerifyState();
-}
-
-class _AccountVerifyState extends ConsumerState<AccountVerify> {
-  final keyNik = GlobalKey<FormState>();
-  final nikCtl = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return accountVerification(context, ref);
-  }
-
-  Widget accountVerification(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -50,29 +48,19 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             sizedSpacer(height: 5.0),
-            inputMediaField(
-                context, "ktp Image", ref.watch(accountVerifyMediaFileProvider),
-                () {
-              getMediaFromCamera();
-            }),
+            viewImageField(context, "Old $label", oldImage),
             sizedSpacer(height: 5.0),
-            inputTextField(
-              context,
-              keyNik,
-              "Nik :",
-              nikCtl,
-              TextInputType.number,
-              false,
-              true,
-              1,
-            ),
+            inputMediaField(context, "new $label",
+                ref.watch(userProfileEditMediaFileProvider), () {
+              getMediaFromCamera(ref);
+            }),
             sizedSpacer(height: 5.0),
             customButton(
               context,
-              ref.watch(accountVerifyLoadingProvider),
-              "SEND",
+              false,
+              "EDIT",
               Colors.lightBlue,
-              () => sendVerifyRequest(),
+              () {},
             ),
             sizedSpacer(height: 5.0),
           ],
@@ -81,9 +69,17 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
     );
   }
 
-  void sendVerifyRequest() {}
+  Widget fieldHeader(String text) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+      child: Text(
+        text,
+        style: kHeaderTextStyle,
+      ),
+    );
+  }
 
-  void getMediaFromCamera() async {
+  void getMediaFromCamera(WidgetRef ref) async {
     try {
       List<Media>? getMedia = await ImagesPicker.openCamera(
         pickType: PickType.image,
@@ -93,7 +89,7 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
       );
       if (getMedia != null) {
         String? imagePath = getMedia[0].thumbPath;
-        ref.read(accountVerifyMediaFileProvider.notifier).state =
+        ref.read(userProfileEditMediaFileProvider.notifier).state =
             File(imagePath!);
       }
     } catch (e) {

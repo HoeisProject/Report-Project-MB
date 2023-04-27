@@ -9,6 +9,7 @@ import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class AdminProjectCreateScreen extends ConsumerStatefulWidget {
   static const routeName = '/admin-project-create';
+
   const AdminProjectCreateScreen({super.key});
 
   @override
@@ -84,10 +85,26 @@ class _AdminProjectCreateScreen
     return SingleChildScrollView(
         child: Column(
       children: [
-        inputTextField(context, _keyTitle, 'Project Name', _nameCtl,
-            TextInputType.text, false, false, 1, (p0) {}),
-        inputTextField(context, _keyDesc, "Project Description", _descCtl,
-            TextInputType.text, false, false, 4, (p0) {}),
+        inputTextField(
+          context,
+          _keyTitle,
+          'Project Name',
+          _nameCtl,
+          TextInputType.text,
+          false,
+          false,
+          1,
+        ),
+        inputTextField(
+          context,
+          _keyDesc,
+          "Project Description",
+          _descCtl,
+          TextInputType.text,
+          false,
+          false,
+          4,
+        ),
         Text(startDate != null ? startDate.toString() : 'Select Start Date'),
         Text(endDate != null ? endDate.toString() : 'Select End Date'),
         customButton(context, isLoading, 'Start Date', Colors.red, () async {

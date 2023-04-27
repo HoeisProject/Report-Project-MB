@@ -143,7 +143,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     final projects = ref.watch(adminProjectControllerProvider);
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 1.5,
+      height: 450.0,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),
@@ -184,7 +184,6 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
-  /// TODO: Jika list sudah melebihi 4 item, content ke - 4 tidak terlihat
   Widget _projectViewItem(ReportModel data, ProjectModel? project, int status) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
