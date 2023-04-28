@@ -27,6 +27,7 @@ class AuthService {
     final newUser = ParseUser.createUser(username, password, email)
       ..set(UserModelEnum.roleId.name, ParseObject('_Role')..objectId = roleId)
       ..set(UserModelEnum.nickname.name, username)
+      ..set(UserModelEnum.emailClone.name, email)
       ..set(UserModelEnum.phoneNumber.name, phoneNumber)
       ..set(UserModelEnum.isUserVerified.name, false)
       ..set(UserModelEnum.userImage.name, parseUserImage);

@@ -11,6 +11,7 @@ enum UserModelEnum {
   username,
   nickname,
   email,
+  emailClone, // Only back4apps use case, because restricted permission
   nik,
   phoneNumber,
   isUserVerified,
@@ -60,8 +61,8 @@ class UserModel {
           .get(RoleModelEnum.objectId.name),
       username: parse.get<String>(UserModelEnum.username.name)!,
       nickname: parse.get<String>(UserModelEnum.nickname.name)!,
-      email: parse.get<String>(UserModelEnum.email.name)!,
-      nik: parse.get<String>(UserModelEnum.objectId.name),
+      email: parse.get<String>(UserModelEnum.emailClone.name)!,
+      nik: parse.get<String>(UserModelEnum.nik.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
       userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
