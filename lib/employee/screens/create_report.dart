@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
-import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
@@ -21,6 +18,7 @@ import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 import 'package:report_project/employee/view_model/create_report_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
+import 'package:report_project/employee/widgets/project_category_dropdown.dart';
 import 'package:report_project/employee/widgets/report_attach_media.dart';
 import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
@@ -166,44 +164,28 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
               false,
               1,
             ),
-
-            /// TODO Wink - UI nya menggigil
-            const Text('Project Category'),
             projects.when(
               data: (data) {
                 final projectCategories = [
-                  const DropdownMenuItem(value: '', child: Text('')),
+                  const DropdownMenuItem(
+                      value: '', child: Text('Choose Category...')),
                   ...data.map((e) {
                     return DropdownMenuItem(value: e.id, child: Text(e.name));
                   }).toList()
                 ];
-                return Container(
-                  margin: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 0.0),
-                        child: const Text(
-                          "Project Category : ",
-                          style: kHeaderTextStyle,
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        value: projectCategorySelected,
-                        items: projectCategories,
-                        onChanged: (value) {
-                          debugPrint(value);
-                          ref
-                              .read(createReportProjectCategorySelectedProvider
-                                  .notifier)
-                              .state = value ?? '';
-                        },
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                      ),
-                    ],
-                  ),
+                return projectCategoryDropdown(
+                  context,
+                  "Project Category",
+                  projectCategorySelected,
+                  projectCategories,
+                  (value) {
+                    debugPrint(value);
+                    ref
+                        .read(createReportProjectCategorySelectedProvider
+                            .notifier)
+                        .state = value ?? '';
+                  },
+                  const Icon(Icons.keyboard_arrow_down),
                 );
               },
               error: (error, stackTrace) {
@@ -249,8 +231,6 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                   });
             }),
             sizedSpacer(height: 30.0),
-
-            /// TODO riverpod loading
             customButton(
               context,
               false,

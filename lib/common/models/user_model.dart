@@ -42,11 +42,11 @@ class UserModel {
       username: parse.get<String>(UserModelEnum.username.name)!,
       nickname: parse.get<String>(UserModelEnum.nickname.name)!,
       email: parse.get<String>(UserModelEnum.email.name)!,
-      nik: parse.get<String>(UserModelEnum.objectId.name),
+      nik: parse.get<String>(UserModelEnum.nik.name) ?? '-',
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
-      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
-      ktpImage: parse.get<String>(UserModelEnum.objectId.name),
+      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '-',
+      ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url ?? '-',
     );
   }
 

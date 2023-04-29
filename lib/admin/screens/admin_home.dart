@@ -13,6 +13,7 @@ import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/admin/screens/admin_detail_report.dart';
+import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
@@ -79,8 +80,8 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           child: Column(
             children: [
               _menuBar(),
-              _listProjectView(),
               _searchAndFilter(),
+              _listProjectView(),
             ],
           ),
         ),
@@ -138,11 +139,11 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   Widget _searchAndFilter() {
     return Row(
       children: [
-        Expanded(
-          flex: 1,
+        Flexible(
+          flex: 3,
           child: adminHomeSearchBar(context, ref, _searchController),
         ),
-        Expanded(
+        Flexible(
           child: adminHomeFilterMenu(context, ref),
         ),
       ],
@@ -153,7 +154,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     final reports = ref.watch(adminReportControllerProvider);
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 1.5,
+      height: 425.0,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),
@@ -236,7 +237,13 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                   // reportItemContent(report.uploadBy.username, false),
                   reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
-                  reportItemContent("Project Location", false),
+                  FutureBuilder(
+                    future: TranslatePosition(position: report.position)
+                        .translatePos(),
+                    builder: (context, snapshot) {
+                      return reportItemContent(snapshot.data ?? '-', false);
+                    },
+                  ),
                   reportItemContent(report.description, true),
                 ],
               ),

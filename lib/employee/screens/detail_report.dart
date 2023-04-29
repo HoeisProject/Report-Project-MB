@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:report_project/common/models/report_model.dart';
+import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/controllers/report_media_controller.dart';
@@ -43,9 +45,16 @@ class DetailReportScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 viewTextField(context, "Project Title", report.title),
-                viewTextField(
-                    context, "Time and Date", report.updatedAt.toString()),
-                viewTextField(context, "Location", report.position.toString()),
+                viewTextField(context, "Time and Date",
+                    DateFormat.yMMMEd().format(report.updatedAt)),
+                FutureBuilder(
+                  future: TranslatePosition(position: report.position)
+                      .translatePos(),
+                  builder: (context, snapshot) {
+                    return viewTextField(
+                        context, "Location", snapshot.data ?? '-');
+                  },
+                ),
                 viewTextField(
                     context, "Project Description", report.description),
                 reportsMedia.when(
@@ -72,7 +81,6 @@ class DetailReportScreen extends ConsumerWidget {
                     );
                   },
                 ),
-                // viewMediaField(context, "Attach Media", listMediaFilePath),
               ],
             ),
           ),

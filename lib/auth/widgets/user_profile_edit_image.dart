@@ -35,7 +35,8 @@ class UserProfileEditImage extends ConsumerWidget {
         width: MediaQuery.of(context).size.width / 1.2,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          color: Colors.white,
+          color:
+              ConstColor(context).getConstColor(ConstColorEnum.kBgColor.name),
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: const [
             BoxShadow(
@@ -49,12 +50,12 @@ class UserProfileEditImage extends ConsumerWidget {
               children: <Widget>[
                 sizedSpacer(height: 5.0),
                 viewImageField(context, "Old $label", oldImage),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(height: 15.0),
                 inputMediaField(context, "new $label",
                     ref.watch(userProfileEditMediaFileProvider), () {
                   getMediaFromCamera(ref);
                 }),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(height: 15.0),
                 customButton(
                   context,
                   false,

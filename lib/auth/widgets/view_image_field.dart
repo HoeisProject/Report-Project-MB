@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/widgets/show_image_full_func.dart';
 
 Widget viewImageField(
     BuildContext context, String fieldLabel, String? mediaFilePath) {
@@ -21,21 +21,37 @@ Widget viewImageField(
             width: 125.0,
             height: 150.0,
             child: mediaFilePath != null
-                ? PhotoView(
-                    loadingBuilder: (context, event) => Center(
-                      child: SizedBox(
-                        width: 50.0,
-                        height: 50.0,
-                        child: CircularProgressIndicator(
-                          value: event == null
-                              ? 0
-                              : event.cumulativeBytesLoaded /
-                                  (event.expectedTotalBytes ?? 1),
+                ? InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShowImageFullFunc(
+                            listMediaFilePath: [mediaFilePath],
+                            backgroundDecoration: const BoxDecoration(
+                              color: Colors.black,
+                            ),
+                            scrollDirection: Axis.horizontal,
+                          ),
                         ),
-                      ),
-                    ),
-                    imageProvider: NetworkImage(
-                      mediaFilePath,
+                      );
+                    },
+                    child: Hero(
+                      tag: mediaFilePath,
+                      child: Image.network(mediaFilePath,
+                          loadingBuilder: (context, child, event) {
+                        if (event == null) return child;
+                        return Center(
+                          child: SizedBox(
+                            width: 20.0,
+                            height: 20.0,
+                            child: CircularProgressIndicator(
+                              value: event.cumulativeBytesLoaded /
+                                  (event.expectedTotalBytes ?? 1),
+                            ),
+                          ),
+                        );
+                      }),
                     ),
                   )
                 : const Icon(Icons.add_a_photo, size: 50.0),

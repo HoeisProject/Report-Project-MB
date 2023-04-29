@@ -19,7 +19,7 @@ class ViewWithIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
+      color: Theme.of(context).cardColor,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: ListTile(
         leading: Icon(

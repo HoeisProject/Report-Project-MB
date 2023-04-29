@@ -129,11 +129,11 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   Widget _searchAndFilter() {
     return Row(
       children: [
-        Expanded(
-          flex: 1,
+        Flexible(
+          flex: 3,
           child: employeeHomeSearchBar(context, ref, _searchController),
         ),
-        Expanded(
+        Flexible(
           child: employeeHomeFilterMenu(context, ref),
         ),
       ],
@@ -145,7 +145,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     final projects = ref.watch(adminProjectControllerProvider);
     return SizedBox(
-      height: 450.0,
+      height: 425.0,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),
@@ -232,13 +232,11 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                     future: TranslatePosition(position: data.position)
                         .translatePos(),
                     builder: (context, snapshot) {
-                      return reportItemContent(snapshot.data!, false);
+                      return reportItemContent(snapshot.data ?? '-', false);
                     },
                   ),
-                  // reportItemContent(data.position.toString(), false),
-                  reportItemContent(data.description, true),
-                  // reportItemContent(data.projectId, false),
                   reportItemContent('From Project: ${project?.name}', false),
+                  reportItemContent(data.description, true),
                 ],
               ),
             ),

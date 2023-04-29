@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/admin/controllers/admin_report_media_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/report_status_model.dart';
+import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
@@ -59,9 +61,16 @@ class AdminDetailReportScreenState
               children: [
                 viewTextField(context, "Project Title", report.title),
                 viewTextField(context, "Report by", "Report by"),
-                viewTextField(
-                    context, "Time and Date", report.updatedAt.toString()),
-                viewTextField(context, "Location", report.position.toString()),
+                viewTextField(context, "Time and Date",
+                    DateFormat.yMMMEd().format(report.updatedAt)),
+                FutureBuilder(
+                  future: TranslatePosition(position: report.position)
+                      .translatePos(),
+                  builder: (context, snapshot) {
+                    return viewTextField(
+                        context, "Location", snapshot.data ?? '-');
+                  },
+                ),
                 viewTextField(
                     context, "Project Description", report.description),
                 reportsMedia.when(
@@ -78,7 +87,9 @@ class AdminDetailReportScreenState
                     return Text('${error.toString()} occured');
                   },
                   loading: () {
-                    return const CircularProgressIndicator();
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                   },
                 ),
                 Row(
@@ -111,8 +122,6 @@ class AdminDetailReportScreenState
       if (value) {
         showSnackBar(context, Icons.done, Colors.greenAccent,
             "Rejection Success", Colors.greenAccent);
-        // Navigator.pushNamedAndRemoveUntil(
-        //     context, AdminHomeScreen.routeName, (route) => false);
         Navigator.pop(context);
       } else {
         showSnackBar(context, Icons.error_outline, Colors.red,
@@ -134,8 +143,6 @@ class AdminDetailReportScreenState
       if (value) {
         showSnackBar(context, Icons.done, Colors.greenAccent,
             "Approval Success", Colors.greenAccent);
-        // Navigator.pushNamedAndRemoveUntil(context, AdminHomeScreen.routeName,
-        //     (Route<dynamic> route) => false);
         Navigator.pop(context);
       } else {
         showSnackBar(context, Icons.error_outline, Colors.red,

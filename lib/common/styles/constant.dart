@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 const kAppbarTextStyle = TextStyle(
@@ -41,3 +42,24 @@ const kContentReportItem = TextStyle(
   letterSpacing: 0.5,
   fontWeight: FontWeight.normal,
 );
+
+enum ConstColorEnum {
+  kBgColor,
+}
+
+class ConstColor {
+  final BuildContext context;
+
+  ConstColor(this.context);
+
+  Color getConstColor(String constColorId) {
+    switch (constColorId) {
+      case 'kBgColor':
+        Color color = Theme.of(context).scaffoldBackgroundColor;
+        return color;
+      default:
+        Color color = Colors.transparent;
+        return color;
+    }
+  }
+}

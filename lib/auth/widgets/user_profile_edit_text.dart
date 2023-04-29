@@ -39,7 +39,8 @@ class UserProfileEditText extends StatelessWidget {
         width: MediaQuery.of(context).size.width / 1.2,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          color: Colors.white,
+          color:
+              ConstColor(context).getConstColor(ConstColorEnum.kBgColor.name),
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: const [
             BoxShadow(
@@ -59,7 +60,7 @@ class UserProfileEditText extends StatelessWidget {
                   iconTrailing: Icons.circle_outlined,
                   onPressed: () {},
                 ),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(height: 15.0),
                 fieldHeader("New $label : "),
                 inputWithIcon(
                   context,
@@ -70,7 +71,7 @@ class UserProfileEditText extends StatelessWidget {
                   inputType,
                   obscureText,
                 ),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(height: 15.0),
                 customButton(
                   context,
                   false,
