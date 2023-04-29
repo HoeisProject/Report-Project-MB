@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
@@ -7,6 +8,7 @@ import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/employee/screens/create_report.dart';
@@ -224,9 +226,16 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                       ],
                     ),
                   ),
-
-                  reportItemContent(data.updatedAt.toString(), false),
-                  reportItemContent(data.position.toString(), false),
+                  reportItemContent(
+                      DateFormat.yMMMEd().format(data.updatedAt), false),
+                  FutureBuilder(
+                    future: TranslatePosition(position: data.position)
+                        .translatePos(),
+                    builder: (context, snapshot) {
+                      return reportItemContent(snapshot.data!, false);
+                    },
+                  ),
+                  // reportItemContent(data.position.toString(), false),
                   reportItemContent(data.description, true),
                   // reportItemContent(data.projectId, false),
                   reportItemContent('From Project: ${project?.name}', false),

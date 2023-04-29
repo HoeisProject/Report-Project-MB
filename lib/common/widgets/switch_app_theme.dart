@@ -9,6 +9,16 @@ Widget switchAppTheme(
   WidgetRef ref,
 ) {
   final appTheme = ref.watch(switchThemeProvider);
+  final themeInit = ref.watch(themeUtilityProvider);
+
+  void saveTheme(AppTheme appTheme) {
+    themeInit.when(
+      data: (data) => Future(() => data.saveTheme(appTheme)),
+      error: (error, trace) => debugPrint('Error : $error'),
+      loading: () => debugPrint('getTheme loading'),
+    );
+  }
+
   return ListTile(
     leading: appTheme == AppTheme.lightTheme
         ? const Icon(Icons.light_mode)
@@ -19,9 +29,11 @@ Widget switchAppTheme(
     onTap: () {
       if (appTheme == AppTheme.lightTheme) {
         ref.read(switchThemeProvider.notifier).state = AppTheme.darkTheme;
+        saveTheme(AppTheme.darkTheme);
         // Utility.saveTheme(AppTheme.darkTheme);
       } else {
         ref.read(switchThemeProvider.notifier).state = AppTheme.lightTheme;
+        saveTheme(AppTheme.lightTheme);
         // Utility.saveTheme(AppTheme.lightTheme);
       }
     },
@@ -30,9 +42,11 @@ Widget switchAppTheme(
         onChanged: (value) {
           if (appTheme == AppTheme.lightTheme) {
             ref.read(switchThemeProvider.notifier).state = AppTheme.darkTheme;
+            saveTheme(AppTheme.darkTheme);
             // Utility.saveTheme(AppTheme.darkTheme);
           } else {
             ref.read(switchThemeProvider.notifier).state = AppTheme.lightTheme;
+            saveTheme(AppTheme.lightTheme);
             // Utility.saveTheme(AppTheme.lightTheme);
           }
         }),

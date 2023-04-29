@@ -13,7 +13,6 @@ import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/utilities/theme_utility.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
-import 'package:report_project/common/widgets/switch_app_theme.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -29,23 +28,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _loadTheme();
     _requestPermission(context);
-  }
-
-  void _loadTheme() {
-    final themeUtility = ref.read(themeUtilityProvider);
-    debugPrint('theme in');
-    print(themeUtility);
-    themeUtility.when(
-        data: (data) {
-          debugPrint('theme : $data');
-          ref.read(switchThemeProvider.notifier).state = data.getTheme()!;
-        },
-        error: (error, trace) => debugPrint('Error : $error'),
-        loading: () {
-          debugPrint('getTheme loading');
-        });
   }
 
   void _requestPermission(context) async {
@@ -81,6 +64,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('theme in');
+    ref.watch(themeUtilityProvider).when(
+          data: (data) {
+            Future(() {
+              ref.read(switchThemeProvider.notifier).state = data.getTheme()!;
+            });
+          },
+          error: (error, trace) => debugPrint('Error : $error'),
+          loading: () => debugPrint('getTheme loading'),
+        );
     debugPrint("Splash Screen");
     final currentUser = ref.watch(profileControllerProvider);
     ref.listen(profileControllerProvider, (previous, next) {
@@ -102,7 +95,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       body: currentUser.when(
         data: (user) {
-          debugPrint(user.toString());
+          debugPrint("User : $user");
           return _splashWidget();
         },
         error: (error, stackTrace) {
@@ -132,7 +125,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               ),
             ),
           ),
-          // switchAppTheme(context, ref),
           const Text('from',
               textAlign: TextAlign.center,
               style: TextStyle(

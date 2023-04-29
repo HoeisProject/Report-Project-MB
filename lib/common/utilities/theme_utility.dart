@@ -11,7 +11,7 @@ part 'theme_utility.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<ThemeUtility> themeUtility(ThemeUtilityRef ref) async {
-  final preferences = await SharedPreferences.getInstance();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
   return ThemeUtility(preferences: preferences);
 }
 
@@ -26,13 +26,14 @@ class ThemeUtility {
 
   Future<bool> saveTheme(AppTheme selectedTheme) async {
     String theme = jsonEncode(selectedTheme.toString());
+    debugPrint('saveTheme $theme');
     return preferences.setString(keySelectedTheme, theme);
   }
 
   AppTheme? getTheme() {
     String? theme = preferences.getString(keySelectedTheme);
-    debugPrint('getTheme');
-    if (null == theme) {
+    debugPrint('getTheme $theme');
+    if (theme == null) {
       return AppTheme.lightTheme;
     }
     return getThemeFromString(jsonDecode(theme));

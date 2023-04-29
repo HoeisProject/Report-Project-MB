@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
+import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/switch_app_theme.dart';
 
 import '../models/user_model.dart';
@@ -23,11 +24,8 @@ Widget showDrawer(context, WidgetRef ref, UserModel user) {
             }),
             switchAppTheme(context, ref),
             drawerItemNavigate(context, Icons.logout, "Logout", () async {
+              showLoadingDialog(context);
               ref.read(authControllerProvider).logout();
-              // Navigator.pushNamedAndRemoveUntil(
-              //     context,
-              //     LoginRegisterScreen.routeName,
-              //     (Route<dynamic> route) => false);
             }),
           ],
         ),
