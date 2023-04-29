@@ -33,8 +33,6 @@ class UserProfileEditImage extends ConsumerWidget {
       child: Container(
         height: MediaQuery.of(context).size.height / 1.25,
         width: MediaQuery.of(context).size.width / 1.2,
-        padding: const EdgeInsets.all(5.0),
-        margin: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           color: Colors.white,
@@ -44,26 +42,30 @@ class UserProfileEditImage extends ConsumerWidget {
                 color: Colors.black, offset: Offset(0, 10), blurRadius: 10)
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            sizedSpacer(height: 5.0),
-            viewImageField(context, "Old $label", oldImage),
-            sizedSpacer(height: 5.0),
-            inputMediaField(context, "new $label",
-                ref.watch(userProfileEditMediaFileProvider), () {
-              getMediaFromCamera(ref);
-            }),
-            sizedSpacer(height: 5.0),
-            customButton(
-              context,
-              false,
-              "EDIT",
-              Colors.lightBlue,
-              () {},
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                sizedSpacer(height: 5.0),
+                viewImageField(context, "Old $label", oldImage),
+                sizedSpacer(height: 5.0),
+                inputMediaField(context, "new $label",
+                    ref.watch(userProfileEditMediaFileProvider), () {
+                  getMediaFromCamera(ref);
+                }),
+                sizedSpacer(height: 5.0),
+                customButton(
+                  context,
+                  false,
+                  "EDIT",
+                  Colors.lightBlue,
+                  () {},
+                ),
+                sizedSpacer(height: 5.0),
+              ],
             ),
-            sizedSpacer(height: 5.0),
-          ],
+          ),
         ),
       ),
     );

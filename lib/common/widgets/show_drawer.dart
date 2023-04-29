@@ -8,7 +8,7 @@ import '../models/user_model.dart';
 
 Widget showDrawer(context, WidgetRef ref, UserModel user) {
   return Container(
-    color: Colors.white,
+    color: Theme.of(context).scaffoldBackgroundColor,
     width: MediaQuery.of(context).size.width / 1.5,
     height: MediaQuery.of(context).size.height,
     child: SafeArea(

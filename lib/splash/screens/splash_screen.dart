@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
-import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/controller/role_controller.dart';
@@ -13,6 +12,8 @@ import 'package:report_project/common/controller/theme_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/utilities/theme_utility.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
+import 'package:report_project/common/widgets/sized_spacer.dart';
+import 'package:report_project/common/widgets/switch_app_theme.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -35,15 +36,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void _loadTheme() {
     final themeUtility = ref.read(themeUtilityProvider);
     debugPrint('theme in');
-    // ref.read(switchThemeProvider.notifier).state =
-    //     themeUtility.value!.getTheme()!;
+    print(themeUtility);
     themeUtility.when(
         data: (data) {
           debugPrint('theme : $data');
           ref.read(switchThemeProvider.notifier).state = data.getTheme()!;
         },
         error: (error, trace) => debugPrint('Error : $error'),
-        loading: () {});
+        loading: () {
+          debugPrint('getTheme loading');
+        });
   }
 
   void _requestPermission(context) async {
@@ -130,10 +132,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               ),
             ),
           ),
+          // switchAppTheme(context, ref),
           const Text('from',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.black54,
                 fontSize: 14.0,
               )),
           const Text(
@@ -144,7 +146,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               fontWeight: FontWeight.bold,
               fontSize: 24.0,
             ),
-          )
+          ),
+          sizedSpacer(height: 25.0),
         ],
       ),
     );

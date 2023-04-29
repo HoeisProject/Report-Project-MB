@@ -33,10 +33,8 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
       elevation: 5,
       backgroundColor: Colors.transparent,
       child: Container(
-        height: MediaQuery.of(context).size.height / 1.25,
+        height: MediaQuery.of(context).size.height / 1.5,
         width: MediaQuery.of(context).size.width / 1.2,
-        padding: const EdgeInsets.all(5.0),
-        margin: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           color: Colors.white,
@@ -46,36 +44,38 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
                 color: Colors.black, offset: Offset(0, 10), blurRadius: 10)
           ],
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              sizedSpacer(height: 5.0),
-              inputMediaField(context, "ktp Image",
-                  ref.watch(accountVerifyMediaFileProvider), () {
-                getMediaFromCamera();
-              }),
-              sizedSpacer(height: 5.0),
-              inputTextField(
-                context,
-                keyNik,
-                "Nik",
-                nikCtl,
-                TextInputType.number,
-                false,
-                true,
-                1,
-              ),
-              sizedSpacer(height: 5.0),
-              customButton(
-                context,
-                ref.watch(accountVerifyLoadingProvider),
-                "SEND",
-                Colors.lightBlue,
-                () => sendVerifyRequest(),
-              ),
-              sizedSpacer(height: 5.0),
-            ],
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                sizedSpacer(height: 5.0),
+                inputMediaField(context, "ktp Image",
+                    ref.watch(accountVerifyMediaFileProvider), () {
+                  getMediaFromCamera();
+                }),
+                sizedSpacer(height: 5.0),
+                inputTextField(
+                  context,
+                  keyNik,
+                  "Nik",
+                  nikCtl,
+                  TextInputType.number,
+                  false,
+                  true,
+                  1,
+                ),
+                sizedSpacer(height: 5.0),
+                customButton(
+                  context,
+                  ref.watch(accountVerifyLoadingProvider),
+                  "SEND",
+                  Colors.lightBlue,
+                  () => sendVerifyRequest(),
+                ),
+                sizedSpacer(height: 5.0),
+              ],
+            ),
           ),
         ),
       ),

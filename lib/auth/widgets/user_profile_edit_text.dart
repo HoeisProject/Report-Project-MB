@@ -35,10 +35,8 @@ class UserProfileEditText extends StatelessWidget {
       elevation: 5,
       backgroundColor: Colors.transparent,
       child: Container(
-        height: MediaQuery.of(context).size.height / 1.25,
+        height: MediaQuery.of(context).size.height / 1.5,
         width: MediaQuery.of(context).size.width / 1.2,
-        padding: const EdgeInsets.all(5.0),
-        margin: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           color: Colors.white,
@@ -48,38 +46,42 @@ class UserProfileEditText extends StatelessWidget {
                 color: Colors.black, offset: Offset(0, 10), blurRadius: 10)
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            sizedSpacer(height: 5.0),
-            fieldHeader("Old $label : "),
-            ViewWithIcon(
-              text: oldValue,
-              iconLeading: iconLeading,
-              iconTrailing: Icons.circle_outlined,
-              onPressed: () {},
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                sizedSpacer(height: 5.0),
+                fieldHeader("Old $label : "),
+                ViewWithIcon(
+                  text: oldValue,
+                  iconLeading: iconLeading,
+                  iconTrailing: Icons.circle_outlined,
+                  onPressed: () {},
+                ),
+                sizedSpacer(height: 5.0),
+                fieldHeader("New $label : "),
+                inputWithIcon(
+                  context,
+                  keyNewValue,
+                  "input new $label",
+                  iconLeading,
+                  newValueCtl,
+                  inputType,
+                  obscureText,
+                ),
+                sizedSpacer(height: 5.0),
+                customButton(
+                  context,
+                  false,
+                  "EDIT",
+                  Colors.lightBlue,
+                  () {},
+                ),
+                sizedSpacer(height: 5.0),
+              ],
             ),
-            sizedSpacer(height: 5.0),
-            fieldHeader("New $label : "),
-            inputWithIcon(
-              context,
-              keyNewValue,
-              "input new $label",
-              iconLeading,
-              newValueCtl,
-              inputType,
-              obscureText,
-            ),
-            sizedSpacer(height: 5.0),
-            customButton(
-              context,
-              false,
-              "EDIT",
-              Colors.lightBlue,
-              () {},
-            ),
-            sizedSpacer(height: 5.0),
-          ],
+          ),
         ),
       ),
     );
@@ -87,7 +89,8 @@ class UserProfileEditText extends StatelessWidget {
 
   Widget fieldHeader(String text) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+      alignment: Alignment.centerLeft,
+      margin: const EdgeInsets.only(left: 10.0),
       child: Text(
         text,
         style: kHeaderTextStyle,

@@ -20,23 +20,29 @@ class ViewWithIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: ListTile(
         leading: Icon(
           iconLeading,
           color: Colors.teal,
         ),
-        title: Text(
-          text,
-          style: kHeaderTextStyle,
-        ),
-        trailing: GestureDetector(
-          onTap: onPressed,
-          child: Icon(
-            iconTrailing,
-            color: Colors.teal,
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Text(
+            text,
+            style: kHeaderTextStyle,
+            maxLines: 1,
           ),
         ),
+        trailing: iconTrailing == Icons.circle_outlined
+            ? null
+            : GestureDetector(
+                onTap: onPressed,
+                child: Icon(
+                  iconTrailing,
+                  color: Colors.teal,
+                ),
+              ),
       ),
     );
   }

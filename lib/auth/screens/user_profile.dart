@@ -126,33 +126,44 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
 
     return Column(
       children: [
-        CircleAvatar(
-          radius: 72,
-          backgroundColor: color,
-          child: CircleAvatar(
-            backgroundImage: image as ImageProvider,
-            radius: 70,
-          ),
-        ),
-        FloatingActionButton(
-          tooltip: "Change Image",
-          child: const Icon(
-            Icons.edit,
-            size: 15.0,
-          ),
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (BuildContext dialogContext) {
-                return UserProfileEditImage(
-                  label: "profile image",
-                  oldImage: imagePath,
-                  onPressed: () {},
-                );
-              },
-            );
-          },
+        Stack(
+          children: [
+            CircleAvatar(
+              radius: 72,
+              backgroundColor: color,
+              child: CircleAvatar(
+                backgroundImage: image as ImageProvider,
+                radius: 70,
+              ),
+            ),
+            Positioned(
+              top: 100.0,
+              left: 100.0,
+              child: FloatingActionButton(
+                mini: true,
+                elevation: 0.0,
+                shape: const CircleBorder(),
+                tooltip: "Change Image",
+                child: const Icon(
+                  Icons.edit,
+                  size: 15.0,
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext dialogContext) {
+                      return UserProfileEditImage(
+                        label: "profile image",
+                        oldImage: imagePath,
+                        onPressed: () {},
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
         Text(
           username,
@@ -170,11 +181,11 @@ Widget ktpField(
   bool isUserVerified,
 ) {
   if (!isUserVerified) {
-    return SizedBox(
-      width: 150.0,
-      height: 100.0,
+    return Container(
+      margin: const EdgeInsets.only(top: 25.0),
+      height: 50.0,
+      width: 250.0,
       child: ElevatedButton(
-          // onPressed: () => accountVerify(context),
           onPressed: () {
             showDialog(
               context: context,
