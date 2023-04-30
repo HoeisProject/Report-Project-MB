@@ -212,19 +212,20 @@ Widget ktpField(
       height: 50.0,
       width: 250.0,
       child: ElevatedButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (dialogContext) {
-                return const AccountVerify();
-              },
-            );
-          },
-          child: const Text(
-            "Account Verification",
-            style: kButtonTextStyle,
-          )),
+        onPressed: () {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (dialogContext) {
+              return const AccountVerify();
+            },
+          );
+        },
+        child: const Text(
+          "Account Verification",
+          style: kButtonTextStyle,
+        ),
+      ),
     );
   }
 

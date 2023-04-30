@@ -33,7 +33,7 @@ class UserModel {
   final String? ktpImage;
 
   factory UserModel.fromParseUser(ParseUser parse) {
-    debugPrint(parse.toString());
+    debugPrint("UserModel.fromParseUser : $parse");
     return UserModel(
       id: parse.get<String>(UserModelEnum.objectId.name)!,
       roleId: parse
@@ -42,18 +42,16 @@ class UserModel {
       username: parse.get<String>(UserModelEnum.username.name)!,
       nickname: parse.get<String>(UserModelEnum.nickname.name)!,
       email: parse.get<String>(UserModelEnum.email.name)!,
-      nik: parse.get<String>(UserModelEnum.nik.name) ?? '-',
+      nik: parse.get<String>(UserModelEnum.nik.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
-      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '-',
-      ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url ?? '-',
+      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
+      ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url,
     );
   }
 
   factory UserModel.fromParseObject(ParseObject parse) {
-    debugPrint("Debug PRINT : $parse");
-    final String? a = parse.get<String>('email');
-    debugPrint("EMAIL : $a");
+    debugPrint("UserModel.fromParseObject : $parse");
     return UserModel(
       id: parse.get<String>(UserModelEnum.objectId.name)!,
       roleId: parse
@@ -66,7 +64,7 @@ class UserModel {
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
       userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
-      ktpImage: parse.get<String>(UserModelEnum.objectId.name),
+      ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url,
     );
   }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,8 +12,12 @@ class ProfileController extends _$ProfileController {
 
   FutureOr<UserModel?> _getCurrentUser() async {
     final parseUser = await _profileService.currentUser();
-    if (parseUser == null) return null;
-    return UserModel.fromParseUser(parseUser);
+    if (parseUser == null || parseUser.objectId == null) return null;
+
+    final currentUser =
+        await _profileService.getCurrentUser(parseUser.objectId!);
+    if (currentUser == null) return null;
+    return UserModel.fromParseObject(currentUser);
   }
 
   @override
@@ -25,5 +31,15 @@ class ProfileController extends _$ProfileController {
     state = await AsyncValue.guard(() async {
       return _getCurrentUser();
     });
+  }
+
+  Future<bool> verifyUser({
+    required String nik,
+    required File ktp,
+  }) async {
+    final res = await _profileService.verifyUser(nik, ktp);
+    if (!res.success) return false;
+    await refreshUser();
+    return true;
   }
 }

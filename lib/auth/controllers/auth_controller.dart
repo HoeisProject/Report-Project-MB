@@ -25,10 +25,11 @@ class AuthController {
   final ProfileController profileController;
   final RoleController roleController;
 
-  AuthController(
-      {required this.authService,
-      required this.profileController,
-      required this.roleController});
+  AuthController({
+    required this.authService,
+    required this.profileController,
+    required this.roleController,
+  });
 
   Future<bool> registerUser({
     required String username,

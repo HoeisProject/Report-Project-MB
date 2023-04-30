@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/account_verify_view_model.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
+import 'package:report_project/common/widgets/show_loading_dialog.dart';
+import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 
 class AccountVerify extends ConsumerStatefulWidget {
@@ -71,7 +74,7 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
                   ref.watch(accountVerifyLoadingProvider),
                   "SEND",
                   Colors.lightBlue,
-                  () => sendVerifyRequest(),
+                  () => sendVerifyRequest(context),
                 ),
                 sizedSpacer(height: 5.0),
               ],
@@ -82,7 +85,26 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
     );
   }
 
-  void sendVerifyRequest() {}
+  void sendVerifyRequest(context) async {
+    showLoadingDialog(context);
+    final ktp = ref.read(accountVerifyMediaFileProvider);
+
+    /// TODO Mungkin dikasih warning gitu ??
+    if (ktp == null || nikCtl.text.isEmpty) {
+      // showSnackBar(context, icon, iconColor, message, messageColor)
+      return;
+    }
+    final res = await ref.read(profileControllerProvider.notifier).verifyUser(
+          nik: nikCtl.text.trim(),
+          ktp: ktp,
+        );
+    if (res) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
+
+    /// TODO Dikasih error bahwa gagal verif
+  }
 
   void getMediaFromCamera() async {
     try {
