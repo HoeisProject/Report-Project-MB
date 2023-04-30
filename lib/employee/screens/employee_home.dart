@@ -61,7 +61,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         return const ErrorScreen(text: 'Employe Home Screen - Call Developer');
       },
       loading: () {
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

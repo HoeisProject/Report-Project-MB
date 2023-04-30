@@ -68,20 +68,22 @@ Widget _attachMediaItem(
             },
             child: Hero(
               tag: mediaFilePath,
-              child: Image.network(mediaFilePath,
-                  loadingBuilder: (context, child, event) {
-                if (event == null) return child;
-                return Center(
-                  child: SizedBox(
-                    width: 20.0,
-                    height: 20.0,
-                    child: CircularProgressIndicator(
-                      value: event.cumulativeBytesLoaded /
-                          (event.expectedTotalBytes ?? 1),
+              child: Image.network(
+                mediaFilePath,
+                loadingBuilder: (context, child, event) {
+                  if (event == null) return child;
+                  return Center(
+                    child: SizedBox(
+                      width: 20.0,
+                      height: 20.0,
+                      child: CircularProgressIndicator(
+                        value: event.cumulativeBytesLoaded /
+                            (event.expectedTotalBytes ?? 1),
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                },
+              ),
             ),
           )
         : const Icon(Icons.add_a_photo, size: 50.0),

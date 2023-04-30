@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/widgets/account_verify.dart';
 import 'package:report_project/auth/widgets/user_profile_edit_image.dart';
 import 'package:report_project/auth/widgets/user_profile_edit_text.dart';
 import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
-import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_image_full_func.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
@@ -15,128 +15,118 @@ import 'package:report_project/common/widgets/view_with_icon.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class UserProfileScreen extends ConsumerStatefulWidget {
-  static const routeName = '/user_profile_screen';
+  static const routeName = '/user-profile';
 
-  final UserModel userModel;
-
-  const UserProfileScreen({super.key, required this.userModel});
+  const UserProfileScreen({super.key});
 
   @override
   ConsumerState<UserProfileScreen> createState() => UserProfileScreenState();
 }
 
 class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
-  String username = "Username";
-  String userImage =
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
-  String? ktpImage =
-      "https://thumbs.dreamstime.com/b/id-identity-card-flat-style-design-vector-illustration-identification-driver-license-national-electronic-chip-male-photo-139157681.jpg";
-  String phoneNumber = "User Phone Number";
-  String? nik = "User Nik";
-  String role = "employee";
-  String email = "User Email";
-  bool isUserVerified = false;
-
-  @override
-  void initState() {
-    super.initState();
-    username = widget.userModel.username;
-    if (widget.userModel.userImage != '-' &&
-        widget.userModel.userImage.isNotEmpty) {
-      userImage = widget.userModel.userImage;
-    }
-    ktpImage = widget.userModel.ktpImage;
-    phoneNumber = widget.userModel.phoneNumber;
-    if (widget.userModel.nik != null) nik = widget.userModel.nik;
-    email = widget.userModel.email;
-    isUserVerified = widget.userModel.isUserVerified;
-
-    final currentRole = ref
-        .read(roleControllerProvider.notifier)
-        .findById(widget.userModel.roleId);
-    role = currentRole.name;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(profileControllerProvider);
+
     return Scaffold(
       appBar: customAppbar("USER PROFILE"),
       body: SafeArea(
         minimum: const EdgeInsets.only(top: 10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              profileHeader(Colors.black, username, userImage),
-              sizedSpacer(
-                height: 20,
-                width: 200,
-              ),
-              ViewWithIcon(
-                text: phoneNumber,
-                iconLeading: Icons.phone,
-                iconTrailing: Icons.edit,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext dialogContext) {
-                      return UserProfileEditText(
-                        label: "phone number",
-                        oldValue: phoneNumber,
-                        iconLeading: Icons.phone,
-                        onPressed: () {},
-                        inputType: TextInputType.phone,
-                        obscureText: false,
+        child: user.when(
+          data: (data) {
+            /// It should not be null, Because every home employee / admin has ref.listen to check authentication
+            if (data == null) return Container();
+            final role = ref
+                .read(roleControllerProvider.notifier)
+                .findById(data.roleId)
+                .name;
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  profileHeader(Colors.black, data.username, data.userImage),
+                  sizedSpacer(
+                    height: 20,
+                    width: 200,
+                  ),
+                  ViewWithIcon(
+                    text: data.phoneNumber,
+                    iconLeading: Icons.phone,
+                    iconTrailing: Icons.edit,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return UserProfileEditText(
+                            label: "phone number",
+                            oldValue: data.phoneNumber,
+                            iconLeading: Icons.phone,
+                            onPressed: () {},
+                            inputType: TextInputType.phone,
+                            obscureText: false,
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              ),
-              ViewWithIcon(
-                text: email,
-                iconLeading: Icons.email,
-                iconTrailing: Icons.edit,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext dialogContext) {
-                      return UserProfileEditText(
-                        label: "email",
-                        oldValue: email,
-                        iconLeading: Icons.email,
-                        onPressed: () {},
-                        inputType: TextInputType.emailAddress,
-                        obscureText: false,
+                  ),
+                  ViewWithIcon(
+                    text: data.email,
+                    iconLeading: Icons.email,
+                    iconTrailing: Icons.edit,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return UserProfileEditText(
+                            label: "email",
+                            oldValue: data.email,
+                            iconLeading: Icons.email,
+                            onPressed: () {},
+                            inputType: TextInputType.emailAddress,
+                            obscureText: false,
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              ),
-              Visibility(
-                visible: !isUserVerified && ktpImage != null,
-                child: Center(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Wait for admin to verify your account\nfor full access",
-                        style: kTitleReportItem.apply(
-                            color: Theme.of(context).primaryColor),
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
+                  ),
+                  Visibility(
+                    visible: !data.isUserVerified && data.ktpImage != null,
+                    child: Center(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Wait for admin to verify your account\nfor full access",
+                            style: kTitleReportItem.apply(
+                                color: Theme.of(context).primaryColor),
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  role == RoleModelNameEnum.employee.name
+                      ? ktpField(
+                          context,
+                          data.nik,
+                          data.ktpImage,
+                          data.isUserVerified,
+                        )
+                      : Container()
+                ],
               ),
-              role == RoleModelNameEnum.employee.name
-                  ? ktpField(context, nik, ktpImage, isUserVerified)
-                  : Container()
-            ],
-          ),
+            );
+          },
+          error: (error, stackTrace) {
+            return Container();
+          },
+          loading: () {
+            return const Center(child: CircularProgressIndicator());
+          },
         ),
       ),
     );

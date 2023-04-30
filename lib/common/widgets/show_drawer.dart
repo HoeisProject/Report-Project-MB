@@ -18,9 +18,7 @@ Widget showDrawer(context, WidgetRef ref, UserModel user) {
           children: [
             drawerHeaderWidget(user),
             drawerItemNavigate(context, Icons.person, "Profile", () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return UserProfileScreen(userModel: user);
-              }));
+              Navigator.pushNamed(context, UserProfileScreen.routeName);
             }),
             switchAppTheme(context, ref),
             drawerItemNavigate(context, Icons.logout, "Logout", () async {
