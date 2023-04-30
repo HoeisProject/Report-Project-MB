@@ -46,7 +46,6 @@ class UserProfileEditImage extends ConsumerWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 sizedSpacer(height: 5.0),
                 viewImageField(context, "Old $label", oldImage),

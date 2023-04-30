@@ -32,11 +32,11 @@ class CreateReportScreen extends ConsumerStatefulWidget {
 }
 
 class _ReportCreateState extends ConsumerState<CreateReportScreen> {
-  final _keyProjectTitle = GlobalKey<FormState>();
-  final _keyProjectDesc = GlobalKey<FormState>();
+  final _keyReportTitle = GlobalKey<FormState>();
+  final _keyReportDesc = GlobalKey<FormState>();
 
-  final _projectTitleCtl = TextEditingController();
-  final _projectDescCtl = TextEditingController();
+  final _reportTitleCtl = TextEditingController();
+  final _reportDescCtl = TextEditingController();
 
   Position? position;
 
@@ -49,8 +49,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
   @override
   void dispose() {
     super.dispose();
-    _projectTitleCtl.dispose();
-    _projectDescCtl.dispose();
+    _reportTitleCtl.dispose();
+    _reportDescCtl.dispose();
   }
 
   Future<void> _getDateTimeLoc(context) async {
@@ -113,7 +113,17 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
 
     Placemark place = placeMarks[0];
 
-    DateTime getNtpDateTime = await NTP.now();
+    DateTime getNtpDateTime = await NTP.now().catchError(
+      (error) {
+        showSnackBar(
+            context,
+            Icons.signal_wifi_connected_no_internet_4,
+            Colors.red,
+            "No internet, please check your connection!",
+            Colors.red);
+        return DateTime.now();
+      },
+    );
     ref.read(createReportProjectCreatedProvider.notifier).state =
         getNtpDateTime;
     ref.read(createReportPositionProvider.notifier).state =
@@ -136,8 +146,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     );
   }
 
-  Widget _body(context) {
-    final projectCreated = ref.watch(createReportProjectCreatedProvider);
+  Widget _body(BuildContext context) {
+    final reportCreated = ref.watch(createReportProjectCreatedProvider);
     final locationAddress = ref.watch(createReportPositionProvider);
     final listMediaPickerFile =
         ref.watch(createReportListMediaPickerFileProvider);
@@ -156,9 +166,9 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
           children: [
             inputTextField(
               context,
-              _keyProjectTitle,
-              "Project Title",
-              _projectTitleCtl,
+              _keyReportTitle,
+              "Report Title",
+              _reportTitleCtl,
               TextInputType.text,
               false,
               false,
@@ -197,16 +207,16 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
             ),
             viewTextField(
                 context,
-                "Time and Date",
-                projectCreated != null
-                    ? DateFormat.yMMMEd().format(projectCreated)
+                "Report Created At",
+                reportCreated != null
+                    ? DateFormat.yMMMEd().format(reportCreated)
                     : "getting network time..."),
-            viewTextField(context, "Position", locationAddress),
+            viewTextField(context, "Report Location", locationAddress),
             inputTextField(
               context,
-              _keyProjectDesc,
-              "Project Description",
-              _projectDescCtl,
+              _keyReportDesc,
+              "Report Description",
+              _reportDescCtl,
               TextInputType.text,
               false,
               true,
@@ -264,19 +274,19 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     final response =
         await ref.read(reportControllerProvider.notifier).createProject(
               projectId: projectCategorySelected,
-              title: _projectTitleCtl.text.trim(),
+              title: _reportTitleCtl.text.trim(),
               position: position!,
-              description: _projectDescCtl.text.trim(),
+              description: _reportDescCtl.text.trim(),
               listMediaFile: listMediaPickerFile,
             );
     if (response) {
-      debugPrint('Done Create Project');
+      debugPrint('Done Create Report');
       Navigator.pop(context);
       showSnackBar(context, Icons.done, Colors.greenAccent, "Report Created",
           Colors.greenAccent);
       Navigator.pop(context);
     } else {
-      // Navigator.pop(context);
+      Navigator.pop(context);
       showSnackBar(context, Icons.error_outline, Colors.red,
           "Failed, please try again!", Colors.red);
     }
@@ -286,8 +296,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
     List<Media> listMediaPickerFile,
     String projectCategorySelected,
   ) {
-    if (_projectTitleCtl.text.trim().isNotEmpty &&
-        _projectDescCtl.text.trim().isNotEmpty &&
+    if (_reportTitleCtl.text.trim().isNotEmpty &&
+        _reportDescCtl.text.trim().isNotEmpty &&
         projectCategorySelected.isNotEmpty &&
         ref.read(createReportProjectCreatedProvider) != null &&
         position != null &&

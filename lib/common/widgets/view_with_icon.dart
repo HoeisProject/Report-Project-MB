@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:report_project/common/styles/constant.dart';
 
 class ViewWithIcon extends StatelessWidget {
-  // the values we need
   final String text;
-  final IconData iconLeading;
-  final IconData iconTrailing;
+  final IconData? iconLeading;
+  final IconData? iconTrailing;
   final void Function() onPressed;
 
   const ViewWithIcon({
     super.key,
     required this.text,
-    required this.iconLeading,
-    required this.iconTrailing,
+    this.iconLeading,
+    this.iconTrailing,
     required this.onPressed,
   });
 
@@ -22,10 +21,12 @@ class ViewWithIcon extends StatelessWidget {
       color: Theme.of(context).cardColor,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: ListTile(
-        leading: Icon(
-          iconLeading,
-          color: Colors.teal,
-        ),
+        leading: iconLeading == null
+            ? null
+            : Icon(
+                iconLeading,
+                color: Colors.teal,
+              ),
         title: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Text(
@@ -34,7 +35,7 @@ class ViewWithIcon extends StatelessWidget {
             maxLines: 1,
           ),
         ),
-        trailing: iconTrailing == Icons.circle_outlined
+        trailing: iconTrailing == null
             ? null
             : GestureDetector(
                 onTap: onPressed,

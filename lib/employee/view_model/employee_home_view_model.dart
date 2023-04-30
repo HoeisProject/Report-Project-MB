@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
@@ -5,7 +6,8 @@ import 'package:report_project/employee/controllers/report_controller.dart';
 
 final employeeHomeSearchTextProvider = StateProvider((ref) => '');
 
-final employeeHomeStatusSelectedProvider = StateProvider((ref) => -1);
+final employeeHomeStatusSelectedProvider = StateProvider((ref) => 0);
+final employeeHomeStatusSelectedLabelProvider = StateProvider((ref) => "All");
 
 final employeeHomeFutureFilteredList = FutureProvider<List<ReportModel>>((ref) {
   final filteredReports = ref.watch(employeeHomeFilteringReport);
@@ -20,10 +22,11 @@ final employeeHomeFilteringReport = StateProvider<List<ReportModel>>((ref) {
 
   List<ReportModel>? filteredReports = rawReports;
 
-  if (statusSelectedItem != -1) {
+  if (statusSelectedItem != 0) {
     filteredReports = filteredReports
         ?.where((reportModel) =>
-            reportModel.reportStatusId == reportStatus[statusSelectedItem].id)
+            reportModel.reportStatusId ==
+            reportStatus[(statusSelectedItem - 1)].id)
         .toList();
   }
   if (searchText != '') {

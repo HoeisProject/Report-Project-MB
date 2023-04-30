@@ -165,7 +165,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           data: (data) {
             if (data.isEmpty) {
               return const Center(
-                  child: Text('NO DATA', style: TextStyle(fontSize: 36.0)));
+                  child: Text('NO DATA', style: kHeaderTextStyle));
             }
             return ListView.builder(
               padding: const EdgeInsets.only(top: 10.0),

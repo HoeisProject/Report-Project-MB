@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/admin/screens/admin_detail_report.dart';
+import 'package:report_project/admin/screens/admin_project_detail.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/admin/screens/admin_project_create.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
+import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
@@ -48,6 +50,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AdminProjectCreateScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const AdminProjectCreateScreen());
+    case AdminProjectDetail.routeName:
+      final project = routeSettings.arguments as ProjectModel;
+      return MaterialPageRoute(
+          builder: (context) => AdminProjectDetail(
+                project: project,
+              ));
     case AdminUserHomeScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const AdminUserHomeScreen());

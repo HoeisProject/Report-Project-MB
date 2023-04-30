@@ -25,7 +25,15 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
 
   @override
   Widget build(BuildContext context) {
-    return accountVerification(context, ref);
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: accountVerification(context, ref),
+    );
   }
 
   Widget accountVerification(BuildContext context, WidgetRef ref) {
@@ -40,7 +48,7 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
         width: MediaQuery.of(context).size.width / 1.2,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: const [
             BoxShadow(
@@ -86,24 +94,35 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
   }
 
   void sendVerifyRequest(context) async {
-    showLoadingDialog(context);
     final ktp = ref.read(accountVerifyMediaFileProvider);
+    showLoadingDialog(context);
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
 
-    /// TODO Mungkin dikasih warning gitu ??
     if (ktp == null || nikCtl.text.isEmpty) {
-      // showSnackBar(context, icon, iconColor, message, messageColor)
+      Navigator.pop(context);
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "There is empty field!", Colors.red);
       return;
     }
-    final res = await ref.read(profileControllerProvider.notifier).verifyUser(
-          nik: nikCtl.text.trim(),
-          ktp: ktp,
-        );
-    if (res) {
+    final response =
+        await ref.read(profileControllerProvider.notifier).verifyUser(
+              nik: nikCtl.text.trim(),
+              ktp: ktp,
+            );
+    if (response) {
+      debugPrint('Verification request sent');
       Navigator.pop(context);
+      showSnackBar(context, Icons.done, Colors.greenAccent,
+          "Verification request sent", Colors.greenAccent);
       Navigator.pop(context);
+    } else {
+      Navigator.pop(context);
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "Failed, please try again!", Colors.red);
     }
-
-    /// TODO Dikasih error bahwa gagal verif
   }
 
   void getMediaFromCamera() async {

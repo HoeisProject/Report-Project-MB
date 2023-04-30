@@ -50,14 +50,13 @@ class UserProfileEditText extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 sizedSpacer(height: 5.0),
                 fieldHeader("Old $label : "),
                 ViewWithIcon(
                   text: oldValue,
                   iconLeading: iconLeading,
-                  iconTrailing: Icons.circle_outlined,
+                  iconTrailing: null,
                   onPressed: () {},
                 ),
                 sizedSpacer(height: 15.0),

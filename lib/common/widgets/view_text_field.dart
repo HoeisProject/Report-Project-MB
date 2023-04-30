@@ -17,11 +17,6 @@ Widget viewTextField(
         ),
         Container(
           margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
-          // decoration: const BoxDecoration(
-          //   border: Border(
-          //     bottom: BorderSide(width: 1.0, color: Colors.black),
-          //   ),
-          // ),
           child: Text(
             fieldContent,
             style: kInputTextStyle,

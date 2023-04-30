@@ -46,6 +46,7 @@ class AdminDetailReportScreenState
       reportId: report.id,
     ));
     return Container(
+      width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.all(10.0),
       child: Card(
         elevation: 5.0,

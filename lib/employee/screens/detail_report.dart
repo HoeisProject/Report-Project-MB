@@ -26,11 +26,12 @@ class DetailReportScreen extends ConsumerWidget {
     );
   }
 
-  Widget _body(context, WidgetRef ref) {
+  Widget _body(BuildContext context, WidgetRef ref) {
     final reportsMedia = ref.watch(getReportMediaProvider(
       reportId: report.id,
     ));
     return Container(
+      width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.all(10.0),
       child: Card(
         elevation: 5.0,
@@ -44,19 +45,19 @@ class DetailReportScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(context, "Project Title", report.title),
-                viewTextField(context, "Time and Date",
+                viewTextField(context, "Report Title", report.title),
+                viewTextField(context, "Report Created At",
                     DateFormat.yMMMEd().format(report.updatedAt)),
                 FutureBuilder(
                   future: TranslatePosition(position: report.position)
                       .translatePos(),
                   builder: (context, snapshot) {
                     return viewTextField(
-                        context, "Location", snapshot.data ?? '-');
+                        context, "Report Location", snapshot.data ?? '-');
                   },
                 ),
                 viewTextField(
-                    context, "Project Description", report.description),
+                    context, "Report Description", report.description),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =

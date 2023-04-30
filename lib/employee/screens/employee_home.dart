@@ -31,6 +31,8 @@ class EmployeeHomeScreen extends ConsumerStatefulWidget {
 class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   final _searchController = TextEditingController();
 
+  List<ProjectModel> listProject = [];
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Employee Home Screen");
@@ -75,7 +77,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
             children: [
               _menuBar(),
               _searchAndFilter(),
-              _listProjectView(),
+              _listReportView(),
             ],
           ),
         ),
@@ -126,6 +128,19 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
+  Widget showFilterMenu(BuildContext context, WidgetRef ref) {
+    return IconButton(
+        onPressed: () {
+          debugPrint("menu out");
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const EmployeeHomeFilterMenu();
+              });
+        },
+        icon: const Icon(Icons.filter_list));
+  }
+
   Widget _searchAndFilter() {
     return Row(
       children: [
@@ -134,13 +149,13 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
           child: employeeHomeSearchBar(context, ref, _searchController),
         ),
         Flexible(
-          child: employeeHomeFilterMenu(context, ref),
+          child: showFilterMenu(context, ref),
         ),
       ],
     );
   }
 
-  Widget _listProjectView() {
+  Widget _listReportView() {
     final reports = ref.watch(employeeHomeFutureFilteredList);
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     final projects = ref.watch(adminProjectControllerProvider);
@@ -154,19 +169,24 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         elevation: 5.0,
         child: reports.when(
           data: (data) {
+            if (data.isEmpty) {
+              return const Center(
+                  child: Text('NO DATA', style: kHeaderTextStyle));
+            }
             return ListView.builder(
-                padding: const EdgeInsets.only(top: 10.0),
-                itemCount: data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final report = data[index];
-                  final project = projects.asData?.value
-                      .firstWhere((element) => element.id == report.projectId);
-                  return _projectViewItem(
-                    report,
-                    project,
-                    reportStatus.findIndexById(report.id),
-                  );
-                });
+              padding: const EdgeInsets.only(top: 10.0),
+              itemCount: data.length,
+              itemBuilder: (BuildContext context, int index) {
+                final report = data[index];
+                final project = projects.asData?.value
+                    .firstWhere((element) => element.id == report.projectId);
+                return _reportViewItem(
+                  report,
+                  project,
+                  reportStatus.findIndexById(report.id),
+                );
+              },
+            );
           },
           error: (error, stackTrace) {
             return Center(
@@ -186,7 +206,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ReportModel data, ProjectModel? project, int status) {
+  Widget _reportViewItem(ReportModel data, ProjectModel? project, int status) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 150.0,
@@ -222,21 +242,21 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(status)
+                        _reportStatus(status)
                       ],
                     ),
                   ),
-                  reportItemContent(
+                  _reportItemContent(
                       DateFormat.yMMMEd().format(data.updatedAt), false),
                   FutureBuilder(
                     future: TranslatePosition(position: data.position)
                         .translatePos(),
                     builder: (context, snapshot) {
-                      return reportItemContent(snapshot.data ?? '-', false);
+                      return _reportItemContent(snapshot.data ?? '-', false);
                     },
                   ),
-                  reportItemContent('From Project: ${project?.name}', false),
-                  reportItemContent(data.description, true),
+                  _reportItemContent('From Project: ${project?.name}', false),
+                  _reportItemContent(data.description, true),
                 ],
               ),
             ),
@@ -246,7 +266,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
-  Widget reportItemContent(String content, bool isDesc) {
+  Widget _reportItemContent(String content, bool isDesc) {
     return Flexible(
       flex: isDesc ? 2 : 1,
       child: Container(
@@ -262,7 +282,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     );
   }
 
-  Widget reportStatus(int status) {
+  Widget _reportStatus(int status) {
     IconData? statusIcon;
     Color? iconColor;
     switch (status) {

@@ -45,8 +45,9 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         widget.userModel.userImage.isNotEmpty) {
       userImage = widget.userModel.userImage;
     }
-    if (widget.userModel.ktpImage != '-') ktpImage = widget.userModel.ktpImage;
-    if (widget.userModel.nik != '-') nik = widget.userModel.nik;
+    ktpImage = widget.userModel.ktpImage;
+    phoneNumber = widget.userModel.phoneNumber;
+    if (widget.userModel.nik != null) nik = widget.userModel.nik;
     email = widget.userModel.email;
     isUserVerified = widget.userModel.isUserVerified;
 
@@ -111,6 +112,25 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     },
                   );
                 },
+              ),
+              Visibility(
+                visible: !isUserVerified && ktpImage != null,
+                child: Center(
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Wait for admin to verify your account\nfor full access",
+                        style: kTitleReportItem.apply(
+                            color: Theme.of(context).primaryColor),
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                      ),
+                    ),
+                  ),
+                ),
               ),
               role == RoleModelNameEnum.employee.name
                   ? ktpField(context, nik, ktpImage, isUserVerified)
@@ -206,7 +226,7 @@ Widget ktpField(
   String? ktpImagePath,
   bool isUserVerified,
 ) {
-  if (!isUserVerified) {
+  if (!isUserVerified && ktpImagePath == null) {
     return Container(
       margin: const EdgeInsets.only(top: 25.0),
       height: 50.0,
@@ -317,7 +337,7 @@ Widget ktpField(
             barrierDismissible: true,
             builder: (BuildContext dialogContext) {
               return UserProfileEditText(
-                label: "nik",
+                label: "NIK",
                 oldValue: nik ?? '-',
                 iconLeading: Icons.credit_card,
                 onPressed: () {},
