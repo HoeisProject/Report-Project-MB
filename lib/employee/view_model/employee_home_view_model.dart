@@ -15,26 +15,26 @@ final employeeHomeFutureFilteredList = FutureProvider<List<ReportModel>>((ref) {
 });
 
 final employeeHomeFilteringReport = StateProvider<List<ReportModel>>((ref) {
-  final rawReports = ref.watch(reportControllerProvider).value;
+  final rawReports = ref.watch(reportControllerProvider).asData?.value;
   final searchText = ref.watch(employeeHomeSearchTextProvider);
   final statusSelectedItem = ref.watch(employeeHomeStatusSelectedProvider);
-  final reportStatus = ref.read(reportStatusControllerProvider);
+  final reportStatus = ref.watch(reportStatusControllerProvider);
 
-  List<ReportModel>? filteredReports = rawReports;
+  List<ReportModel> filteredReports = rawReports ?? [];
 
   if (statusSelectedItem != 0) {
     filteredReports = filteredReports
-        ?.where((reportModel) =>
+        .where((reportModel) =>
             reportModel.reportStatusId ==
             reportStatus[(statusSelectedItem - 1)].id)
         .toList();
   }
   if (searchText != '') {
-    filteredReports = rawReports
-        ?.where((reportModel) =>
+    filteredReports = filteredReports
+        .where((reportModel) =>
             reportModel.title.toLowerCase().contains(searchText.toLowerCase()))
         .toList();
   }
 
-  return filteredReports!;
+  return filteredReports;
 });
