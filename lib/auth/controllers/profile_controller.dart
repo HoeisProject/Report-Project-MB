@@ -33,6 +33,17 @@ class ProfileController extends _$ProfileController {
     });
   }
 
+  /// Update properties String, bool and File only. Based on UserModel properties
+  Future<bool> updateByProperties({
+    required UserModelEnum userModelEnum,
+    required dynamic newValue,
+  }) async {
+    final res = await _profileService.update(userModelEnum, newValue);
+    if (!res.success) return false;
+    await refreshUser();
+    return true;
+  }
+
   Future<bool> verifyUser({
     required String nik,
     required File ktp,

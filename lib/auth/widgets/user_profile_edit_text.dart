@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/auth/controllers/profile_controller.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_with_icon.dart';
+import 'package:report_project/common/widgets/show_loading_dialog.dart';
+import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_with_icon.dart';
 
-class UserProfileEditText extends StatelessWidget {
+class UserProfileEditText extends ConsumerWidget {
   final String label;
   final String oldValue;
   final IconData iconLeading;
   final void Function() onPressed;
+  final UserModelEnum userModelEnum;
 
   final keyNewValue = GlobalKey<FormState>();
   final newValueCtl = TextEditingController();
@@ -24,10 +30,42 @@ class UserProfileEditText extends StatelessWidget {
     required this.onPressed,
     required this.inputType,
     required this.obscureText,
+    required this.userModelEnum,
   });
 
+  void update(context, WidgetRef ref) async {
+    showLoadingDialog(context);
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+
+    if (newValueCtl.text.isEmpty) {
+      Navigator.pop(context);
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "There is empty field!", Colors.red);
+      return;
+    }
+    final response =
+        await ref.read(profileControllerProvider.notifier).updateByProperties(
+              userModelEnum: userModelEnum,
+              newValue: newValueCtl.text.trim(),
+            );
+    if (response) {
+      debugPrint('Update ${userModelEnum.name} Field Complete');
+      Navigator.pop(context);
+      showSnackBar(context, Icons.done, Colors.greenAccent,
+          'Update ${userModelEnum.name} Field Complete', Colors.greenAccent);
+      Navigator.pop(context);
+    } else {
+      Navigator.pop(context);
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "Failed update ${userModelEnum.name}", Colors.red);
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -76,7 +114,7 @@ class UserProfileEditText extends StatelessWidget {
                   false,
                   "EDIT",
                   Colors.lightBlue,
-                  () {},
+                  () => update(context, ref),
                 ),
                 sizedSpacer(height: 5.0),
               ],

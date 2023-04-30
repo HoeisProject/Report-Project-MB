@@ -8,6 +8,7 @@ import 'package:report_project/auth/widgets/user_profile_edit_image.dart';
 import 'package:report_project/auth/widgets/user_profile_edit_text.dart';
 import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_image_full_func.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
@@ -64,6 +65,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                             onPressed: () {},
                             inputType: TextInputType.phone,
                             obscureText: false,
+                            userModelEnum: UserModelEnum.phoneNumber,
                           );
                         },
                       );
@@ -85,6 +87,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                             onPressed: () {},
                             inputType: TextInputType.emailAddress,
                             obscureText: false,
+                            userModelEnum: UserModelEnum.email,
                           );
                         },
                       );
@@ -189,6 +192,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                       return UserProfileEditImage(
                         label: "profile image",
                         oldImage: userImagePath,
+                        userModelEnum: UserModelEnum.userImage,
                         onPressed: () {},
                       );
                     },
@@ -302,6 +306,7 @@ Widget ktpField(
                               return UserProfileEditImage(
                                 label: "ktp image",
                                 oldImage: ktpImagePath,
+                                userModelEnum: UserModelEnum.ktpImage,
                                 onPressed: () {},
                               );
                             },
@@ -333,6 +338,7 @@ Widget ktpField(
                 onPressed: () {},
                 inputType: TextInputType.number,
                 obscureText: false,
+                userModelEnum: UserModelEnum.nik,
               );
             },
           );

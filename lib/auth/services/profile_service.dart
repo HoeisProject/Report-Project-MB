@@ -25,6 +25,25 @@ class ProfileService {
     return res.results![0] as ParseObject;
   }
 
+  /// Update properties String, bool and File only. Based on UserModel properties
+  Future<ParseResponse> update(
+    UserModelEnum userModelEnum,
+    dynamic newValue,
+  ) async {
+    final currentUserId = (await currentUser())!.objectId;
+    final parse = ParseObject('_User')..objectId = currentUserId;
+    if (newValue is String || newValue is bool) {
+      parse.set(userModelEnum.name, newValue);
+      if (userModelEnum == UserModelEnum.email) {
+        parse.set(UserModelEnum.emailClone.name, newValue);
+      }
+    } else if (newValue is File) {
+      final parseFile = ParseFile(File(newValue.path));
+      parse.set(userModelEnum.name, parseFile);
+    }
+    return parse.save();
+  }
+
   Future<ParseResponse> verifyUser(
     String nik,
     File ktp,
