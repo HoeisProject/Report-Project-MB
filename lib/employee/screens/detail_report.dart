@@ -45,19 +45,19 @@ class DetailReportScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(context, "Report Title", report.title),
+                viewTextField(context, "Report Title", report.title, false),
                 viewTextField(context, "Report Created At",
-                    DateFormat.yMMMEd().format(report.updatedAt)),
+                    DateFormat.yMMMEd().format(report.updatedAt), false),
                 FutureBuilder(
                   future: TranslatePosition(position: report.position)
                       .translatePos(),
                   builder: (context, snapshot) {
-                    return viewTextField(
-                        context, "Report Location", snapshot.data ?? '-');
+                    return viewTextField(context, "Report Location",
+                        snapshot.data ?? '-', false);
                   },
                 ),
                 viewTextField(
-                    context, "Report Description", report.description),
+                    context, "Report Description", report.description, true),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =

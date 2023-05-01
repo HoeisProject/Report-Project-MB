@@ -44,6 +44,7 @@ const kContentReportItem = TextStyle(
 
 enum ConstColorEnum {
   kBgColor,
+  kOutlineBorderColor,
 }
 
 class ConstColor {
@@ -55,6 +56,9 @@ class ConstColor {
     switch (constColorId) {
       case 'kBgColor':
         Color color = Theme.of(context).scaffoldBackgroundColor;
+        return color;
+      case 'kOutlineBorderColor':
+        Color color = Theme.of(context).indicatorColor;
         return color;
       default:
         Color color = Colors.transparent;

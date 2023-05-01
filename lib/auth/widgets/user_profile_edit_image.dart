@@ -81,16 +81,16 @@ class UserProfileEditImage extends ConsumerWidget {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
                 viewImageField(context, "Old $label", oldImage),
-                sizedSpacer(height: 15.0),
+                sizedSpacer(context: context, height: 15.0),
                 inputMediaField(
                   context,
                   "new $label",
                   ref.watch(userProfileEditMediaFileProvider),
                   () => getMediaFromCamera(ref),
                 ),
-                sizedSpacer(height: 15.0),
+                sizedSpacer(context: context, height: 15.0),
                 customButton(
                   context,
                   false,
@@ -98,7 +98,7 @@ class UserProfileEditImage extends ConsumerWidget {
                   Colors.lightBlue,
                   () => update(context, ref),
                 ),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
               ],
             ),
           ),

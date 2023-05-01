@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:report_project/admin/controllers/admin_report_controller.dart';
+import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
+import 'package:report_project/admin/view_model/admin_home_view_model.dart';
 import 'package:report_project/admin/widgets/admin_home_filter.dart';
 import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/controller/role_controller.dart';
+import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/styles/constant.dart';
@@ -66,7 +68,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         return const ErrorScreen(text: 'Admin Home Screen - Call Developer');
       },
       loading: () {
-        return const CircularProgressIndicator();
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
@@ -81,7 +85,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
             children: [
               _menuBar(),
               _searchAndFilter(),
-              _listProjectView(),
+              _listReportView(),
             ],
           ),
         ),
@@ -98,13 +102,12 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _menuBarItem(Icons.polyline_rounded, 'Project', () {
+            _menuBarItem(Icons.work_outline, 'Project', () {
               Navigator.pushNamed(context, AdminProjectHomeScreen.routeName);
             }),
-            _menuBarItem(Icons.assignment, "User", () {
+            _menuBarItem(Icons.supervised_user_circle_outlined, "User", () {
               Navigator.pushNamed(context, AdminUserHomeScreen.routeName);
             }),
-            _menuBarItem(Icons.question_mark, "Project", () {}),
           ],
         ),
       ),
@@ -136,25 +139,39 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     );
   }
 
+  Widget showFilterMenu(BuildContext context, WidgetRef ref) {
+    return IconButton(
+        onPressed: () {
+          debugPrint("menu out");
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const AdminHomeFilterMenu();
+              });
+        },
+        icon: const Icon(Icons.filter_list));
+  }
+
   Widget _searchAndFilter() {
     return Row(
       children: [
         Flexible(
-          flex: 3,
+          flex: 4,
           child: adminHomeSearchBar(context, ref, _searchController),
         ),
         Flexible(
-          child: adminHomeFilterMenu(context, ref),
+          child: showFilterMenu(context, ref),
         ),
       ],
     );
   }
 
-  Widget _listProjectView() {
-    final reports = ref.watch(adminReportControllerProvider);
+  Widget _listReportView() {
+    final reports = ref.watch(adminHomeFutureFilteredList);
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
+    final projects = ref.watch(adminProjectControllerProvider);
     return SizedBox(
-      height: 425.0,
+      height: 375.0,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),
@@ -168,12 +185,16 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                   child: Text('NO DATA', style: kHeaderTextStyle));
             }
             return ListView.builder(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
-                return _projectViewItem(
-                  data[index],
-                  reportStatus.findIndexById(data[index].id),
+                final reports = data[index];
+                final project = projects.asData?.value
+                    .firstWhere((element) => element.id == reports.projectId);
+                return _reportViewItem(
+                  reports,
+                  project,
+                  reportStatus.findIndexById(reports.id),
                 );
               },
             );
@@ -195,10 +216,11 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     );
   }
 
-  Widget _projectViewItem(ReportModel report, int status) {
+  Widget _reportViewItem(
+      ReportModel report, ProjectModel? project, int status) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
-      height: 150.0,
+      height: 200.0,
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
@@ -208,9 +230,11 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         child: Material(
           child: InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return AdminDetailReportScreen(report: report);
-              }));
+              Navigator.pushNamed(
+                context,
+                AdminDetailReportScreen.routeName,
+                arguments: report,
+              );
             },
             child: Padding(
               padding: const EdgeInsets.all(5.0),
@@ -233,18 +257,19 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                       ],
                     ),
                   ),
-                  // TODO
-                  // reportItemContent(report.uploadBy.username, false),
-                  reportItemContent(
+                  _reportItemContent(
+                      'Report by : ${report.userId.nickname}', false),
+                  _reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
                   FutureBuilder(
                     future: TranslatePosition(position: report.position)
                         .translatePos(),
                     builder: (context, snapshot) {
-                      return reportItemContent(snapshot.data ?? '-', false);
+                      return _reportItemContent(snapshot.data ?? '-', false);
                     },
                   ),
-                  reportItemContent(report.description, true),
+                  _reportItemContent('From project : ${project?.name}', false),
+                  _reportItemContent(report.description, true),
                 ],
               ),
             ),
@@ -254,9 +279,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     );
   }
 
-  Widget reportItemContent(String content, bool isDesc) {
+  Widget _reportItemContent(String content, bool isDesc) {
     return Flexible(
-      flex: isDesc ? 2 : 1,
+      flex: isDesc ? 3 : 1,
       child: Container(
         margin: const EdgeInsets.only(top: 2.5, bottom: 2.5),
         child: Text(

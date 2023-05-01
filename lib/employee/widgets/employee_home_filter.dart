@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/employee/view_model/employee_home_view_model.dart';
 
@@ -15,6 +16,7 @@ class EmployeeHomeFilterMenuState
     extends ConsumerState<EmployeeHomeFilterMenu> {
   @override
   Widget build(BuildContext context) {
+    final projects = ref.watch(adminProjectControllerProvider);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -23,7 +25,7 @@ class EmployeeHomeFilterMenuState
       backgroundColor: Colors.transparent,
       child: Container(
         padding: const EdgeInsets.all(20.0),
-        height: MediaQuery.of(context).size.height / 2,
+        height: 350.0,
         width: MediaQuery.of(context).size.width / 1.2,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -44,19 +46,54 @@ class EmployeeHomeFilterMenuState
                   context,
                   "Project Status",
                   ref,
-                  statusDropdown(context, ref),
+                  statusDropdown(ref),
+                ),
+                projects.when(
+                  data: (data) {
+                    final projectCategories = [
+                      const DropdownMenuItem(
+                        value: 'All',
+                        child: SizedBox(
+                          width: 100.0,
+                          child: Text('All'),
+                        ),
+                      ),
+                      ...data.map((e) {
+                        return DropdownMenuItem(
+                          value: e.id,
+                          child: SizedBox(
+                            width: 100.0,
+                            child: Text(e.name),
+                          ),
+                        );
+                      }).toList()
+                    ];
+                    return filterDialogDropdownItem(
+                      context,
+                      "Project Category",
+                      ref,
+                      projectCategoryDropdown(context, ref, projectCategories),
+                    );
+                  },
+                  error: (error, stackTrace) {
+                    return const Text('Error Happen');
+                  },
+                  loading: () {
+                    return const Center(child: CircularProgressIndicator());
+                  },
                 ),
                 Container(
                   margin: const EdgeInsets.all(5.0),
                   alignment: Alignment.bottomRight,
                   child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text(
-                        "Close",
-                        style: kButtonTextStyle,
-                      )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      "Close",
+                      style: kButtonTextStyle,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -96,20 +133,21 @@ class EmployeeHomeFilterMenuState
     "Rejected",
   ];
 
-  List<DropdownMenuItem<String>> get statusDropdownItem {
+  List<DropdownMenuItem<String>> statusDropdownItem() {
     List<DropdownMenuItem<String>> items = [];
     items = statusFilter.map((e) {
       return DropdownMenuItem(
-          value: e,
-          child: SizedBox(
-            width: 100.0,
-            child: Text(e),
-          ));
+        value: e,
+        child: SizedBox(
+          width: 100.0,
+          child: Text(e),
+        ),
+      );
     }).toList();
     return items;
   }
 
-  Widget statusDropdown(BuildContext context, WidgetRef ref) {
+  Widget statusDropdown(WidgetRef ref) {
     return DropdownButton(
       value: ref.watch(employeeHomeStatusSelectedLabelProvider),
       onChanged: (value) {
@@ -118,7 +156,19 @@ class EmployeeHomeFilterMenuState
         ref.read(employeeHomeStatusSelectedProvider.notifier).state =
             (statusFilter.indexOf(value.toString()));
       },
-      items: statusDropdownItem,
+      items: statusDropdownItem(),
+    );
+  }
+
+  Widget projectCategoryDropdown(BuildContext context, WidgetRef ref,
+      List<DropdownMenuItem<String>>? items) {
+    return DropdownButton(
+      value: ref.watch(employeeHomeProjectCategorySelectedProvider),
+      onChanged: (value) {
+        ref.read(employeeHomeProjectCategorySelectedProvider.notifier).state =
+            value!;
+      },
+      items: items,
     );
   }
 }

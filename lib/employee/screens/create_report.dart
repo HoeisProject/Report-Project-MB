@@ -202,7 +202,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                 return const Text('Error Happen');
               },
               loading: () {
-                return const CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               },
             ),
             viewTextField(
@@ -210,8 +210,9 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                 "Report Created At",
                 reportCreated != null
                     ? DateFormat.yMMMEd().format(reportCreated)
-                    : "getting network time..."),
-            viewTextField(context, "Report Location", locationAddress),
+                    : "getting network time...",
+                false),
+            viewTextField(context, "Report Location", locationAddress, false),
             inputTextField(
               context,
               _keyReportDesc,
@@ -240,7 +241,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
                     Navigator.pop(context);
                   });
             }),
-            sizedSpacer(height: 30.0),
+            sizedSpacer(context: context, height: 30.0),
             customButton(
               context,
               false,
@@ -248,7 +249,7 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
               Colors.lightBlue,
               () => submit(context),
             ),
-            sizedSpacer(height: 30.0),
+            sizedSpacer(context: context, height: 30.0),
           ],
         ),
       ),

@@ -239,9 +239,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            sizedSpacer(height: 10.0),
+            sizedSpacer(context: context, height: 10.0),
             titleContext("LOGIN"),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             inputTextField(
               context,
               keyEmailField,
@@ -252,7 +252,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               false,
               1,
             ),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             inputTextField(
               context,
               keyPasswordField,
@@ -263,7 +263,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               false,
               1,
             ),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             customButton(
               context,
               ref.watch(loginRegisterLoadingProvider),
@@ -271,7 +271,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               Colors.lightBlue,
               () => userLogin(context),
             ),
-            sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
+            sizedSpacer(
+                context: context, height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
               "Login",
               "Register",
@@ -280,7 +281,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               changeToLoginCard,
               changeToRegisterCard,
             ),
-            sizedSpacer(height: 20.0),
+            sizedSpacer(context: context, height: 20.0),
           ],
         ),
       ),
@@ -292,9 +293,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            sizedSpacer(height: 10.0),
+            sizedSpacer(context: context, height: 10.0),
             titleContext("REGISTER"),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             inputMediaField(
               context,
               "Profile Image",
@@ -303,7 +304,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                 getMediaFromCamera();
               },
             ),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             inputTextField(
               context,
               keyUsernameField,
@@ -314,7 +315,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               false,
               1,
             ),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             inputTextField(
               context,
               keyPhoneNumberField,
@@ -325,7 +326,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               false,
               1,
             ),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             inputTextField(
               context,
               keyEmailField,
@@ -336,7 +337,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               false,
               1,
             ),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             inputTextField(
               context,
               keyPasswordField,
@@ -347,7 +348,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               false,
               1,
             ),
-            sizedSpacer(height: 5.0),
+            sizedSpacer(context: context, height: 5.0),
             customButton(
               context,
               ref.watch(loginRegisterLoadingProvider),
@@ -355,7 +356,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               Colors.lightBlue,
               () => userRegister(context),
             ),
-            sizedSpacer(height: 10.0, width: 150.0, thickness: 1.0),
+            sizedSpacer(
+                context: context, height: 10.0, width: 150.0, thickness: 1.0),
             _logRegSwitchLink(
               "Login",
               "Register",
@@ -364,7 +366,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               changeToLoginCard,
               changeToRegisterCard,
             ),
-            sizedSpacer(height: 20.0),
+            sizedSpacer(context: context, height: 20.0),
           ],
         ),
       ),

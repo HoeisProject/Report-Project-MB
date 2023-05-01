@@ -17,6 +17,7 @@ ReportService reportService(ReportServiceRef ref) {
 
 class ReportService {
   final ProviderRef ref;
+
   ReportService({required this.ref});
 
   Future<ParseResponse> create(
@@ -78,7 +79,8 @@ class ReportService {
   Future<List<ParseObject>> getReport(ParseUser currentUser) async {
     ParseObject? getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..whereEqualTo(ReportModelEnum.userId.name, currentUser);
+      ..whereEqualTo(ReportModelEnum.userId.name, currentUser)
+      ..includeObject(["userId"]);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {

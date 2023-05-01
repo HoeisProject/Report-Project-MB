@@ -139,7 +139,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               fontSize: 24.0,
             ),
           ),
-          sizedSpacer(height: 25.0),
+          sizedSpacer(context: context, height: 25.0),
         ],
       ),
     );

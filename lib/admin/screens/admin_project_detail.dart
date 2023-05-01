@@ -39,13 +39,13 @@ class AdminProjectDetail extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(context, "Project Title", project.name),
+                viewTextField(context, "Project Title", project.name, false),
                 viewTextField(context, "Start Date",
-                    DateFormat.yMMMEd().format(project.startDate)),
+                    DateFormat.yMMMEd().format(project.startDate), false),
                 viewTextField(context, "End Date",
-                    DateFormat.yMMMEd().format(project.endDate)),
+                    DateFormat.yMMMEd().format(project.endDate), false),
                 viewTextField(
-                    context, "Project Description", project.description),
+                    context, "Project Description", project.description, true),
               ],
             ),
           ),

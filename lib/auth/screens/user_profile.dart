@@ -44,10 +44,16 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  profileHeader(Colors.black, data.username, data.userImage),
+                  profileHeader(
+                      ConstColor(context).getConstColor(
+                          ConstColorEnum.kOutlineBorderColor.name),
+                      data.nickname,
+                      data.userImage),
                   sizedSpacer(
+                    context: context,
                     height: 20,
-                    width: 200,
+                    width: 225,
+                    thickness: 1.0,
                   ),
                   ViewWithIcon(
                     text: data.phoneNumber,
@@ -135,7 +141,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     );
   }
 
-  Widget profileHeader(Color color, String username, String userImagePath) {
+  Widget profileHeader(Color color, String nickname, String userImagePath) {
     final image = userImagePath.contains('https://')
         ? NetworkImage(userImagePath)
         : FileImage(File(userImagePath));
@@ -166,6 +172,8 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   tag: userImagePath,
                   child: CircleAvatar(
                     backgroundImage: image as ImageProvider,
+                    backgroundColor: ConstColor(context)
+                        .getConstColor(ConstColorEnum.kBgColor.name),
                     radius: 70,
                   ),
                 ),
@@ -202,12 +210,27 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             ),
           ],
         ),
-        Text(
-          username,
-          style: kTitleContextStyle,
-          maxLines: 2,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
+        ViewWithIcon(
+          text: nickname,
+          iconLeading: Icons.person,
+          iconTrailing: Icons.edit,
+          onPressed: () {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext dialogContext) {
+                return UserProfileEditText(
+                  label: "Nickname",
+                  oldValue: nickname,
+                  iconLeading: Icons.person,
+                  onPressed: () {},
+                  inputType: TextInputType.text,
+                  obscureText: false,
+                  userModelEnum: UserModelEnum.nickname,
+                );
+              },
+            );
+          },
         ),
       ],
     );

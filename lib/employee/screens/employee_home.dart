@@ -61,7 +61,9 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         return const ErrorScreen(text: 'Employe Home Screen - Call Developer');
       },
       loading: () {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
@@ -94,7 +96,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _menuBarItem(Icons.assignment, "Report", () {
+            _menuBarItem(Icons.assignment_outlined, "Report", () {
               Navigator.pushNamed(context, CreateReportScreen.routeName);
             }),
           ],
@@ -145,7 +147,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     return Row(
       children: [
         Flexible(
-          flex: 3,
+          flex: 4,
           child: employeeHomeSearchBar(context, ref, _searchController),
         ),
         Flexible(
@@ -160,7 +162,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     final reportStatus = ref.read(reportStatusControllerProvider.notifier);
     final projects = ref.watch(adminProjectControllerProvider);
     return SizedBox(
-      height: 425.0,
+      height: 375.0,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),
@@ -174,16 +176,16 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                   child: Text('NO DATA', style: kHeaderTextStyle));
             }
             return ListView.builder(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
-                final report = data[index];
+                final reports = data[index];
                 final project = projects.asData?.value
-                    .firstWhere((element) => element.id == report.projectId);
+                    .firstWhere((element) => element.id == reports.projectId);
                 return _reportViewItem(
-                  report,
+                  reports,
                   project,
-                  reportStatus.findIndexById(report.id),
+                  reportStatus.findIndexById(reports.id),
                 );
               },
             );
@@ -209,7 +211,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   Widget _reportViewItem(ReportModel data, ProjectModel? project, int status) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
-      height: 150.0,
+      height: 200.0,
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
@@ -255,7 +257,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                       return _reportItemContent(snapshot.data ?? '-', false);
                     },
                   ),
-                  _reportItemContent('From Project: ${project?.name}', false),
+                  _reportItemContent('From project : ${project?.name}', false),
                   _reportItemContent(data.description, true),
                 ],
               ),
@@ -268,7 +270,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
 
   Widget _reportItemContent(String content, bool isDesc) {
     return Flexible(
-      flex: isDesc ? 2 : 1,
+      flex: isDesc ? 3 : 1,
       child: Container(
         margin: const EdgeInsets.only(top: 2.5, bottom: 2.5),
         child: Text(

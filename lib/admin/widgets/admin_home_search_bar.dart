@@ -18,7 +18,10 @@ Widget adminHomeSearchBar(BuildContext context, WidgetRef ref,
           hintText: 'Search...',
           suffixIcon: IconButton(
             icon: const Icon(Icons.clear),
-            onPressed: () => searchController.clear(),
+            onPressed: () {
+              ref.read(adminHomeSearchTextProvider.notifier).state = "";
+              searchController.clear();
+            },
           ),
           prefixIcon: IconButton(
             icon: const Icon(Icons.search),

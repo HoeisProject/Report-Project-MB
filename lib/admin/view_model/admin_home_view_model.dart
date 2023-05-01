@@ -5,7 +5,11 @@ import 'package:report_project/common/controller/report_status_controller.dart';
 
 final adminHomeSearchTextProvider = StateProvider((ref) => '');
 
-final adminHomeStatusSelectedProvider = StateProvider((ref) => -1);
+final adminHomeStatusSelectedProvider = StateProvider((ref) => 0);
+
+final adminHomeStatusSelectedLabelProvider = StateProvider((ref) => "All");
+
+final adminHomeProjectCategorySelectedProvider = StateProvider((ref) => "All");
 
 final adminHomeFutureFilteredList = FutureProvider<List<ReportModel>>((ref) {
   final filteredReports = ref.watch(adminHomeFilteringReport);
@@ -13,25 +17,39 @@ final adminHomeFutureFilteredList = FutureProvider<List<ReportModel>>((ref) {
 });
 
 final adminHomeFilteringReport = StateProvider<List<ReportModel>>((ref) {
-  final rawReports = ref.watch(adminReportControllerProvider).value;
+  final rawReports = ref.watch(adminReportControllerProvider).asData?.value;
   final searchText = ref.watch(adminHomeSearchTextProvider);
+
   final statusSelectedItem = ref.watch(adminHomeStatusSelectedProvider);
   final reportStatus = ref.read(reportStatusControllerProvider);
 
-  List<ReportModel>? filteredReports = rawReports;
+  final projectCategorySelected =
+      ref.watch(adminHomeProjectCategorySelectedProvider);
 
-  if (statusSelectedItem != -1) {
+  List<ReportModel> filteredReports = rawReports ?? [];
+
+  if (statusSelectedItem != 0) {
     filteredReports = filteredReports
-        ?.where((reportModel) =>
-            reportModel.reportStatusId == reportStatus[statusSelectedItem].id)
+        .where((reportModel) =>
+            reportModel.reportStatusId ==
+            reportStatus[(statusSelectedItem - 1)].id)
         .toList();
   }
+
+  if (projectCategorySelected != "All") {
+    filteredReports = filteredReports
+        .where((reportModel) => reportModel.projectId
+            .toLowerCase()
+            .contains(projectCategorySelected.toLowerCase()))
+        .toList();
+  }
+
   if (searchText != '') {
-    filteredReports = rawReports
-        ?.where((reportModel) =>
+    filteredReports = filteredReports
+        .where((reportModel) =>
             reportModel.title.toLowerCase().contains(searchText.toLowerCase()))
         .toList();
   }
 
-  return filteredReports!;
+  return filteredReports;
 });

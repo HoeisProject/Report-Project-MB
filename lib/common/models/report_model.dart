@@ -21,7 +21,7 @@ enum ReportModelEnum {
 class ReportModel {
   final String id;
   final String projectId;
-  final String userId;
+  final UserModel userId;
   final String reportStatusId;
   final String title;
   final String description;
@@ -48,9 +48,8 @@ class ReportModel {
       projectId: parse
           .get<ParseObject>(ReportModelEnum.projectId.name)!
           .get(ProjectModelEnum.objectId.name)!,
-      userId: parse
-          .get<ParseObject>(ReportModelEnum.userId.name)!
-          .get(UserModelEnum.objectId.name),
+      userId: UserModel.fromParseObject(
+          parse.get<ParseObject>(ReportModelEnum.userId.name)!),
       reportStatusId: parse
           .get<ParseObject>(ReportModelEnum.reportStatusId.name)!
           .get(ReportStatusModelEnum.objectId.name),
@@ -66,7 +65,7 @@ class ReportModel {
   ReportModel copyWith({
     String? id,
     String? projectId,
-    String? userId,
+    UserModel? userId,
     String? reportStatusId,
     String? title,
     String? description,

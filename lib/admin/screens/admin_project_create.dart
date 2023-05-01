@@ -184,7 +184,7 @@ class _AdminProjectCreateScreen
                     pickedDate;
               },
             ),
-            sizedSpacer(height: 30.0),
+            sizedSpacer(context: context, height: 30.0),
             customButton(
               context,
               isLoading,
@@ -192,7 +192,7 @@ class _AdminProjectCreateScreen
               Colors.lightBlue,
               () => submit(context),
             ),
-            sizedSpacer(height: 30.0),
+            sizedSpacer(context: context, height: 30.0),
           ],
         ),
       ),

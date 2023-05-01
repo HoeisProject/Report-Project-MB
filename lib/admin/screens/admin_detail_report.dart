@@ -60,20 +60,21 @@ class AdminDetailReportScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                viewTextField(context, "Project Title", report.title),
-                viewTextField(context, "Report by", "Report by"),
+                viewTextField(context, "Project Title", report.title, false),
+                viewTextField(
+                    context, "Report by", report.userId.nickname, false),
                 viewTextField(context, "Time and Date",
-                    DateFormat.yMMMEd().format(report.updatedAt)),
+                    DateFormat.yMMMEd().format(report.updatedAt), false),
                 FutureBuilder(
                   future: TranslatePosition(position: report.position)
                       .translatePos(),
                   builder: (context, snapshot) {
                     return viewTextField(
-                        context, "Location", snapshot.data ?? '-');
+                        context, "Location", snapshot.data ?? '-', false);
                   },
                 ),
                 viewTextField(
-                    context, "Project Description", report.description),
+                    context, "Project Description", report.description, true),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =
@@ -85,7 +86,7 @@ class AdminDetailReportScreenState
                     );
                   },
                   error: (error, stackTrace) {
-                    return Text('${error.toString()} occured');
+                    return Text('${error.toString()} occurred');
                   },
                   loading: () {
                     return const Center(

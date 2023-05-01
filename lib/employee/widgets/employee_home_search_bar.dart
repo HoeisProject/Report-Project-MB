@@ -18,7 +18,10 @@ Widget employeeHomeSearchBar(BuildContext context, WidgetRef ref,
           hintText: 'Search...',
           suffixIcon: IconButton(
             icon: const Icon(Icons.clear),
-            onPressed: () => searchController.clear(),
+            onPressed: () {
+              ref.read(employeeHomeSearchTextProvider.notifier).state = "";
+              searchController.clear();
+            },
           ),
           prefixIcon: IconButton(
             icon: const Icon(Icons.search),

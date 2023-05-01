@@ -89,7 +89,7 @@ class UserProfileEditText extends ConsumerWidget {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
                 fieldHeader("Old $label : "),
                 ViewWithIcon(
                   text: oldValue,
@@ -97,7 +97,7 @@ class UserProfileEditText extends ConsumerWidget {
                   iconTrailing: null,
                   onPressed: () {},
                 ),
-                sizedSpacer(height: 15.0),
+                sizedSpacer(context: context, height: 15.0),
                 fieldHeader("New $label : "),
                 inputWithIcon(
                   context,
@@ -108,7 +108,7 @@ class UserProfileEditText extends ConsumerWidget {
                   inputType,
                   obscureText,
                 ),
-                sizedSpacer(height: 15.0),
+                sizedSpacer(context: context, height: 15.0),
                 customButton(
                   context,
                   false,
@@ -116,7 +116,7 @@ class UserProfileEditText extends ConsumerWidget {
                   Colors.lightBlue,
                   () => update(context, ref),
                 ),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
               ],
             ),
           ),

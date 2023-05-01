@@ -12,7 +12,8 @@ AdminReportService adminReportService(AdminReportServiceRef ref) {
 class AdminReportService {
   Future<List<ParseObject>> getReport() async {
     ParseObject? getPostObject = ParseObject('Report');
-    final queryPosts = QueryBuilder<ParseObject>(getPostObject);
+    final queryPosts = QueryBuilder<ParseObject>(getPostObject)
+      ..includeObject(["userId"]);
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {

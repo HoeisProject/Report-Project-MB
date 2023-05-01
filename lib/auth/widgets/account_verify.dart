@@ -60,12 +60,12 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
                 inputMediaField(context, "ktp Image",
                     ref.watch(accountVerifyMediaFileProvider), () {
                   getMediaFromCamera();
                 }),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
                 inputTextField(
                   context,
                   keyNik,
@@ -76,7 +76,7 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
                   true,
                   1,
                 ),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
                 customButton(
                   context,
                   ref.watch(accountVerifyLoadingProvider),
@@ -84,7 +84,7 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
                   Colors.lightBlue,
                   () => sendVerifyRequest(context),
                 ),
-                sizedSpacer(height: 5.0),
+                sizedSpacer(context: context, height: 5.0),
               ],
             ),
           ),
