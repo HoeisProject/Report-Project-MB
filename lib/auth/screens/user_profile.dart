@@ -49,6 +49,25 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                           ConstColorEnum.kOutlineBorderColor.name),
                       data.nickname,
                       data.userImage),
+                  Visibility(
+                    visible: !data.isUserVerified && data.ktpImage != null,
+                    child: Center(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Wait for admin to verify your account\nfor full access",
+                            style: kTitleReportItem.apply(
+                                color: Theme.of(context).primaryColor),
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   sizedSpacer(
                     context: context,
                     height: 20,
@@ -98,25 +117,6 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                         },
                       );
                     },
-                  ),
-                  Visibility(
-                    visible: !data.isUserVerified && data.ktpImage != null,
-                    child: Center(
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Wait for admin to verify your account\nfor full access",
-                            style: kTitleReportItem.apply(
-                                color: Theme.of(context).primaryColor),
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                          ),
-                        ),
-                      ),
-                    ),
                   ),
                   role == RoleModelNameEnum.employee.name
                       ? ktpField(
@@ -268,6 +268,28 @@ Widget ktpField(
 
   return Column(
     children: [
+      ViewWithIcon(
+        text: nik ?? '-',
+        iconLeading: Icons.credit_card,
+        iconTrailing: Icons.edit,
+        onPressed: () {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext dialogContext) {
+              return UserProfileEditText(
+                label: "NIK",
+                oldValue: nik ?? '-',
+                iconLeading: Icons.credit_card,
+                onPressed: () {},
+                inputType: TextInputType.number,
+                obscureText: false,
+                userModelEnum: UserModelEnum.nik,
+              );
+            },
+          );
+        },
+      ),
       Center(
         child: SizedBox(
           width: 200.0,
@@ -344,28 +366,6 @@ Widget ktpField(
                   child: Icon(Icons.add_a_photo, size: 50.0),
                 ),
         ),
-      ),
-      ViewWithIcon(
-        text: nik ?? '-',
-        iconLeading: Icons.credit_card,
-        iconTrailing: Icons.edit,
-        onPressed: () {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext dialogContext) {
-              return UserProfileEditText(
-                label: "NIK",
-                oldValue: nik ?? '-',
-                iconLeading: Icons.credit_card,
-                onPressed: () {},
-                inputType: TextInputType.number,
-                obscureText: false,
-                userModelEnum: UserModelEnum.nik,
-              );
-            },
-          );
-        },
       ),
     ],
   );
