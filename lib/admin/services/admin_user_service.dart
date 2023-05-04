@@ -1,4 +1,5 @@
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'admin_user_service.g.dart';
 
@@ -15,5 +16,12 @@ class AdminUserService {
     if (!res.success || res.result == null) return [];
 
     return res.results as List<ParseObject>;
+  }
+
+  Future<ParseResponse> verify(String id, bool value) {
+    final verifyUser = ParseObject('_User')
+      ..objectId = id
+      ..set(UserModelEnum.isUserVerified.name, value);
+    return verifyUser.save();
   }
 }

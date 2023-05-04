@@ -22,4 +22,21 @@ class AdminUserController extends _$AdminUserController {
     _adminUserService = ref.watch(adminUserServiceProvider);
     return _getUser();
   }
+
+  Future<bool> verifyUser({
+    required String id,
+    required bool value,
+  }) async {
+    debugPrint('AdminUserController - verifyUser');
+    final res = await _adminUserService.verify(id, value);
+    if (!res.success || res.results == null) {
+      return false;
+    }
+    final userList = state.value!.map((e) {
+      if (e.id != id) return e;
+      return e.copyWith(isUserVerified: value);
+    }).toList();
+    state = AsyncValue.data(userList);
+    return true;
+  }
 }

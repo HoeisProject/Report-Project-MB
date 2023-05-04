@@ -5,6 +5,7 @@ import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/admin/screens/admin_project_create.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
+import 'package:report_project/admin/screens/admin_user_verify.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
 import 'package:report_project/common/models/project_model.dart';
@@ -18,6 +19,7 @@ import 'common/widgets/error_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
+    /// AUTH
     case SplashScreen.routeName:
       return MaterialPageRoute(builder: (context) => const SplashScreen());
     case LoginRegisterScreen.routeName:
@@ -50,12 +52,20 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AdminProjectDetail.routeName:
       final project = routeSettings.arguments as ProjectModel;
       return MaterialPageRoute(
-          builder: (context) => AdminProjectDetail(
-                project: project,
-              ));
+          builder: (context) => AdminProjectDetail(project: project));
     case AdminUserHomeScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const AdminUserHomeScreen());
+    case AdminUserVerifyScreen.routeName:
+      final user = routeSettings.arguments as AdminUserVerifyArguments;
+      return MaterialPageRoute(
+        builder: (context) => AdminUserVerifyScreen(
+          id: user.id,
+          isUserVerified: user.isUserVerified,
+          nik: user.nik,
+          ktpImage: user.ktpImage,
+        ),
+      );
     case AdminDetailReportScreen.routeName:
       final report = routeSettings.arguments as ReportModel;
       return MaterialPageRoute(
