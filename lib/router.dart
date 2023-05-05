@@ -10,6 +10,7 @@ import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
@@ -57,14 +58,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
           builder: (context) => const AdminUserHomeScreen());
     case AdminUserVerifyScreen.routeName:
-      final user = routeSettings.arguments as AdminUserVerifyArguments;
+      final user = routeSettings.arguments as UserModel;
       return MaterialPageRoute(
-        builder: (context) => AdminUserVerifyScreen(
-          id: user.id,
-          isUserVerified: user.isUserVerified,
-          nik: user.nik,
-          ktpImage: user.ktpImage,
-        ),
+        builder: (context) => AdminUserVerifyScreen(user: user),
       );
     case AdminDetailReportScreen.routeName:
       final report = routeSettings.arguments as ReportModel;

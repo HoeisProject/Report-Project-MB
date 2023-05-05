@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
@@ -45,10 +43,11 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               child: Column(
                 children: [
                   profileHeader(
-                      ConstColor(context).getConstColor(
-                          ConstColorEnum.kOutlineBorderColor.name),
-                      data.nickname,
-                      data.userImage),
+                    ConstColor(context)
+                        .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
+                    data.nickname,
+                    data.userImage,
+                  ),
                   Visibility(
                     visible: !data.isUserVerified && data.ktpImage != null,
                     child: Center(
@@ -142,10 +141,6 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   }
 
   Widget profileHeader(Color color, String nickname, String userImagePath) {
-    final image = userImagePath.contains('https://')
-        ? NetworkImage(userImagePath)
-        : FileImage(File(userImagePath));
-
     return Column(
       children: [
         Stack(
@@ -171,10 +166,32 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 child: Hero(
                   tag: userImagePath,
                   child: CircleAvatar(
-                    backgroundImage: image as ImageProvider,
                     backgroundColor: ConstColor(context)
                         .getConstColor(ConstColorEnum.kBgColor.name),
                     radius: 70,
+                    child: ClipOval(
+                      child: Image.network(
+                        userImagePath,
+                        loadingBuilder: (context, child, event) {
+                          if (event == null) return child;
+                          return Center(
+                            child: SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                value: event.cumulativeBytesLoaded /
+                                    (event.expectedTotalBytes ?? 1),
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                            child: Icon(Icons.image_not_supported),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -314,20 +331,27 @@ Widget ktpField(
                       },
                       child: Hero(
                         tag: ktpImagePath,
-                        child: Image.network(ktpImagePath,
-                            loadingBuilder: (context, child, event) {
-                          if (event == null) return child;
-                          return Center(
-                            child: SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: CircularProgressIndicator(
-                                value: event.cumulativeBytesLoaded /
-                                    (event.expectedTotalBytes ?? 1),
+                        child: Image.network(
+                          ktpImagePath,
+                          loadingBuilder: (context, child, event) {
+                            if (event == null) return child;
+                            return Center(
+                              child: SizedBox(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircularProgressIndicator(
+                                  value: event.cumulativeBytesLoaded /
+                                      (event.expectedTotalBytes ?? 1),
+                                ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(Icons.image_not_supported),
+                            );
+                          },
+                        ),
                       ),
                     ),
                     Positioned(

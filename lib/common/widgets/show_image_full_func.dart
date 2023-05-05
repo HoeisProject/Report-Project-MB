@@ -1,7 +1,14 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:report_project/common/controller/show_image_full_func_controller.dart';
+import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/widgets/show_download_loading_dialog.dart';
+import 'package:report_project/common/widgets/show_snack_bar.dart';
 
 class ShowImageFullFunc extends ConsumerStatefulWidget {
   final LoadingBuilder? loadingBuilder;
@@ -39,7 +46,7 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
           height: MediaQuery.of(context).size.height,
         ),
         child: Stack(
-          alignment: Alignment.bottomRight,
+          alignment: Alignment.topRight,
           children: <Widget>[
             PhotoViewGallery.builder(
               scrollPhysics: const BouncingScrollPhysics(),
@@ -48,20 +55,111 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
               loadingBuilder: widget.loadingBuilder,
               backgroundDecoration: widget.backgroundDecoration,
               pageController: widget.pageController,
-              // onPageChanged: onPageChanged,
+              onPageChanged: (page) {
+                ref.read(switchImageFullFuncProvider.notifier).state = page;
+              },
               scrollDirection: widget.scrollDirection,
             ),
             Container(
-              padding: const EdgeInsets.all(20.0),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.download),
+              margin: const EdgeInsets.only(top: 50.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5.0),
+                    child: IconButton(
+                      onPressed: () {
+                        downloadImage();
+                      },
+                      icon: Icon(
+                        Icons.download,
+                        size: 25.0,
+                        color: ConstColor(context)
+                            .getConstColor(ConstColorEnum.kBgColor.name),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(5.0),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.cancel_outlined,
+                        size: 25.0,
+                        color: ConstColor(context)
+                            .getConstColor(ConstColorEnum.kBgColor.name),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  void downloadImage() async {
+    int pagePosition = ref.watch(switchImageFullFuncProvider);
+    Dio dio = Dio();
+    String fileName = DateTime.now().toString();
+    String? dirLoc = "";
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return const ShowDownloadLoadingDialog();
+      },
+    );
+    if (Platform.isAndroid) {
+      dirLoc = "/storage/emulated/0/Download/";
+      bool dirDownloadExists = await File(dirLoc).exists();
+      if (dirDownloadExists) {
+        dirLoc = "/storage/emulated/0/Download/";
+      } else {
+        dirLoc = "/storage/emulated/0/Downloads/";
+      }
+      debugPrint("dirPath 1 : $dirLoc");
+    }
+    try {
+      dio.download(
+        widget.listMediaFilePath[pagePosition]!,
+        '$dirLoc$fileName.jpg',
+        onReceiveProgress: (receivedBytes, totalBytes) {
+          ref.read(imageDownloadProgressProvider.notifier).state =
+              (receivedBytes / totalBytes).toDouble();
+          ref.read(imageDownloadTextProvider.notifier).state =
+              "Download File : ${((receivedBytes / totalBytes) * 100).toStringAsFixed(0)}%";
+        },
+      ).then((value) {
+        if (value.statusCode == 200) {
+          ref.read(imageDownloadProgressProvider.notifier).state = 0;
+          ref.read(imageDownloadTextProvider.notifier).state =
+              "Download File : 0%";
+          Navigator.pop(context);
+          showSnackBar(context, Icons.done, Colors.greenAccent,
+              "Download Success $dirLoc$fileName.jpg", Colors.greenAccent);
+          debugPrint("file : $dirLoc$fileName.jpg");
+        } else {
+          ref.read(imageDownloadProgressProvider.notifier).state = 0;
+          ref.read(imageDownloadTextProvider.notifier).state =
+              "Download File : 0%";
+          Navigator.pop(context);
+          showSnackBar(context, Icons.error_outline, Colors.red,
+              "Download Failed $dirLoc$fileName.jpg", Colors.red);
+        }
+      });
+    } catch (e) {
+      ref.read(imageDownloadProgressProvider.notifier).state = 0;
+      ref.read(imageDownloadTextProvider.notifier).state = "Download File : 0%";
+      debugPrint("error : $e");
+      if (!mounted) return;
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "Download Failed $dirLoc$fileName.jpg", Colors.red);
+    }
   }
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {

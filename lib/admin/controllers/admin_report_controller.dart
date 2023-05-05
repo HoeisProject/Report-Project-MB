@@ -28,18 +28,19 @@ class AdminReportController extends _$AdminReportController {
   }) async {
     debugPrint('AdminReportController - updateReportStatus');
     state = const AsyncValue.loading();
-    final res = await _adminReportService.updateReportStatus(
-      id,
-      status,
-    );
-    if (!res.success || res.results == null) {
-      return false;
-    }
     final reportStatus = ref.read(reportStatusControllerProvider);
     final reportList = state.value!.map((e) {
       if (e.id != id) return e;
       return e.copyWith(reportStatusId: reportStatus[status].id);
     }).toList();
+    final res = await _adminReportService.updateReportStatus(
+      id,
+      reportStatus[status].id,
+    );
+    if (!res.success || res.results == null) {
+      return false;
+    }
+
     state = AsyncValue.data(reportList);
     return true;
   }

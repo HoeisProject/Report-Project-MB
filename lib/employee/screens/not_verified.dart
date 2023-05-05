@@ -6,7 +6,9 @@ class NotVerifiedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('You are not verified, Please contact admin')),
+      body: Center(
+        child: Text('You are not verified, Please contact admin'),
+      ),
     );
   }
 }

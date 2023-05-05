@@ -15,10 +15,15 @@ void showSnackBar(BuildContext context, IconData? icon, Color? iconColor,
             const SizedBox(
               width: 10.0,
             ),
-            Text(
-              message!,
-              style: TextStyle(
-                color: messageColor!,
+            Flexible(
+              child: Text(
+                message!,
+                style: TextStyle(
+                  color: messageColor!,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
             ),
           ],

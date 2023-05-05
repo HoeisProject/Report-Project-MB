@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_user_controller.dart';
 import 'package:report_project/admin/screens/admin_user_verify.dart';
 import 'package:report_project/common/models/user_model.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class AdminUserHomeScreen extends ConsumerWidget {
   static const routeName = '/admin-employee-home';
+
   const AdminUserHomeScreen({super.key});
 
   @override
@@ -44,7 +46,12 @@ class AdminUserHomeScreen extends ConsumerWidget {
               return const Center(
                   child: Text('NO DATA', style: TextStyle(fontSize: 36.0)));
             }
-            return ListView.builder(
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 5,
+                crossAxisSpacing: 5,
+              ),
               padding: const EdgeInsets.only(top: 10.0),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
@@ -70,21 +77,9 @@ class AdminUserHomeScreen extends ConsumerWidget {
   }
 
   Widget _listUserViewItem(BuildContext context, UserModel user) {
-    // return ListTile(
-    //   title: Text(user.username.toString()),
-    //   subtitle: Text(user.nickname.toString()),
-    //   trailing: user.isUserVerified
-    //       ? const Icon(Icons.verified, color: Colors.green)
-    //       : const Icon(Icons.lock, color: Colors.red),
-    //   onTap: () {},
-    // );
-
-    /// TODO UI nya di sesuaikan selera aja ler.
-    /// Kode UI terinpirasi dari admin_project_home.dart
-    /// Anjer lupa gw cara padding dah WWKWKWK
     return Container(
-      margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
-      height: 70.0,
+      margin: const EdgeInsets.all(5.0),
+      height: 150.0,
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
@@ -97,23 +92,74 @@ class AdminUserHomeScreen extends ConsumerWidget {
               Navigator.pushNamed(
                 context,
                 AdminUserVerifyScreen.routeName,
-                arguments: AdminUserVerifyArguments(
-                  id: user.id,
-                  isUserVerified: user.isUserVerified,
-                  nik: user.nik,
-                  ktpImage: user.ktpImage,
-                ),
+                arguments: user,
               );
             },
-            child: Row(children: [
-              Expanded(child: Text(user.nickname.toString())),
-              user.isUserVerified
-                  ? const Icon(Icons.verified, color: Colors.green)
-                  : const Icon(Icons.lock, color: Colors.red),
-            ]),
+            child: Column(
+              children: [
+                _listItemHeader(context, user.userImage.toString()),
+                _listItemContent(
+                  user.nickname.toString(),
+                  user.isUserVerified
+                      ? const Icon(Icons.verified, color: Colors.greenAccent)
+                      : const Icon(Icons.lock, color: Colors.red),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _listItemHeader(BuildContext context, String imagePath) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: CircleAvatar(
+        radius: 72,
+        backgroundColor: ConstColor(context)
+            .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
+        child: Hero(
+          tag: imagePath,
+          child: CircleAvatar(
+            backgroundColor:
+                ConstColor(context).getConstColor(ConstColorEnum.kBgColor.name),
+            radius: 70,
+            child: ClipOval(
+              child: Image.network(
+                imagePath,
+                loadingBuilder: (context, child, event) {
+                  if (event == null) return child;
+                  return Center(
+                    child: SizedBox(
+                      width: 20.0,
+                      height: 20.0,
+                      child: CircularProgressIndicator(
+                        value: event.cumulativeBytesLoaded /
+                            (event.expectedTotalBytes ?? 1),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _listItemContent(String text, Widget? trailing) {
+    return ListTile(
+      title: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Text(
+          text,
+          style: kContentReportItem,
+          maxLines: 1,
+        ),
+      ),
+      trailing: trailing,
     );
   }
 }

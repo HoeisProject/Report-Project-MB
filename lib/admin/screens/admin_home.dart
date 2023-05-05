@@ -144,10 +144,11 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         onPressed: () {
           debugPrint("menu out");
           showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const AdminHomeFilterMenu();
-              });
+            context: context,
+            builder: (BuildContext context) {
+              return const AdminHomeFilterMenu();
+            },
+          );
         },
         icon: const Icon(Icons.filter_list));
   }

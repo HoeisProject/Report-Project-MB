@@ -36,11 +36,12 @@ class AdminReportService {
 
   Future<ParseResponse> updateReportStatus(
     String objectId,
-    int projectStatus,
+    String projectStatus,
   ) async {
     ParseObject updateReport = ParseObject("Report")
       ..objectId = objectId
-      ..set(ReportModelEnum.reportStatusId.name, projectStatus);
+      ..set(ReportModelEnum.reportStatusId.name,
+          (ParseObject('ReportStatus')..objectId = projectStatus).toPointer());
 
     return updateReport.save();
   }

@@ -1,11 +1,17 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/admin/controllers/admin_report_media_controller.dart';
+import 'package:report_project/common/controller/show_image_full_func_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/report_status_model.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
+import 'package:report_project/common/widgets/show_download_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
@@ -79,6 +85,14 @@ class AdminDetailReportScreenState
                   data: (data) {
                     final listMediaFilePath =
                         data.map((e) => e.reportAttachment).toList();
+                    Future(
+                      () {
+                        ref
+                            .read(
+                                reportDetailListMediaFilePathProvider.notifier)
+                            .state = listMediaFilePath;
+                      },
+                    );
                     return viewMediaField(
                       context,
                       "Attach Media",
@@ -140,16 +154,88 @@ class AdminDetailReportScreenState
           id: report.id,
           status: ReportStatusEnum.approve.index,
         )
-        .then((value) {
-      Navigator.pop(context);
-      if (value) {
-        showSnackBar(context, Icons.done, Colors.greenAccent,
-            "Approval Success", Colors.greenAccent);
+        .then(
+      (value) {
         Navigator.pop(context);
+        if (value) {
+          showSnackBar(context, Icons.done, Colors.greenAccent,
+              "Approval Success", Colors.greenAccent);
+          downloadImages();
+        } else {
+          showSnackBar(context, Icons.error_outline, Colors.red,
+              "Approval Failed", Colors.red);
+        }
+      },
+    );
+  }
+
+  void downloadImages() async {
+    List<String> listMediaPath =
+        ref.watch(reportDetailListMediaFilePathProvider);
+    Dio dio = Dio();
+    String? dirLoc = "";
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return const ShowDownloadLoadingDialog();
+      },
+    );
+    if (Platform.isAndroid) {
+      dirLoc = "/storage/emulated/0/Download/";
+      bool dirDownloadExists = await File(dirLoc).exists();
+      if (dirDownloadExists) {
+        dirLoc = "/storage/emulated/0/Download/";
       } else {
-        showSnackBar(context, Icons.error_outline, Colors.red,
-            "Approval Failed", Colors.red);
+        dirLoc = "/storage/emulated/0/Downloads/";
       }
-    });
+      debugPrint("dirPath 1 : $dirLoc");
+    }
+
+    bool fileError = false;
+
+    for (var mediaPath in listMediaPath) {
+      if (fileError) break;
+      try {
+        String fileName = DateTime.now().toString();
+        await dio.download(
+          mediaPath,
+          '$dirLoc${report.title}_$fileName.jpg',
+          onReceiveProgress: (receivedBytes, totalBytes) {
+            ref.read(imageDownloadProgressProvider.notifier).state =
+                (receivedBytes / totalBytes).toDouble();
+            ref.read(imageDownloadTextProvider.notifier).state =
+                "Download File : ${((receivedBytes / totalBytes) * 100).toStringAsFixed(0)}% ${listMediaPath.indexOf(mediaPath) + 1}/${listMediaPath.length}";
+          },
+        ).then(
+          (value) {
+            if (value.statusCode == 200) {
+              ref.read(imageDownloadProgressProvider.notifier).state = 0;
+              ref.read(imageDownloadTextProvider.notifier).state =
+                  "Download File : 0% -/${listMediaPath.length}";
+              if ((listMediaPath.indexOf(mediaPath) + 1) ==
+                  listMediaPath.length) {
+                Navigator.pop(context);
+                showSnackBar(context, Icons.done, Colors.greenAccent,
+                    "Download Success $dirLoc", Colors.greenAccent);
+              }
+            } else {
+              ref.read(imageDownloadProgressProvider.notifier).state = 0;
+              ref.read(imageDownloadTextProvider.notifier).state =
+                  "Download File : 0% -/${listMediaPath.length}";
+              fileError = true;
+              showSnackBar(context, Icons.error_outline, Colors.red,
+                  "Download Failed $dirLoc$fileName.jpg", Colors.red);
+            }
+          },
+        );
+      } catch (e) {
+        debugPrint("error : $e");
+        if (!mounted) return;
+        showSnackBar(context, Icons.error_outline, Colors.red,
+            "Download Failed", Colors.red);
+        break;
+      }
+    }
   }
 }
