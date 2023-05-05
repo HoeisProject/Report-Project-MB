@@ -61,7 +61,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _userImageHeader(context, user.userImage),
+                _userImageHeader(context, user.userImage, user.id),
                 ViewWithIcon(
                   text: user.nickname,
                   iconLeading: Icons.person,
@@ -117,7 +117,8 @@ class AdminUserVerifyScreen extends ConsumerWidget {
     );
   }
 
-  Widget _userImageHeader(BuildContext context, String userImagePath) {
+  Widget _userImageHeader(
+      BuildContext context, String userImagePath, String id) {
     return Stack(
       children: [
         Container(
@@ -142,7 +143,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                 );
               },
               child: Hero(
-                tag: userImagePath,
+                tag: id,
                 child: CircleAvatar(
                   backgroundColor: ConstColor(context)
                       .getConstColor(ConstColorEnum.kBgColor.name),

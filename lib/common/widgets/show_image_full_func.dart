@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:report_project/common/controller/show_image_full_func_controller.dart';
@@ -69,7 +70,7 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
                     padding: const EdgeInsets.all(5.0),
                     child: IconButton(
                       onPressed: () {
-                        downloadImage();
+                        downloadImage(context);
                       },
                       icon: Icon(
                         Icons.download,
@@ -102,11 +103,12 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
     );
   }
 
-  void downloadImage() async {
+  void downloadImage(context) async {
     int pagePosition = ref.watch(switchImageFullFuncProvider);
     Dio dio = Dio();
     String fileName = DateTime.now().toString();
-    String? dirLoc = "";
+    String dirLoc = (await getApplicationDocumentsDirectory()).path;
+
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -114,16 +116,16 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
         return const ShowDownloadLoadingDialog();
       },
     );
-    if (Platform.isAndroid) {
-      dirLoc = "/storage/emulated/0/Download/";
-      bool dirDownloadExists = await File(dirLoc).exists();
-      if (dirDownloadExists) {
-        dirLoc = "/storage/emulated/0/Download/";
-      } else {
-        dirLoc = "/storage/emulated/0/Downloads/";
-      }
-      debugPrint("dirPath 1 : $dirLoc");
-    }
+    // if (Platform.isAndroid) {
+    //   dirLoc = "/storage/emulated/0/Download/";
+    //   bool dirDownloadExists = await File(dirLoc).exists();
+    //   if (dirDownloadExists) {
+    //     dirLoc = "/storage/emulated/0/Download/";
+    //   } else {
+    //     dirLoc = "/storage/emulated/0/Downloads/";
+    //   }
+    //   debugPrint("dirPath 1 : $dirLoc");
+    // }
     try {
       dio.download(
         widget.listMediaFilePath[pagePosition]!,

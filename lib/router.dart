@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:report_project/admin/screens/admin_detail_report.dart';
+import 'package:report_project/admin/screens/admin_report_detail.dart';
 import 'package:report_project/admin/screens/admin_project_detail.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
@@ -62,10 +62,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         builder: (context) => AdminUserVerifyScreen(user: user),
       );
-    case AdminDetailReportScreen.routeName:
+    case AdminReportDetailScreen.routeName:
       final report = routeSettings.arguments as ReportModel;
       return MaterialPageRoute(
-          builder: (context) => AdminDetailReportScreen(report: report));
+          builder: (context) => AdminReportDetailScreen(report: report));
     default:
       return MaterialPageRoute(builder: (context) {
         return Scaffold(

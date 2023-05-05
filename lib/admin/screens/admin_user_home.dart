@@ -49,8 +49,8 @@ class AdminUserHomeScreen extends ConsumerWidget {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
+                // mainAxisSpacing: 5,
+                // crossAxisSpacing: 5,
               ),
               padding: const EdgeInsets.only(top: 10.0),
               itemCount: data.length,
@@ -78,8 +78,8 @@ class AdminUserHomeScreen extends ConsumerWidget {
 
   Widget _listUserViewItem(BuildContext context, UserModel user) {
     return Container(
+      constraints: BoxConstraints(maxWidth: 300, minHeight: 300),
       margin: const EdgeInsets.all(5.0),
-      height: 150.0,
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
@@ -95,16 +95,18 @@ class AdminUserHomeScreen extends ConsumerWidget {
                 arguments: user,
               );
             },
-            child: Column(
-              children: [
-                _listItemHeader(context, user.userImage.toString()),
-                _listItemContent(
-                  user.nickname.toString(),
-                  user.isUserVerified
-                      ? const Icon(Icons.verified, color: Colors.greenAccent)
-                      : const Icon(Icons.lock, color: Colors.red),
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _listItemHeader(context, user.userImage.toString(), user.id),
+                  _listItemContent(
+                    user.nickname.toString(),
+                    user.isUserVerified
+                        ? const Icon(Icons.verified, color: Colors.greenAccent)
+                        : const Icon(Icons.lock, color: Colors.red),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -112,15 +114,15 @@ class AdminUserHomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _listItemHeader(BuildContext context, String imagePath) {
-    return Container(
+  Widget _listItemHeader(BuildContext context, String imagePath, String id) {
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: CircleAvatar(
         radius: 72,
         backgroundColor: ConstColor(context)
             .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
         child: Hero(
-          tag: imagePath,
+          tag: id,
           child: CircleAvatar(
             backgroundColor:
                 ConstColor(context).getConstColor(ConstColorEnum.kBgColor.name),
@@ -139,6 +141,11 @@ class AdminUserHomeScreen extends ConsumerWidget {
                             (event.expectedTotalBytes ?? 1),
                       ),
                     ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return const Center(
+                    child: Icon(Icons.image_not_supported),
                   );
                 },
               ),

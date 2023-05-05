@@ -18,7 +18,7 @@ class AdminProjectDetail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: customAppbar("Detail Report"),
+      appBar: customAppbar("Detail Project"),
       body: _body(context, ref),
     );
   }

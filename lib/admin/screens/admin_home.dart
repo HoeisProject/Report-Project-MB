@@ -14,7 +14,7 @@ import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/styles/constant.dart';
-import 'package:report_project/admin/screens/admin_detail_report.dart';
+import 'package:report_project/admin/screens/admin_report_detail.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
@@ -233,7 +233,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
             onTap: () {
               Navigator.pushNamed(
                 context,
-                AdminDetailReportScreen.routeName,
+                AdminReportDetailScreen.routeName,
                 arguments: report,
               );
             },
