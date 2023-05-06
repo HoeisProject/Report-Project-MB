@@ -62,10 +62,12 @@ class DetailReportScreen extends ConsumerWidget {
                   data: (data) {
                     final listMediaFilePath =
                         data.map((e) => e.reportAttachment).toList();
+                    final listMediaId = data.map((e) => e.id).toList();
                     return viewMediaField(
                       context,
                       "Attach Media",
                       listMediaFilePath,
+                      listMediaId,
                     );
                   },
                   error: (error, stackTrace) {

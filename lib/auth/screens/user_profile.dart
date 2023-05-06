@@ -47,6 +47,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                         .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
                     data.nickname,
                     data.userImage,
+                    data.id,
                   ),
                   Visibility(
                     visible: !data.isUserVerified && data.ktpImage != null,
@@ -122,6 +123,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                           context,
                           data.nik,
                           data.ktpImage,
+                          data.id,
                           data.isUserVerified,
                         )
                       : Container()
@@ -140,7 +142,8 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     );
   }
 
-  Widget profileHeader(Color color, String nickname, String userImagePath) {
+  Widget profileHeader(
+      Color color, String nickname, String userImagePath, String id) {
     return Column(
       children: [
         Stack(
@@ -154,6 +157,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ShowImageFullFunc(
+                        id: id,
                         listMediaFilePath: [userImagePath],
                         backgroundDecoration: const BoxDecoration(
                           color: Colors.black,
@@ -164,7 +168,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   );
                 },
                 child: Hero(
-                  tag: userImagePath,
+                  tag: id,
                   child: CircleAvatar(
                     backgroundColor: ConstColor(context)
                         .getConstColor(ConstColorEnum.kBgColor.name),
@@ -258,6 +262,7 @@ Widget ktpField(
   context,
   String? nik,
   String? ktpImagePath,
+  String id,
   bool isUserVerified,
 ) {
   if (!isUserVerified && ktpImagePath == null) {
@@ -320,6 +325,7 @@ Widget ktpField(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ShowImageFullFunc(
+                              id: id,
                               listMediaFilePath: [ktpImagePath],
                               backgroundDecoration: const BoxDecoration(
                                 color: Colors.black,
@@ -330,7 +336,7 @@ Widget ktpField(
                         );
                       },
                       child: Hero(
-                        tag: ktpImagePath,
+                        tag: id,
                         child: Image.network(
                           ktpImagePath,
                           loadingBuilder: (context, child, event) {

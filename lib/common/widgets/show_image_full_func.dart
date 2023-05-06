@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:report_project/common/controller/show_image_full_func_controller.dart';
@@ -18,6 +17,7 @@ class ShowImageFullFunc extends ConsumerStatefulWidget {
   final dynamic maxScale;
   final int initialIndex;
   final PageController pageController;
+  final String id;
   final List<String?> listMediaFilePath;
   final Axis scrollDirection;
 
@@ -28,6 +28,7 @@ class ShowImageFullFunc extends ConsumerStatefulWidget {
     this.minScale,
     this.maxScale,
     this.initialIndex = 0,
+    required this.id,
     required this.listMediaFilePath,
     this.scrollDirection = Axis.horizontal,
   }) : pageController = PageController(initialPage: initialIndex);
@@ -75,8 +76,8 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
                       icon: Icon(
                         Icons.download,
                         size: 25.0,
-                        color: ConstColor(context)
-                            .getConstColor(ConstColorEnum.kBgColor.name),
+                        color: ConstColor(context).getConstColor(
+                            ConstColorEnum.kOutlineBorderColor.name),
                       ),
                     ),
                   ),
@@ -89,8 +90,8 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
                       icon: Icon(
                         Icons.cancel_outlined,
                         size: 25.0,
-                        color: ConstColor(context)
-                            .getConstColor(ConstColorEnum.kBgColor.name),
+                        color: ConstColor(context).getConstColor(
+                            ConstColorEnum.kOutlineBorderColor.name),
                       ),
                     ),
                   ),
@@ -107,7 +108,7 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
     int pagePosition = ref.watch(switchImageFullFuncProvider);
     Dio dio = Dio();
     String fileName = DateTime.now().toString();
-    String dirLoc = (await getApplicationDocumentsDirectory()).path;
+    String dirLoc = "";
 
     showDialog(
       barrierDismissible: false,
@@ -116,16 +117,16 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
         return const ShowDownloadLoadingDialog();
       },
     );
-    // if (Platform.isAndroid) {
-    //   dirLoc = "/storage/emulated/0/Download/";
-    //   bool dirDownloadExists = await File(dirLoc).exists();
-    //   if (dirDownloadExists) {
-    //     dirLoc = "/storage/emulated/0/Download/";
-    //   } else {
-    //     dirLoc = "/storage/emulated/0/Downloads/";
-    //   }
-    //   debugPrint("dirPath 1 : $dirLoc");
-    // }
+    if (Platform.isAndroid) {
+      dirLoc = "/storage/emulated/0/Download/";
+      bool dirDownloadExists = await File(dirLoc).exists();
+      if (dirDownloadExists) {
+        dirLoc = "/storage/emulated/0/Download/";
+      } else {
+        dirLoc = "/storage/emulated/0/Downloads/";
+      }
+      debugPrint("dirPath 1 : $dirLoc");
+    }
     try {
       dio.download(
         widget.listMediaFilePath[pagePosition]!,
@@ -158,7 +159,6 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
       ref.read(imageDownloadProgressProvider.notifier).state = 0;
       ref.read(imageDownloadTextProvider.notifier).state = "Download File : 0%";
       debugPrint("error : $e");
-      if (!mounted) return;
       showSnackBar(context, Icons.error_outline, Colors.red,
           "Download Failed $dirLoc$fileName.jpg", Colors.red);
     }
@@ -166,12 +166,16 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
     return PhotoViewGalleryPageOptions(
+      errorBuilder: (context, error, stackTrace) {
+        return const Center(
+          child: Icon(Icons.image_not_supported),
+        );
+      },
       imageProvider: NetworkImage(widget.listMediaFilePath[index]!),
       initialScale: PhotoViewComputedScale.contained,
       minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
       maxScale: PhotoViewComputedScale.covered * 4.1,
-      heroAttributes:
-          PhotoViewHeroAttributes(tag: widget.listMediaFilePath[index]!),
+      heroAttributes: PhotoViewHeroAttributes(tag: widget.id),
     );
   }
 }

@@ -3,7 +3,11 @@ import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_image_full_func.dart';
 
 Widget viewMediaField(
-    BuildContext context, String fieldLabel, List<String?> listMediaFilePath) {
+  BuildContext context,
+  String fieldLabel,
+  List<String?> listMediaFilePath,
+  List<String> listId,
+) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     child: Column(
@@ -29,6 +33,7 @@ Widget viewMediaField(
               return _attachMediaItem(
                 context,
                 listMediaFilePath,
+                listId[index],
                 listMediaFilePath[index],
                 index,
               );
@@ -43,6 +48,7 @@ Widget viewMediaField(
 Widget _attachMediaItem(
   BuildContext context,
   List<String?> listMediaFilePath,
+  String id,
   String? mediaFilePath,
   int index,
 ) {
@@ -56,6 +62,7 @@ Widget _attachMediaItem(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ShowImageFullFunc(
+                    id: id,
                     listMediaFilePath: listMediaFilePath,
                     backgroundDecoration: const BoxDecoration(
                       color: Colors.black,

@@ -7,6 +7,7 @@ import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_image_full_func.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
+import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_with_icon.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
@@ -61,6 +62,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                sizedSpacer(context: context, height: 10.0),
                 _userImageHeader(context, user.userImage, user.id),
                 ViewWithIcon(
                   text: user.nickname,
@@ -74,30 +76,8 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                   iconTrailing: null,
                   onPressed: () {},
                 ),
-                SizedBox(
-                  height: 200.0,
-                  child: Image.network(
-                    user.ktpImage ?? '-',
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1),
-                          ),
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Center(
-                        child: Icon(Icons.image_not_supported),
-                      );
-                    },
-                  ),
-                ),
+                _ktpImageHolder(context, user.id),
+                sizedSpacer(context: context, height: 10.0),
                 customButton(
                   context,
                   ref.watch(adminUserVerifyIsLoadingProvider),
@@ -118,74 +98,138 @@ class AdminUserVerifyScreen extends ConsumerWidget {
   }
 
   Widget _userImageHeader(
-      BuildContext context, String userImagePath, String id) {
-    return Stack(
-      children: [
-        Container(
-          alignment: Alignment.center,
-          child: CircleAvatar(
-            radius: 72,
-            backgroundColor: ConstColor(context)
-                .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShowImageFullFunc(
-                      listMediaFilePath: [userImagePath],
-                      backgroundDecoration: const BoxDecoration(
-                        color: Colors.black,
-                      ),
-                      scrollDirection: Axis.horizontal,
-                    ),
-                  ),
-                );
-              },
-              child: Hero(
-                tag: id,
+    BuildContext context,
+    String userImagePath,
+    String id,
+  ) {
+    return Center(
+      child: SizedBox(
+        width: 144.0,
+        height: 144.0,
+        child: Stack(
+          children: [
+            Center(
+              child: Container(
+                alignment: Alignment.center,
                 child: CircleAvatar(
+                  radius: 72,
                   backgroundColor: ConstColor(context)
-                      .getConstColor(ConstColorEnum.kBgColor.name),
-                  radius: 70,
-                  child: ClipOval(
-                    child: Image.network(
-                      userImagePath,
-                      loadingBuilder: (context, child, event) {
-                        if (event == null) return child;
-                        return Center(
-                          child: SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              value: event.cumulativeBytesLoaded /
-                                  (event.expectedTotalBytes ?? 1),
+                      .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShowImageFullFunc(
+                            id: id,
+                            listMediaFilePath: [userImagePath],
+                            backgroundDecoration: const BoxDecoration(
+                              color: Colors.black,
                             ),
+                            scrollDirection: Axis.horizontal,
                           ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons.image_not_supported),
-                        );
-                      },
+                        ),
+                      );
+                    },
+                    child: Hero(
+                      tag: id,
+                      child: CircleAvatar(
+                        backgroundColor: ConstColor(context)
+                            .getConstColor(ConstColorEnum.kBgColor.name),
+                        radius: 70,
+                        child: ClipOval(
+                          child: Image.network(
+                            userImagePath,
+                            fit: BoxFit.fill,
+                            width: 140.0,
+                            loadingBuilder: (context, child, event) {
+                              if (event == null) return child;
+                              return Center(
+                                child: SizedBox(
+                                  width: 20.0,
+                                  height: 20.0,
+                                  child: CircularProgressIndicator(
+                                    value: event.cumulativeBytesLoaded /
+                                        (event.expectedTotalBytes ?? 1),
+                                  ),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(Icons.image_not_supported),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
+            Positioned(
+              top: 100.0,
+              left: 100.0,
+              child: CircleAvatar(
+                radius: 20.0,
+                child: user.isUserVerified
+                    ? const Icon(Icons.verified, color: Colors.greenAccent)
+                    : const Icon(Icons.lock, color: Colors.red),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _ktpImageHolder(context, String id) {
+    return Center(
+      child: SizedBox(
+        height: 200.0,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ShowImageFullFunc(
+                  id: id,
+                  listMediaFilePath: [user.ktpImage ?? '-'],
+                  backgroundDecoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                ),
+              ),
+            );
+          },
+          child: Hero(
+            tag: id,
+            child: Image.network(
+              user.ktpImage ?? '-',
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.cumulativeBytesLoaded /
+                          (loadingProgress.expectedTotalBytes ?? 1),
+                    ),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return const Center(
+                  child: Icon(Icons.image_not_supported),
+                );
+              },
+            ),
           ),
         ),
-        Positioned(
-          top: 100.0,
-          left: 100.0,
-          child: CircleAvatar(
-            child: user.isUserVerified
-                ? const Icon(Icons.verified, color: Colors.greenAccent)
-                : const Icon(Icons.lock, color: Colors.red),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

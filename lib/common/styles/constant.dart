@@ -45,7 +45,6 @@ const kContentReportItem = TextStyle(
 enum ConstColorEnum {
   kBgColor,
   kOutlineBorderColor,
-  kIconColor,
 }
 
 class ConstColor {

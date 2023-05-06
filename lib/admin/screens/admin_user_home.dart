@@ -49,8 +49,9 @@ class AdminUserHomeScreen extends ConsumerWidget {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                // mainAxisSpacing: 5,
-                // crossAxisSpacing: 5,
+                mainAxisSpacing: 5.0,
+                crossAxisSpacing: 5.0,
+                childAspectRatio: (1 / 1.5),
               ),
               padding: const EdgeInsets.only(top: 10.0),
               itemCount: data.length,
@@ -78,8 +79,8 @@ class AdminUserHomeScreen extends ConsumerWidget {
 
   Widget _listUserViewItem(BuildContext context, UserModel user) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 300, minHeight: 300),
       margin: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(10.0),
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
@@ -130,6 +131,8 @@ class AdminUserHomeScreen extends ConsumerWidget {
             child: ClipOval(
               child: Image.network(
                 imagePath,
+                fit: BoxFit.fill,
+                width: 140.0,
                 loadingBuilder: (context, child, event) {
                   if (event == null) return child;
                   return Center(
