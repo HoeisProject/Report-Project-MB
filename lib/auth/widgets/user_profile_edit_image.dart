@@ -82,7 +82,7 @@ class UserProfileEditImage extends ConsumerWidget {
             child: Column(
               children: <Widget>[
                 sizedSpacer(context: context, height: 5.0),
-                viewImageField(context, "Old $label", oldImage),
+                viewImageField(context, "Old $label", oldImage, oldImage),
                 sizedSpacer(context: context, height: 15.0),
                 inputMediaField(
                   context,

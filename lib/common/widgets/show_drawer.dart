@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/switch_app_theme.dart';
-
-import '../models/user_model.dart';
 
 Widget showDrawer(context, WidgetRef ref, UserModel user) {
   return Container(
@@ -17,14 +16,24 @@ Widget showDrawer(context, WidgetRef ref, UserModel user) {
         child: Column(
           children: [
             drawerHeaderWidget(user),
-            drawerItemNavigate(context, Icons.person, "Profile", () {
-              Navigator.pushNamed(context, UserProfileScreen.routeName);
-            }),
+            drawerItemNavigate(
+              context,
+              Icons.person,
+              "Profile",
+              () {
+                Navigator.pushNamed(context, UserProfileScreen.routeName);
+              },
+            ),
             switchAppTheme(context, ref),
-            drawerItemNavigate(context, Icons.logout, "Logout", () async {
-              showLoadingDialog(context);
-              ref.read(authControllerProvider).logout();
-            }),
+            drawerItemNavigate(
+              context,
+              Icons.logout,
+              "Logout",
+              () async {
+                showLoadingDialog(context);
+                ref.read(authControllerProvider).logout();
+              },
+            ),
           ],
         ),
       ),
@@ -38,11 +47,34 @@ Widget drawerHeaderWidget(UserModel user) {
   const String defaultImageProfile =
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
   return UserAccountsDrawerHeader(
-    accountName: Text(user.username),
+    accountName: Text(user.nickname),
     accountEmail: Text(user.email),
     currentAccountPicture: CircleAvatar(
-      backgroundImage: NetworkImage(
-        user.userImage.isEmpty ? defaultImageProfile : user.userImage,
+      radius: 70,
+      child: ClipOval(
+        child: Image.network(
+          user.userImage.isEmpty ? defaultImageProfile : user.userImage,
+          fit: BoxFit.fill,
+          width: 140.0,
+          loadingBuilder: (context, child, event) {
+            if (event == null) return child;
+            return Center(
+              child: SizedBox(
+                width: 20.0,
+                height: 20.0,
+                child: CircularProgressIndicator(
+                  value: event.cumulativeBytesLoaded /
+                      (event.expectedTotalBytes ?? 1),
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(
+              child: Icon(Icons.image_not_supported),
+            );
+          },
+        ),
       ),
     ),
     decoration: const BoxDecoration(

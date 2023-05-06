@@ -3,7 +3,7 @@ import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/show_image_full_func.dart';
 
 Widget viewImageField(
-    BuildContext context, String fieldLabel, String? mediaFilePath) {
+    BuildContext context, String fieldLabel, String? mediaFilePath, String id) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     child: Column(
@@ -28,6 +28,7 @@ Widget viewImageField(
                         MaterialPageRoute(
                           builder: (context) => ShowImageFullFunc(
                             listMediaFilePath: [mediaFilePath],
+                            id: id,
                             backgroundDecoration: const BoxDecoration(
                               color: Colors.black,
                             ),

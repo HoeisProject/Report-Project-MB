@@ -146,90 +146,101 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       Color color, String nickname, String userImagePath, String id) {
     return Column(
       children: [
-        Stack(
-          children: [
-            CircleAvatar(
-              radius: 72,
-              backgroundColor: color,
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShowImageFullFunc(
-                        id: id,
-                        listMediaFilePath: [userImagePath],
-                        backgroundDecoration: const BoxDecoration(
-                          color: Colors.black,
-                        ),
-                        scrollDirection: Axis.horizontal,
-                      ),
-                    ),
-                  );
-                },
-                child: Hero(
-                  tag: id,
+        Center(
+          child: SizedBox(
+            width: 144.0,
+            height: 144.0,
+            child: Stack(
+              children: [
+                Center(
                   child: CircleAvatar(
+                    radius: 72,
                     backgroundColor: ConstColor(context)
-                        .getConstColor(ConstColorEnum.kBgColor.name),
-                    radius: 70,
-                    child: ClipOval(
-                      child: Image.network(
-                        userImagePath,
-                        loadingBuilder: (context, child, event) {
-                          if (event == null) return child;
-                          return Center(
-                            child: SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: CircularProgressIndicator(
-                                value: event.cumulativeBytesLoaded /
-                                    (event.expectedTotalBytes ?? 1),
+                        .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShowImageFullFunc(
+                              id: id,
+                              listMediaFilePath: [userImagePath],
+                              backgroundDecoration: const BoxDecoration(
+                                color: Colors.black,
                               ),
+                              scrollDirection: Axis.horizontal,
                             ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(
-                            child: Icon(Icons.image_not_supported),
-                          );
-                        },
+                          ),
+                        );
+                      },
+                      child: Hero(
+                        tag: id,
+                        child: CircleAvatar(
+                          backgroundColor: ConstColor(context)
+                              .getConstColor(ConstColorEnum.kBgColor.name),
+                          radius: 70,
+                          child: ClipOval(
+                            child: Image.network(
+                              userImagePath,
+                              fit: BoxFit.fill,
+                              width: 140.0,
+                              loadingBuilder: (context, child, event) {
+                                if (event == null) return child;
+                                return Center(
+                                  child: SizedBox(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    child: CircularProgressIndicator(
+                                      value: event.cumulativeBytesLoaded /
+                                          (event.expectedTotalBytes ?? 1),
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(Icons.image_not_supported),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              top: 100.0,
-              left: 100.0,
-              child: FloatingActionButton(
-                heroTag: "btn1",
-                mini: true,
-                elevation: 0.0,
-                shape: const CircleBorder(),
-                tooltip: "Change Image",
-                child: const Icon(
-                  Icons.edit,
-                  size: 15.0,
-                ),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext dialogContext) {
-                      return UserProfileEditImage(
-                        label: "profile image",
-                        oldImage: userImagePath,
-                        userModelEnum: UserModelEnum.userImage,
-                        onPressed: () {},
+                Positioned(
+                  top: 100.0,
+                  left: 100.0,
+                  child: FloatingActionButton(
+                    heroTag: "btn1",
+                    mini: true,
+                    elevation: 0.0,
+                    shape: const CircleBorder(),
+                    tooltip: "Change Image",
+                    child: const Icon(
+                      Icons.edit,
+                      size: 15.0,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return UserProfileEditImage(
+                            label: "profile image",
+                            oldImage: userImagePath,
+                            userModelEnum: UserModelEnum.userImage,
+                            onPressed: () {},
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
         ViewWithIcon(
           text: nickname,

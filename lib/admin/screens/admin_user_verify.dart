@@ -109,58 +109,55 @@ class AdminUserVerifyScreen extends ConsumerWidget {
         child: Stack(
           children: [
             Center(
-              child: Container(
-                alignment: Alignment.center,
-                child: CircleAvatar(
-                  radius: 72,
-                  backgroundColor: ConstColor(context)
-                      .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ShowImageFullFunc(
-                            id: id,
-                            listMediaFilePath: [userImagePath],
-                            backgroundDecoration: const BoxDecoration(
-                              color: Colors.black,
-                            ),
-                            scrollDirection: Axis.horizontal,
+              child: CircleAvatar(
+                radius: 72,
+                backgroundColor: ConstColor(context)
+                    .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowImageFullFunc(
+                          id: id,
+                          listMediaFilePath: [userImagePath],
+                          backgroundDecoration: const BoxDecoration(
+                            color: Colors.black,
                           ),
+                          scrollDirection: Axis.horizontal,
                         ),
-                      );
-                    },
-                    child: Hero(
-                      tag: id,
-                      child: CircleAvatar(
-                        backgroundColor: ConstColor(context)
-                            .getConstColor(ConstColorEnum.kBgColor.name),
-                        radius: 70,
-                        child: ClipOval(
-                          child: Image.network(
-                            userImagePath,
-                            fit: BoxFit.fill,
-                            width: 140.0,
-                            loadingBuilder: (context, child, event) {
-                              if (event == null) return child;
-                              return Center(
-                                child: SizedBox(
-                                  width: 20.0,
-                                  height: 20.0,
-                                  child: CircularProgressIndicator(
-                                    value: event.cumulativeBytesLoaded /
-                                        (event.expectedTotalBytes ?? 1),
-                                  ),
+                      ),
+                    );
+                  },
+                  child: Hero(
+                    tag: id,
+                    child: CircleAvatar(
+                      backgroundColor: ConstColor(context)
+                          .getConstColor(ConstColorEnum.kBgColor.name),
+                      radius: 70,
+                      child: ClipOval(
+                        child: Image.network(
+                          userImagePath,
+                          fit: BoxFit.fill,
+                          width: 140.0,
+                          loadingBuilder: (context, child, event) {
+                            if (event == null) return child;
+                            return Center(
+                              child: SizedBox(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircularProgressIndicator(
+                                  value: event.cumulativeBytesLoaded /
+                                      (event.expectedTotalBytes ?? 1),
                                 ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(Icons.image_not_supported),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(Icons.image_not_supported),
+                            );
+                          },
                         ),
                       ),
                     ),
