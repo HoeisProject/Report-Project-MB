@@ -6,8 +6,26 @@ part of 'admin_report_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$reportRejectedControllerHash() =>
+    r'4f37ffb67752c5ebe8da453e507813181946cbf5';
+
+/// See also [reportRejectedController].
+@ProviderFor(reportRejectedController)
+final reportRejectedControllerProvider =
+    AutoDisposeFutureProvider<List<ReportModel>>.internal(
+  reportRejectedController,
+  name: r'reportRejectedControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$reportRejectedControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ReportRejectedControllerRef
+    = AutoDisposeFutureProviderRef<List<ReportModel>>;
 String _$adminReportControllerHash() =>
-    r'462059b75404a4733a3b6aae6bacf110e1cac9ae';
+    r'1d22e0997b65cc27228ffca79a3b0babddb51597';
 
 /// See also [AdminReportController].
 @ProviderFor(AdminReportController)

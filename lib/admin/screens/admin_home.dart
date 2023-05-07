@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
+import 'package:report_project/admin/screens/admin_report_rejected.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
 import 'package:report_project/admin/view_model/admin_home_view_model.dart';
@@ -108,6 +109,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
             _menuBarItem(Icons.supervised_user_circle_outlined, "User", () {
               Navigator.pushNamed(context, AdminUserHomeScreen.routeName);
             }),
+            _menuBarItem(Icons.report_outlined, "Report", () {
+              Navigator.pushNamed(context, AdminReportRejectedScreen.routeName);
+            }),
           ],
         ),
       ),
@@ -189,13 +193,13 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
               padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
-                final reports = data[index];
+                final report = data[index];
                 final project = projects.asData?.value
-                    .firstWhere((element) => element.id == reports.projectId);
+                    .firstWhere((element) => element.id == report.projectId);
                 return _reportViewItem(
-                  reports,
+                  report,
                   project,
-                  reportStatus.findIndexById(reports.reportStatusId),
+                  reportStatus.findIndexById(report.reportStatusId),
                 );
               },
             );
@@ -218,7 +222,10 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   }
 
   Widget _reportViewItem(
-      ReportModel report, ProjectModel? project, int status) {
+    ReportModel report,
+    ProjectModel? project,
+    int status,
+  ) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
       height: 200.0,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
@@ -10,16 +11,27 @@ AdminReportService adminReportService(AdminReportServiceRef ref) {
 }
 
 class AdminReportService {
-  Future<List<ParseObject>> getReport(String rejectReportStatusId) async {
-    ParseObject? getPostObject = ParseObject('Report');
+  Future<List<ParseObject>> getReport(
+    String rejectReportStatusId,
+    bool showRejectedReportOnly,
+  ) async {
+    final getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..includeObject(["userId"])
-      ..whereNotEqualTo(
+      ..includeObject(["userId"]);
+    if (showRejectedReportOnly == false) {
+      queryPosts.whereNotEqualTo(
         ReportModelEnum.reportStatusId.name,
         rejectReportStatusId,
       );
-    final ParseResponse response = await queryPosts.query();
+    } else {
+      queryPosts.whereEqualTo(
+        ReportModelEnum.reportStatusId.name,
+        rejectReportStatusId,
+      );
+    }
 
+    final ParseResponse response = await queryPosts.query();
+    debugPrint(response.results.toString());
     if (response.success && response.results != null) {
       return response.results as List<ParseObject>;
     }

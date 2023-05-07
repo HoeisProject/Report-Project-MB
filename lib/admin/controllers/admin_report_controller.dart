@@ -15,7 +15,8 @@ class AdminReportController extends _$AdminReportController {
     debugPrint('AdminReportController - _getReport');
     final rejectReportStatusId =
         _reportStatusController.findIdForStatusReject();
-    final res = await _adminReportService.getReport(rejectReportStatusId);
+    final res =
+        await _adminReportService.getReport(rejectReportStatusId, false);
     return res.map((e) => ReportModel.fromParseObject(e)).toList();
   }
 
@@ -46,4 +47,16 @@ class AdminReportController extends _$AdminReportController {
     });
     return true;
   }
+}
+
+// @Riverpod(keepAlive: true)
+@riverpod
+FutureOr<List<ReportModel>> reportRejectedController(
+    ReportRejectedControllerRef ref) async {
+  final adminReportService = ref.watch(adminReportServiceProvider);
+  final reportStatusController =
+      ref.watch(reportStatusControllerProvider.notifier);
+  final rejectReportStatusId = reportStatusController.findIdForStatusReject();
+  final res = await adminReportService.getReport(rejectReportStatusId, true);
+  return res.map((e) => ReportModel.fromParseObject(e)).toList();
 }

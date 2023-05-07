@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/admin/screens/admin_report_detail.dart';
 import 'package:report_project/admin/screens/admin_project_detail.dart';
+import 'package:report_project/admin/screens/admin_report_rejected.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/admin/screens/admin_project_create.dart';
@@ -42,6 +43,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           builder: (context) => DetailReportScreen(report: report));
 
     /// ADMIN
+    /// Project
     case AdminHomeScreen.routeName:
       return MaterialPageRoute(builder: (context) => const AdminHomeScreen());
     case AdminProjectHomeScreen.routeName:
@@ -54,6 +56,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       final project = routeSettings.arguments as ProjectModel;
       return MaterialPageRoute(
           builder: (context) => AdminProjectDetail(project: project));
+
+    /// User
     case AdminUserHomeScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const AdminUserHomeScreen());
@@ -62,10 +66,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         builder: (context) => AdminUserVerifyScreen(user: user),
       );
+
+    /// Report
     case AdminReportDetailScreen.routeName:
       final report = routeSettings.arguments as ReportModel;
       return MaterialPageRoute(
           builder: (context) => AdminReportDetailScreen(report: report));
+    case AdminReportRejectedScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const AdminReportRejectedScreen());
+
+    /// Other
     default:
       return MaterialPageRoute(builder: (context) {
         return Scaffold(
