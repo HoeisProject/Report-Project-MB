@@ -129,7 +129,6 @@ class AdminHomeFilterMenuState extends ConsumerState<AdminHomeFilterMenu> {
     "All",
     "Pending",
     "Approved",
-    "Rejected",
   ];
 
   List<DropdownMenuItem<String>> statusDropdownItem() {

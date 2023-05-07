@@ -105,7 +105,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
 
   Widget _menuBar() {
     return Container(
-      margin: const EdgeInsets.only(top: 20.0, bottom: 15.0),
+      margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -123,7 +123,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
 
   Widget _menuBarItem(IconData icon, String label, void Function()? onPressed) {
     return SizedBox(
-      height: 85.0,
+      height: 100.0,
       width: 85.0,
       child: Card(
         elevation: 5.0,
@@ -133,11 +133,20 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(
-                  icon,
-                  size: 35.0,
+                Flexible(
+                  child: Icon(
+                    icon,
+                    size: 35.0,
+                  ),
                 ),
-                Text(label),
+                Flexible(
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
           ),

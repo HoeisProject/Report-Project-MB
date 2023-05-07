@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
@@ -13,7 +12,6 @@ AdminReportService adminReportService(AdminReportServiceRef ref) {
 class AdminReportService {
   Future<List<ParseObject>> getReport(
     String rejectReportStatusId,
-    bool showRejectedReportOnly,
   ) async {
     final getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
