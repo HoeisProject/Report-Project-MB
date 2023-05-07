@@ -7,12 +7,12 @@ part of 'admin_report_controller.dart';
 // **************************************************************************
 
 String _$reportRejectedControllerHash() =>
-    r'4f37ffb67752c5ebe8da453e507813181946cbf5';
+    r'239fea4c79b6459654c49496f5e614febf6d2bd0';
 
 /// See also [reportRejectedController].
 @ProviderFor(reportRejectedController)
 final reportRejectedControllerProvider =
-    AutoDisposeFutureProvider<List<ReportModel>>.internal(
+    FutureProvider<List<ReportModel>>.internal(
   reportRejectedController,
   name: r'reportRejectedControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,10 +22,9 @@ final reportRejectedControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ReportRejectedControllerRef
-    = AutoDisposeFutureProviderRef<List<ReportModel>>;
+typedef ReportRejectedControllerRef = FutureProviderRef<List<ReportModel>>;
 String _$adminReportControllerHash() =>
-    r'1d22e0997b65cc27228ffca79a3b0babddb51597';
+    r'b39c6abffeaf6caf81b4e647998811b7913c1d0a';
 
 /// See also [AdminReportController].
 @ProviderFor(AdminReportController)

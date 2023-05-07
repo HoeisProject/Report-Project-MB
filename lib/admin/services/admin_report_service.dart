@@ -18,20 +18,19 @@ class AdminReportService {
     final getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
       ..includeObject(["userId"]);
-    if (showRejectedReportOnly == false) {
-      queryPosts.whereEqualTo(
-        ReportModelEnum.reportStatusId.name,
-        rejectReportStatusId,
-      );
-    } else {
-      queryPosts.whereNotEqualTo(
-        ReportModelEnum.reportStatusId.name,
-        rejectReportStatusId,
-      );
-    }
+    // if (showRejectedReportOnly) {
+    //   queryPosts.whereEqualTo(
+    //     ReportModelEnum.reportStatusId.name,
+    //     rejectReportStatusId,
+    //   );
+    // } else {
+    //   queryPosts.whereNotEqualTo(
+    //     ReportModelEnum.reportStatusId.name,
+    //     rejectReportStatusId,
+    //   );
+    // }
 
     final ParseResponse response = await queryPosts.query();
-    debugPrint(response.results.toString());
     if (response.success && response.results != null) {
       return response.results as List<ParseObject>;
     }

@@ -15,9 +15,13 @@ class AdminReportController extends _$AdminReportController {
     debugPrint('AdminReportController - _getReport');
     final rejectReportStatusId =
         _reportStatusController.findIdForStatusReject();
-    final res =
-        await _adminReportService.getReport(rejectReportStatusId, false);
-    return res.map((e) => ReportModel.fromParseObject(e)).toList();
+    final res = await _adminReportService.getReport(rejectReportStatusId);
+    // return res.map((e) => ReportModel.fromParseObject(e)).toList();
+    return res
+        .map((e) => ReportModel.fromParseObject(e))
+        .toList()
+        .where((element) => element.reportStatusId != rejectReportStatusId)
+        .toList();
   }
 
   @override
@@ -49,14 +53,17 @@ class AdminReportController extends _$AdminReportController {
   }
 }
 
-// @Riverpod(keepAlive: true)
-@riverpod
+@Riverpod(keepAlive: true)
 FutureOr<List<ReportModel>> reportRejectedController(
     ReportRejectedControllerRef ref) async {
   final adminReportService = ref.watch(adminReportServiceProvider);
   final reportStatusController =
       ref.watch(reportStatusControllerProvider.notifier);
   final rejectReportStatusId = reportStatusController.findIdForStatusReject();
-  final res = await adminReportService.getReport(rejectReportStatusId, true);
-  return res.map((e) => ReportModel.fromParseObject(e)).toList();
+  final res = await adminReportService.getReport(rejectReportStatusId);
+  return res
+      .map((e) => ReportModel.fromParseObject(e))
+      .toList()
+      .where((element) => element.reportStatusId == rejectReportStatusId)
+      .toList();
 }

@@ -27,7 +27,7 @@ class AdminReportRejectedScreen extends ConsumerWidget {
     final projects = ref.watch(adminProjectControllerProvider);
     return reports.when(
       data: (data) {
-        if (data.isEmpty) return const Center(child: Text('No Data'));
+        // if (data.isEmpty) return const Center(child: Text('No Data'));
         return ListView.builder(
           itemCount: data.length,
           itemBuilder: (context, index) {
