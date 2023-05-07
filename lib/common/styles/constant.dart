@@ -45,6 +45,9 @@ const kContentReportItem = TextStyle(
 enum ConstColorEnum {
   kBgColor,
   kOutlineBorderColor,
+  kErrorColor,
+  kNormalButtonColor,
+  kTextThemeColor,
 }
 
 class ConstColor {
@@ -59,6 +62,15 @@ class ConstColor {
         return color;
       case 'kOutlineBorderColor':
         Color color = Theme.of(context).indicatorColor;
+        return color;
+      case 'kRejectColor':
+        Color color = Theme.of(context).colorScheme.error;
+        return color;
+      case 'kNormalButtonColor':
+        Color color = Theme.of(context).colorScheme.tertiary;
+        return color;
+      case 'kTextThemeColor':
+        Color color = Theme.of(context).colorScheme.inverseSurface;
         return color;
       default:
         Color color = Colors.transparent;

@@ -54,7 +54,7 @@ Widget drawerHeaderWidget(UserModel user) {
       child: ClipOval(
         child: Image.network(
           user.userImage.isEmpty ? defaultImageProfile : user.userImage,
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
           width: 140.0,
           loadingBuilder: (context, child, event) {
             if (event == null) return child;

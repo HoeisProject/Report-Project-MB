@@ -78,24 +78,22 @@ class AdminUserHomeScreen extends ConsumerWidget {
   }
 
   Widget _listUserViewItem(BuildContext context, UserModel user) {
-    return Container(
-      margin: const EdgeInsets.all(5.0),
-      padding: const EdgeInsets.all(10.0),
-      child: Card(
-        elevation: 5.0,
-        clipBehavior: Clip.hardEdge,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        ),
-        child: Material(
-          child: InkWell(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                AdminUserVerifyScreen.routeName,
-                arguments: user,
-              );
-            },
+    return Card(
+      elevation: 5.0,
+      clipBehavior: Clip.hardEdge,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+      child: Material(
+        child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              AdminUserVerifyScreen.routeName,
+              arguments: user,
+            );
+          },
+          child: Center(
             child: SingleChildScrollView(
               child: Column(
                 children: [

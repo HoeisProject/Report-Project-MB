@@ -185,7 +185,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                 return _reportViewItem(
                   reports,
                   project,
-                  reportStatus.findIndexById(reports.id),
+                  reportStatus.findIndexById(reports.reportStatusId),
                 );
               },
             );

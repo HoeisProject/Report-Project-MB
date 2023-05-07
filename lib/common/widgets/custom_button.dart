@@ -14,8 +14,10 @@ Widget customButton(
       child: SizedBox(
         height: 50.0,
         width: 150.0,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
+        child: FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: buttonColor,
+          ),
           onPressed: isLoading! ? null : onPressed,
           child: Center(
             child: isLoading

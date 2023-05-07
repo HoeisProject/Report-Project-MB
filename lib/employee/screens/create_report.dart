@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_alert_dialog.dart';
@@ -246,7 +247,8 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
               context,
               false,
               "SEND",
-              Colors.lightBlue,
+              ConstColor(context)
+                  .getConstColor(ConstColorEnum.kNormalButtonColor.name),
               () => submit(context),
             ),
             sizedSpacer(context: context, height: 30.0),

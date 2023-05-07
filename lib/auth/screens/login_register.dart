@@ -7,6 +7,7 @@ import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/login_register_view_model.dart';
 import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
@@ -86,7 +87,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       showSnackBar(context, Icons.done, Colors.greenAccent, "Register Success",
           Colors.greenAccent);
       ref.read(loginRegisterIsLoginProvider.notifier).state = true;
-      ref.read(loginRegisterLoginColorProvider.notifier).state = Colors.black;
+      ref.read(loginRegisterLoginColorProvider.notifier).state =
+          ConstColor(context)
+              .getConstColor(ConstColorEnum.kTextThemeColor.name);
       ref.read(loginRegisterRegisterColorProvider.notifier).state =
           Colors.lightBlue;
     }
@@ -144,7 +147,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     }
     if (ref.read(loginRegisterIsLoginProvider) == false) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
-      ref.read(loginRegisterLoginColorProvider.notifier).state = Colors.black;
+      ref.read(loginRegisterLoginColorProvider.notifier).state =
+          ConstColor(context)
+              .getConstColor(ConstColorEnum.kTextThemeColor.name);
       ref.read(loginRegisterRegisterColorProvider.notifier).state =
           Colors.lightBlue;
       ref.read(loginRegisterIsLoginProvider.notifier).state = true;
@@ -163,7 +168,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       ref.read(loginRegisterLoginColorProvider.notifier).state =
           Colors.lightBlue;
       ref.read(loginRegisterRegisterColorProvider.notifier).state =
-          Colors.black;
+          ConstColor(context)
+              .getConstColor(ConstColorEnum.kTextThemeColor.name);
       ref.read(loginRegisterIsLoginProvider.notifier).state = false;
       usernameCtl.clear();
       emailCtl.clear();
@@ -268,7 +274,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               context,
               ref.watch(loginRegisterLoadingProvider),
               "LOGIN",
-              Colors.lightBlue,
+              ConstColor(context)
+                  .getConstColor(ConstColorEnum.kNormalButtonColor.name),
               () => userLogin(context),
             ),
             sizedSpacer(
@@ -353,7 +360,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               context,
               ref.watch(loginRegisterLoadingProvider),
               "REGISTER",
-              Colors.lightBlue,
+              ConstColor(context)
+                  .getConstColor(ConstColorEnum.kNormalButtonColor.name),
               () => userRegister(context),
             ),
             sizedSpacer(

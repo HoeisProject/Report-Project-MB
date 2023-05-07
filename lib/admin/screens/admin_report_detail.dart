@@ -14,6 +14,7 @@ import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_download_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
+import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
@@ -113,10 +114,15 @@ class AdminReportDetailScreenState
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    customButton(context, isLoadingReject, "REJECT", Colors.red,
-                        rejectReport),
-                    customButton(context, isLoadingApprove, "APPROVE",
-                        Colors.greenAccent, approveReport)
+                    Flexible(
+                      child: customButton(context, isLoadingReject, "REJECT",
+                          Colors.red, rejectReport),
+                    ),
+                    const SizedBox(width: 10.0),
+                    Flexible(
+                      child: customButton(context, isLoadingApprove, "APPROVE",
+                          Colors.greenAccent, approveReport),
+                    )
                   ],
                 ),
               ],

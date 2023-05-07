@@ -95,7 +95,8 @@ class UserProfileEditImage extends ConsumerWidget {
                   context,
                   false,
                   "EDIT",
-                  Colors.lightBlue,
+                  ConstColor(context)
+                      .getConstColor(ConstColorEnum.kNormalButtonColor.name),
                   () => update(context, ref),
                 ),
                 sizedSpacer(context: context, height: 5.0),

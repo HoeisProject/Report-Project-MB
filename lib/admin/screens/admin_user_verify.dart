@@ -191,8 +191,8 @@ class AdminUserVerifyScreen extends ConsumerWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => ShowImageFullFunc(
-                  id: id,
-                  listMediaFilePath: [user.ktpImage ?? '-'],
+                  id: "$id${user.ktpImage ?? user.nik}",
+                  listMediaFilePath: [user.ktpImage ?? user.nik],
                   backgroundDecoration: const BoxDecoration(
                     color: Colors.black,
                   ),
@@ -202,7 +202,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
             );
           },
           child: Hero(
-            tag: id,
+            tag: "$id${user.ktpImage ?? user.nik}",
             child: Image.network(
               user.ktpImage ?? '-',
               loadingBuilder: (context, child, loadingProgress) {

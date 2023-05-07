@@ -195,7 +195,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                 return _reportViewItem(
                   reports,
                   project,
-                  reportStatus.findIndexById(reports.id),
+                  reportStatus.findIndexById(reports.reportStatusId),
                 );
               },
             );

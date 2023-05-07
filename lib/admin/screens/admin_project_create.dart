@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/admin/view_model/admin_project_create_view_model.dart';
+import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
@@ -188,8 +189,9 @@ class _AdminProjectCreateScreen
             customButton(
               context,
               isLoading,
-              'Create',
-              Colors.lightBlue,
+              'CREATE',
+              ConstColor(context)
+                  .getConstColor(ConstColorEnum.kNormalButtonColor.name),
               () => submit(context),
             ),
             sizedSpacer(context: context, height: 30.0),

@@ -126,7 +126,8 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                           data.id,
                           data.isUserVerified,
                         )
-                      : Container()
+                      : Container(),
+                  sizedSpacer(context: context, height: 25.0),
                 ],
               ),
             );
@@ -323,10 +324,11 @@ Widget ktpField(
           );
         },
       ),
+      sizedSpacer(context: context, height: 25.0),
       Center(
         child: SizedBox(
-          width: 200.0,
-          height: 150.0,
+          width: 225.0,
+          height: 175.0,
           child: ktpImagePath != null
               ? Stack(
                   children: [
@@ -348,32 +350,36 @@ Widget ktpField(
                       },
                       child: Hero(
                         tag: id,
-                        child: Image.network(
-                          ktpImagePath,
-                          loadingBuilder: (context, child, event) {
-                            if (event == null) return child;
-                            return Center(
-                              child: SizedBox(
-                                width: 20.0,
-                                height: 20.0,
-                                child: CircularProgressIndicator(
-                                  value: event.cumulativeBytesLoaded /
-                                      (event.expectedTotalBytes ?? 1),
+                        child: Center(
+                          child: Image.network(
+                            ktpImagePath,
+                            width: 200,
+                            height: 150,
+                            loadingBuilder: (context, child, event) {
+                              if (event == null) return child;
+                              return Center(
+                                child: SizedBox(
+                                  width: 20.0,
+                                  height: 20.0,
+                                  child: CircularProgressIndicator(
+                                    value: event.cumulativeBytesLoaded /
+                                        (event.expectedTotalBytes ?? 1),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(Icons.image_not_supported),
-                            );
-                          },
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(Icons.image_not_supported),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                     Positioned(
-                      top: 100.0,
-                      left: 150.0,
+                      top: 125.0,
+                      left: 175.0,
                       child: FloatingActionButton(
                         heroTag: "btn2",
                         mini: true,
