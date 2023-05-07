@@ -49,11 +49,11 @@ class AdminUserHomeScreen extends ConsumerWidget {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 5.0,
-                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 2.5,
+                crossAxisSpacing: 2.5,
                 childAspectRatio: (1 / 1.5),
               ),
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.all(5.0),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
                 return _listUserViewItem(context, data[index]);
@@ -109,10 +109,9 @@ class AdminUserHomeScreen extends ConsumerWidget {
     );
   }
 
-  /// TODO Trailing Icon 4 variasi untuk semua kondisi status ??
   Widget _listUserViewItemTrailing(int status) {
     if (UserStatus.pending.value == status) {
-      return const Icon(Icons.lock, color: Colors.red);
+      return const Icon(Icons.timelapse, color: Colors.yellow);
     }
     if (UserStatus.approve.value == status) {
       return const Icon(Icons.verified, color: Colors.greenAccent);
@@ -121,7 +120,7 @@ class AdminUserHomeScreen extends ConsumerWidget {
       return const Icon(Icons.lock, color: Colors.red);
     }
     // status no upload
-    return const Icon(Icons.verified, color: Colors.greenAccent);
+    return const Icon(Icons.new_releases, color: Colors.deepOrange);
   }
 
   Widget _listItemHeader(BuildContext context, String imagePath, String id) {

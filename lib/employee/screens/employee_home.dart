@@ -14,7 +14,9 @@ import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
-import 'package:report_project/employee/screens/not_verified.dart';
+import 'package:report_project/employee/screens/user_status_no_upload.dart';
+import 'package:report_project/employee/screens/user_status_pending.dart';
+import 'package:report_project/employee/screens/user_status_rejected.dart';
 import 'package:report_project/employee/view_model/employee_home_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/employee/widgets/employee_home_filter.dart';
@@ -37,13 +39,16 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   // Availability is important to ensure that information and systems are accessible to authorized users when they need them.
   Widget availability(int status) {
     if (UserStatus.pending.value == status) {
-      return const NotVerifiedScreen();
+      return const UserStatusPendingScreen();
     }
+
     if (UserStatus.approve.value == status) return _body();
 
-    /// TODO Screen ketika di reject, harus melakukan upload Ktp dan NIK lagi
-    if (UserStatus.reject.value == status) return Container();
-    return Container();
+    if (UserStatus.reject.value == status) {
+      return const UserStatusRejectedScreen();
+    }
+
+    return const UserStatusNoUploadScreen();
   }
 
   @override

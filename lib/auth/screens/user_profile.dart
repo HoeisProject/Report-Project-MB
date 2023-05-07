@@ -49,8 +49,27 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     data.userImage,
                     data.id,
                   ),
-
-                  /// TODO Widget untuk memberitahu ketika Ktp dan NIK di REJECT dan Belum Upload
+                  Visibility(
+                    visible: UserStatus.reject.value == data.status,
+                    child: Center(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Flexible(
+                            child: Text(
+                              "your account got rejected,\nplease resend ktp image and NIK\nby pressing edit button",
+                              style: kTitleReportItem.apply(
+                                  color: Theme.of(context).primaryColor),
+                              maxLines: 4,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   Visibility(
                     visible: UserStatus.pending.value == data.status &&
                         data.ktpImage != null,
@@ -58,14 +77,16 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Wait for admin to verify your account\nfor full access",
-                            style: kTitleReportItem.apply(
-                                color: Theme.of(context).primaryColor),
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
+                          child: Flexible(
+                            child: Text(
+                              "Wait for admin to verify your account\nfor full access",
+                              style: kTitleReportItem.apply(
+                                  color: Theme.of(context).primaryColor),
+                              maxLines: 3,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                            ),
                           ),
                         ),
                       ),
@@ -280,7 +301,7 @@ Widget ktpField(
   String id,
   int status,
 ) {
-  if (UserStatus.noupload.value == status && ktpImagePath == null) {
+  if (UserStatus.noupload.value == status) {
     return Container(
       margin: const EdgeInsets.only(top: 25.0),
       height: 50.0,

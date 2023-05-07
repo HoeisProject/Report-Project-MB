@@ -152,7 +152,7 @@ class _AdminProjectCreateScreen
             ViewWithIcon(
               text: startDate != null
                   ? DateFormat.yMMMEd().format(startDate)
-                  : "Select Start Date",
+                  : "Select Start Date ->",
               iconLeading: null,
               iconTrailing: Icons.edit_calendar,
               onPressed: () async {
@@ -170,7 +170,7 @@ class _AdminProjectCreateScreen
             ViewWithIcon(
               text: endDate != null
                   ? DateFormat.yMMMEd().format(endDate)
-                  : "Select End Date",
+                  : "Select End Date ->",
               iconLeading: null,
               iconTrailing: Icons.edit_calendar,
               onPressed: () async {

@@ -190,10 +190,9 @@ class AdminUserVerifyScreen extends ConsumerWidget {
     );
   }
 
-  /// TODO Trailing Icon 4 variasi untuk semua kondisi status ??
   Widget _userImageHeaderTrailing(int status) {
     if (UserStatus.pending.value == status) {
-      return const Icon(Icons.lock, color: Colors.red);
+      return const Icon(Icons.timelapse, color: Colors.yellow);
     }
     if (UserStatus.approve.value == status) {
       return const Icon(Icons.verified, color: Colors.greenAccent);
@@ -202,7 +201,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
       return const Icon(Icons.lock, color: Colors.red);
     }
     // status no upload
-    return const Icon(Icons.verified, color: Colors.greenAccent);
+    return const Icon(Icons.new_releases, color: Colors.deepOrange);
   }
 
   Widget _ktpImageHolder(context, String id) {
