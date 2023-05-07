@@ -10,10 +10,14 @@ AdminReportService adminReportService(AdminReportServiceRef ref) {
 }
 
 class AdminReportService {
-  Future<List<ParseObject>> getReport() async {
+  Future<List<ParseObject>> getReport(String rejectReportStatusId) async {
     ParseObject? getPostObject = ParseObject('Report');
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..includeObject(["userId"]);
+      ..includeObject(["userId"])
+      ..whereNotEqualTo(
+        ReportModelEnum.reportStatusId.name,
+        rejectReportStatusId,
+      );
     final ParseResponse response = await queryPosts.query();
 
     if (response.success && response.results != null) {

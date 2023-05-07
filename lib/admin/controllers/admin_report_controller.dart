@@ -9,16 +9,21 @@ part 'admin_report_controller.g.dart';
 @Riverpod(keepAlive: true)
 class AdminReportController extends _$AdminReportController {
   late final AdminReportService _adminReportService;
+  late final ReportStatusController _reportStatusController;
 
   FutureOr<List<ReportModel>> _getReport() async {
     debugPrint('AdminReportController - _getReport');
-    final res = await _adminReportService.getReport();
+    final rejectReportStatusId =
+        _reportStatusController.findIdForStatusReject();
+    final res = await _adminReportService.getReport(rejectReportStatusId);
     return res.map((e) => ReportModel.fromParseObject(e)).toList();
   }
 
   @override
   FutureOr<List<ReportModel>> build() {
     _adminReportService = ref.watch(adminReportServiceProvider);
+    _reportStatusController =
+        ref.watch(reportStatusControllerProvider.notifier);
     return _getReport();
   }
 
@@ -29,10 +34,6 @@ class AdminReportController extends _$AdminReportController {
     debugPrint('AdminReportController - updateReportStatus');
     state = const AsyncValue.loading();
     final reportStatus = ref.read(reportStatusControllerProvider);
-    final reportList = state.value!.map((e) {
-      if (e.id != id) return e;
-      return e.copyWith(reportStatusId: reportStatus[status].id);
-    }).toList();
     final res = await _adminReportService.updateReportStatus(
       id,
       reportStatus[status].id,
@@ -40,8 +41,9 @@ class AdminReportController extends _$AdminReportController {
     if (!res.success || res.results == null) {
       return false;
     }
-
-    state = AsyncValue.data(reportList);
+    state = await AsyncValue.guard(() async {
+      return _getReport();
+    });
     return true;
   }
 }

@@ -14,7 +14,7 @@ enum ReportModelEnum {
   description,
   position,
   createdAt,
-  updatedAt,
+  updatedAt
 }
 
 @immutable

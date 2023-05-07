@@ -37,4 +37,8 @@ class ReportStatusController extends _$ReportStatusController {
   String findIdForStatusPending() {
     return state.firstWhere((element) => element.name == 'pending').id;
   }
+
+  String findIdForStatusReject() {
+    return state.firstWhere((element) => element.name == 'reject').id;
+  }
 }
