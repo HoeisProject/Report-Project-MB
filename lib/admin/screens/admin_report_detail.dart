@@ -14,7 +14,6 @@ import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_download_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
-import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_media_field.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';

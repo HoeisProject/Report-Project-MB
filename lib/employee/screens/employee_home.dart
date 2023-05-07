@@ -61,9 +61,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         return const ErrorScreen(text: 'Employe Home Screen - Call Developer');
       },
       loading: () {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
@@ -199,9 +197,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
             );
           },
           loading: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),

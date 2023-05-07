@@ -11,7 +11,7 @@ Future<void> showLoadingDialog(BuildContext context) {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: const [
-              CircularProgressIndicator(),
+              Center(child: CircularProgressIndicator()),
               SizedBox(
                 height: 15,
               ),

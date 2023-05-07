@@ -78,16 +78,27 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                 ),
                 _ktpImageHolder(context, user.id),
                 sizedSpacer(context: context, height: 10.0),
-                customButton(
-                  context,
-                  ref.watch(adminUserVerifyIsLoadingProvider),
-                  user.isUserVerified ? 'REJECT' : 'APPROVE',
-                  user.isUserVerified ? Colors.red : Colors.greenAccent,
-                  () {
-                    user.isUserVerified
-                        ? submit(context, false, ref)
-                        : submit(context, true, ref);
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: customButton(
+                          context,
+                          ref.watch(adminUserVerifyIsLoadingProvider),
+                          "REJECT",
+                          Colors.red,
+                          () => submit(context, false, ref)),
+                    ),
+                    const SizedBox(width: 10.0),
+                    Flexible(
+                      child: customButton(
+                          context,
+                          ref.watch(adminUserVerifyIsLoadingProvider),
+                          "APPROVE",
+                          Colors.greenAccent,
+                          () => submit(context, true, ref)),
+                    )
+                  ],
                 ),
               ],
             ),

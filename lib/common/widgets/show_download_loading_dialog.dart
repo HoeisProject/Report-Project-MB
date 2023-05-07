@@ -26,8 +26,10 @@ class ShowDownloadLoadingDialogState
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(
-                value: ref.watch(imageDownloadProgressProvider),
+              Center(
+                child: CircularProgressIndicator(
+                  value: ref.watch(imageDownloadProgressProvider),
+                ),
               ),
               const SizedBox(
                 height: 15,

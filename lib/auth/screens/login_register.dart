@@ -211,7 +211,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             return const ErrorScreen(text: 'Login Register Call developer');
           },
           loading: () {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),
