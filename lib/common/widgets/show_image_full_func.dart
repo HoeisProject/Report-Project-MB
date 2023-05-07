@@ -119,7 +119,7 @@ class _ShowImageFullFuncState extends ConsumerState<ShowImageFullFunc> {
     );
     if (Platform.isAndroid) {
       dirLoc = "/storage/emulated/0/Download/";
-      bool dirDownloadExists = await File(dirLoc).exists();
+      bool dirDownloadExists = await Directory(dirLoc).exists();
       if (dirDownloadExists) {
         dirLoc = "/storage/emulated/0/Download/";
       } else {
