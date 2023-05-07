@@ -19,12 +19,12 @@ class AdminReportService {
     final queryPosts = QueryBuilder<ParseObject>(getPostObject)
       ..includeObject(["userId"]);
     if (showRejectedReportOnly == false) {
-      queryPosts.whereNotEqualTo(
+      queryPosts.whereEqualTo(
         ReportModelEnum.reportStatusId.name,
         rejectReportStatusId,
       );
     } else {
-      queryPosts.whereEqualTo(
+      queryPosts.whereNotEqualTo(
         ReportModelEnum.reportStatusId.name,
         rejectReportStatusId,
       );
