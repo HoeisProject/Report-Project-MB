@@ -21,7 +21,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
 
   final UserModel user;
 
-  void submit(context, bool isApprove, WidgetRef ref) async {
+  void submit(context, int isApprove, WidgetRef ref) async {
     ref.read(adminUserVerifyIsLoadingProvider.notifier).state = true;
     final isSuccess = await ref
         .read(adminUserControllerProvider.notifier)
@@ -87,7 +87,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                           ref.watch(adminUserVerifyIsLoadingProvider),
                           "REJECT",
                           Colors.red,
-                          () => submit(context, false, ref)),
+                          () => submit(context, UserStatus.reject.value, ref)),
                     ),
                     const SizedBox(width: 10.0),
                     Flexible(
@@ -96,7 +96,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                           ref.watch(adminUserVerifyIsLoadingProvider),
                           "APPROVE",
                           Colors.greenAccent,
-                          () => submit(context, true, ref)),
+                          () => submit(context, UserStatus.approve.value, ref)),
                     )
                   ],
                 ),
@@ -181,15 +181,28 @@ class AdminUserVerifyScreen extends ConsumerWidget {
               left: 100.0,
               child: CircleAvatar(
                 radius: 20.0,
-                child: user.isUserVerified
-                    ? const Icon(Icons.verified, color: Colors.greenAccent)
-                    : const Icon(Icons.lock, color: Colors.red),
+                child: _userImageHeaderTrailing(user.status),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  /// TODO Trailing Icon 4 variasi untuk semua kondisi status ??
+  Widget _userImageHeaderTrailing(int status) {
+    if (UserStatus.pending.value == status) {
+      return const Icon(Icons.lock, color: Colors.red);
+    }
+    if (UserStatus.approve.value == status) {
+      return const Icon(Icons.verified, color: Colors.greenAccent);
+    }
+    if (UserStatus.reject.value == status) {
+      return const Icon(Icons.lock, color: Colors.red);
+    }
+    // status no upload
+    return const Icon(Icons.verified, color: Colors.greenAccent);
   }
 
   Widget _ktpImageHolder(context, String id) {

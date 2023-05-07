@@ -18,10 +18,10 @@ class AdminUserService {
     return res.results as List<ParseObject>;
   }
 
-  Future<ParseResponse> verify(String id, bool value) {
+  Future<ParseResponse> verify(String id, int value) {
     final verifyUser = ParseObject('_User')
       ..objectId = id
-      ..set(UserModelEnum.isUserVerified.name, value);
+      ..set(UserModelEnum.status.name, value);
     return verifyUser.save();
   }
 }

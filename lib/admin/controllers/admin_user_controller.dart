@@ -25,7 +25,7 @@ class AdminUserController extends _$AdminUserController {
 
   Future<bool> verifyUser({
     required String id,
-    required bool value,
+    required int value,
   }) async {
     debugPrint('AdminUserController - verifyUser');
     final res = await _adminUserService.verify(id, value);
@@ -34,7 +34,7 @@ class AdminUserController extends _$AdminUserController {
     }
     final userList = state.value!.map((e) {
       if (e.id != id) return e;
-      return e.copyWith(isUserVerified: value);
+      return e.copyWith(status: value);
     }).toList();
     state = AsyncValue.data(userList);
     return true;

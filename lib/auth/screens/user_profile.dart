@@ -49,8 +49,11 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     data.userImage,
                     data.id,
                   ),
+
+                  /// TODO Widget untuk memberitahu ketika Ktp dan NIK di REJECT dan Belum Upload
                   Visibility(
-                    visible: !data.isUserVerified && data.ktpImage != null,
+                    visible: UserStatus.pending.value == data.status &&
+                        data.ktpImage != null,
                     child: Center(
                       child: Card(
                         child: Padding(
@@ -124,7 +127,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                           data.nik,
                           data.ktpImage,
                           data.id,
-                          data.isUserVerified,
+                          data.status,
                         )
                       : Container(),
                   sizedSpacer(context: context, height: 25.0),
@@ -275,9 +278,9 @@ Widget ktpField(
   String? nik,
   String? ktpImagePath,
   String id,
-  bool isUserVerified,
+  int status,
 ) {
-  if (!isUserVerified && ktpImagePath == null) {
+  if (UserStatus.noupload.value == status && ktpImagePath == null) {
     return Container(
       margin: const EdgeInsets.only(top: 25.0),
       height: 50.0,

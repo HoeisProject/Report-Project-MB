@@ -5,16 +5,30 @@ import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/common/models/role_model.dart';
 
+// https://stackoverflow.com/questions/38908285/how-do-i-add-methods-or-values-to-enums-in-dart
+enum UserStatus {
+  admin(0),
+  noupload(1),
+  pending(2),
+  approve(3),
+  reject(4);
+
+  const UserStatus(this.value);
+  final int value;
+}
+
 enum UserModelEnum {
   objectId,
   roleId,
   username,
   nickname,
   email,
+
+  /// TODO After migration to Laravel
   emailClone, // Only back4apps use case, because restricted permission
   nik,
   phoneNumber,
-  isUserVerified,
+  status,
   userImage,
   ktpImage,
 }
@@ -28,9 +42,22 @@ class UserModel {
   final String email;
   final String? nik;
   final String phoneNumber;
-  final bool isUserVerified;
+  final int status;
   final String userImage;
   final String? ktpImage;
+
+  const UserModel({
+    required this.id,
+    required this.roleId,
+    required this.username,
+    required this.nickname,
+    required this.email,
+    this.nik,
+    required this.phoneNumber,
+    required this.status,
+    required this.userImage,
+    this.ktpImage,
+  });
 
   factory UserModel.fromParseUser(ParseUser parse) {
     debugPrint("UserModel.fromParseUser : $parse");
@@ -44,7 +71,7 @@ class UserModel {
       email: parse.get<String>(UserModelEnum.email.name)!,
       nik: parse.get<String>(UserModelEnum.nik.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
-      isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
+      status: parse.get<int>(UserModelEnum.status.name)!,
       userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
       ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url,
     );
@@ -62,24 +89,11 @@ class UserModel {
       email: parse.get<String>(UserModelEnum.emailClone.name)!,
       nik: parse.get<String>(UserModelEnum.nik.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
-      isUserVerified: parse.get<bool>(UserModelEnum.isUserVerified.name)!,
+      status: parse.get<int>(UserModelEnum.status.name)!,
       userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
       ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url,
     );
   }
-
-  const UserModel({
-    required this.id,
-    required this.roleId,
-    required this.username,
-    required this.nickname,
-    required this.email,
-    this.nik,
-    required this.phoneNumber,
-    required this.isUserVerified,
-    required this.userImage,
-    this.ktpImage,
-  });
 
   UserModel copyWith({
     String? id,
@@ -89,7 +103,7 @@ class UserModel {
     String? email,
     String? nik,
     String? phoneNumber,
-    bool? isUserVerified,
+    int? status,
     String? userImage,
     String? ktpImage,
   }) {
@@ -101,7 +115,7 @@ class UserModel {
       email: email ?? this.email,
       nik: nik ?? this.nik,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      isUserVerified: isUserVerified ?? this.isUserVerified,
+      status: status ?? this.status,
       userImage: userImage ?? this.userImage,
       ktpImage: ktpImage ?? this.ktpImage,
     );
@@ -116,7 +130,7 @@ class UserModel {
       'email': email,
       'nik': nik,
       'phoneNumber': phoneNumber,
-      'isUserVerified': isUserVerified,
+      'status': status,
       'userImage': userImage,
       'ktpImage': ktpImage,
     };
@@ -131,7 +145,7 @@ class UserModel {
       email: map['email'] as String,
       nik: map['nik'] != null ? map['nik'] as String : null,
       phoneNumber: map['phoneNumber'] as String,
-      isUserVerified: map['isUserVerified'] as bool,
+      status: map['status'] as int,
       userImage: map['userImage'] as String,
       ktpImage: map['ktpImage'] != null ? map['ktpImage'] as String : null,
     );
@@ -144,7 +158,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, roleId: $roleId, username: $username, nickname: $nickname, email: $email, nik: $nik, phoneNumber: $phoneNumber, isUserVerified: $isUserVerified, userImage: $userImage, ktpImage: $ktpImage)';
+    return 'UserModel(id: $id, roleId: $roleId, username: $username, nickname: $nickname, email: $email, nik: $nik, phoneNumber: $phoneNumber, status: $status, userImage: $userImage, ktpImage: $ktpImage)';
   }
 
   @override
@@ -158,7 +172,7 @@ class UserModel {
         other.email == email &&
         other.nik == nik &&
         other.phoneNumber == phoneNumber &&
-        other.isUserVerified == isUserVerified &&
+        other.status == status &&
         other.userImage == userImage &&
         other.ktpImage == ktpImage;
   }
@@ -172,7 +186,7 @@ class UserModel {
         email.hashCode ^
         nik.hashCode ^
         phoneNumber.hashCode ^
-        isUserVerified.hashCode ^
+        status.hashCode ^
         userImage.hashCode ^
         ktpImage.hashCode;
   }

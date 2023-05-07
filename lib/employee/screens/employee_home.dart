@@ -7,6 +7,7 @@ import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
+import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
@@ -33,6 +34,18 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
 
   List<ProjectModel> listProject = [];
 
+  // Availability is important to ensure that information and systems are accessible to authorized users when they need them.
+  Widget availability(int status) {
+    if (UserStatus.pending.value == status) {
+      return const NotVerifiedScreen();
+    }
+    if (UserStatus.approve.value == status) return _body();
+
+    /// TODO Screen ketika di reject, harus melakukan upload Ktp dan NIK lagi
+    if (UserStatus.reject.value == status) return Container();
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Employee Home Screen");
@@ -53,7 +66,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         if (data == null) return Container();
         return Scaffold(
           appBar: customAppbar("HOME"),
-          body: data.isUserVerified ? _body() : const NotVerifiedScreen(),
+          body: availability(data.status),
           drawer: showDrawer(context, ref, data),
         );
       },

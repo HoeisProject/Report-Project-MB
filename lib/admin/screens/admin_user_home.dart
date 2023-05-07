@@ -98,12 +98,8 @@ class AdminUserHomeScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   _listItemHeader(context, user.userImage.toString(), user.id),
-                  _listItemContent(
-                    user.nickname.toString(),
-                    user.isUserVerified
-                        ? const Icon(Icons.verified, color: Colors.greenAccent)
-                        : const Icon(Icons.lock, color: Colors.red),
-                  ),
+                  _listItemContent(user.nickname.toString(),
+                      _listUserViewItemTrailing(user.status)),
                 ],
               ),
             ),
@@ -111,6 +107,21 @@ class AdminUserHomeScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// TODO Trailing Icon 4 variasi untuk semua kondisi status ??
+  Widget _listUserViewItemTrailing(int status) {
+    if (UserStatus.pending.value == status) {
+      return const Icon(Icons.lock, color: Colors.red);
+    }
+    if (UserStatus.approve.value == status) {
+      return const Icon(Icons.verified, color: Colors.greenAccent);
+    }
+    if (UserStatus.reject.value == status) {
+      return const Icon(Icons.lock, color: Colors.red);
+    }
+    // status no upload
+    return const Icon(Icons.verified, color: Colors.greenAccent);
   }
 
   Widget _listItemHeader(BuildContext context, String imagePath, String id) {

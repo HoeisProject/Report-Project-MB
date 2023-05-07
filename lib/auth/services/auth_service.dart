@@ -29,7 +29,7 @@ class AuthService {
       ..set(UserModelEnum.nickname.name, username)
       ..set(UserModelEnum.emailClone.name, email)
       ..set(UserModelEnum.phoneNumber.name, phoneNumber)
-      ..set(UserModelEnum.isUserVerified.name, false)
+      ..set(UserModelEnum.status.name, UserStatus.noupload.value)
       ..set(UserModelEnum.userImage.name, parseUserImage);
 
     return newUser.signUp();
