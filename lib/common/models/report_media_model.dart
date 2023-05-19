@@ -7,40 +7,38 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 enum ReportMediaModelEnum {
   objectId,
   reportId,
-  reportAttachment,
+  attachment,
 }
 
 @immutable
 class ReportMediaModel {
   final String id;
   final String reportId;
-  final String reportAttachment;
+  final String attachment;
   const ReportMediaModel({
     required this.id,
     required this.reportId,
-    required this.reportAttachment,
+    required this.attachment,
   });
 
   factory ReportMediaModel.fromParseObject(ParseObject parse) {
     return ReportMediaModel(
       id: parse.get<String>(ReportMediaModelEnum.objectId.name)!,
       reportId: parse.get<String>(ReportMediaModelEnum.reportId.name)!,
-      reportAttachment: parse
-              .get<ParseFile>(ReportMediaModelEnum.reportAttachment.name)!
-              .url ??
-          '',
+      attachment:
+          parse.get<ParseFile>(ReportMediaModelEnum.attachment.name)!.url ?? '',
     );
   }
 
   ReportMediaModel copyWith({
     String? id,
     String? reportId,
-    String? reportAttachment,
+    String? attachment,
   }) {
     return ReportMediaModel(
       id: id ?? this.id,
       reportId: reportId ?? this.reportId,
-      reportAttachment: reportAttachment ?? this.reportAttachment,
+      attachment: attachment ?? this.attachment,
     );
   }
 
@@ -48,7 +46,7 @@ class ReportMediaModel {
     return <String, dynamic>{
       'id': id,
       'reportId': reportId,
-      'reportAttachment': reportAttachment,
+      'attachment': attachment,
     };
   }
 
@@ -56,7 +54,7 @@ class ReportMediaModel {
     return ReportMediaModel(
       id: map['id'] as String,
       reportId: map['reportId'] as String,
-      reportAttachment: map['reportAttachment'] as String,
+      attachment: map['attachment'] as String,
     );
   }
 
@@ -67,7 +65,7 @@ class ReportMediaModel {
 
   @override
   String toString() =>
-      'ReportMediaModel(id: $id, reportId: $reportId, reportAttachment: $reportAttachment)';
+      'ReportMediaModel(id: $id, reportId: $reportId, attachment: $attachment)';
 
   @override
   bool operator ==(covariant ReportMediaModel other) {
@@ -75,10 +73,9 @@ class ReportMediaModel {
 
     return other.id == id &&
         other.reportId == reportId &&
-        other.reportAttachment == reportAttachment;
+        other.attachment == attachment;
   }
 
   @override
-  int get hashCode =>
-      id.hashCode ^ reportId.hashCode ^ reportAttachment.hashCode;
+  int get hashCode => id.hashCode ^ reportId.hashCode ^ attachment.hashCode;
 }

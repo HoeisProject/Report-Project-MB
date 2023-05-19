@@ -84,7 +84,7 @@ class AdminReportDetailScreenState
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =
-                        data.map((e) => e.reportAttachment).toList();
+                        data.map((e) => e.attachment).toList();
                     final listMediaId = data.map((e) => e.id).toList();
                     Future(
                       () {

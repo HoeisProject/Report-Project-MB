@@ -63,7 +63,7 @@ class ReportService {
       newReportMedia.set(
           ReportMediaModelEnum.reportId.name, newReport.objectId);
       newReportMedia.set(
-          ReportMediaModelEnum.reportAttachment.name, parseReportMedia);
+          ReportMediaModelEnum.attachment.name, parseReportMedia);
 
       final response = await newReportMedia.save();
       if (response.success) {
