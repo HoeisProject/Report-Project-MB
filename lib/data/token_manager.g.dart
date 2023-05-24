@@ -1,24 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'profile_service.dart';
+part of 'token_manager.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileServiceHash() => r'0697df0d8ddbae0eed7f22c0669383dcb09ec1de';
+String _$tokenManagerHash() => r'4cc62e2f1b363ff5430ef3c7ca28cf5993ac207d';
 
-/// See also [profileService].
-@ProviderFor(profileService)
-final profileServiceProvider = Provider<ProfileService>.internal(
-  profileService,
-  name: r'profileServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$profileServiceHash,
+/// See also [tokenManager].
+@ProviderFor(tokenManager)
+final tokenManagerProvider = Provider<TokenManager>.internal(
+  tokenManager,
+  name: r'tokenManagerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$tokenManagerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ProfileServiceRef = ProviderRef<ProfileService>;
+typedef TokenManagerRef = ProviderRef<TokenManager>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

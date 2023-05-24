@@ -6,7 +6,7 @@ class UserStatusRejectedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Flexible(
+      body: Center(
         child: Text(
           "Your account got rejected,\nplease check and resend your ktp image and NIK\non user profile menu",
           maxLines: 5,

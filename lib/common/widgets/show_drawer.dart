@@ -4,6 +4,7 @@ import 'package:report_project/auth/controllers/auth_controller.dart';
 import 'package:report_project/auth/screens/user_profile.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
+import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/switch_app_theme.dart';
 
 Widget showDrawer(context, WidgetRef ref, UserModel user) {
@@ -31,7 +32,7 @@ Widget showDrawer(context, WidgetRef ref, UserModel user) {
               "Logout",
               () async {
                 showLoadingDialog(context);
-                ref.read(authControllerProvider).logout();
+                await ref.read(authControllerProvider).logout();
               },
             ),
           ],

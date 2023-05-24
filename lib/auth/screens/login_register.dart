@@ -5,7 +5,6 @@ import 'package:images_picker/images_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/login_register_view_model.dart';
-import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
@@ -42,7 +41,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final passwordCtl = TextEditingController();
   final phoneNumberCtl = TextEditingController();
 
-  void userLogin(context) async {
+  void login(context) async {
     ref.read(loginRegisterLoadingProvider.notifier).state = true;
     if (!fieldValidation()) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
@@ -50,19 +49,19 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           "There is empty field!", Colors.red);
       return;
     }
-    final isLoginSuccess = await ref.read(authControllerProvider).loginUser(
-          username: emailCtl.text.trim(),
+    final errorMessage = await ref.read(authControllerProvider).login(
+          email: emailCtl.text.trim(),
           password: passwordCtl.text.trim(),
         );
-    if (!isLoginSuccess) {
-      ref.read(loginRegisterLoadingProvider.notifier).state = false;
+    ref.read(loginRegisterLoadingProvider.notifier).state = false;
+    if (errorMessage.isNotEmpty) {
       showSnackBar(
-          context, Icons.error_outline, Colors.red, "Login Failed", Colors.red);
+          context, Icons.error_outline, Colors.red, errorMessage, Colors.red);
       return;
     }
   }
 
-  void userRegister(context) async {
+  void register(context) async {
     ref.read(loginRegisterLoadingProvider.notifier).state = true;
     if (!fieldValidation()) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
@@ -70,18 +69,17 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           "There is empty field!", Colors.red);
       return;
     }
-    final isRegisterSuccess =
-        await ref.read(authControllerProvider).registerUser(
-              username: usernameCtl.text.trim(),
-              email: emailCtl.text.trim(),
-              phoneNumber: phoneNumberCtl.text.trim(),
-              password: passwordCtl.text.trim(),
-              userImage: ref.read(loginRegisterMediaFileProvider)!.path,
-            );
-    if (!isRegisterSuccess) {
+    final errorMessage = await ref.read(authControllerProvider).register(
+          username: usernameCtl.text.trim(),
+          email: emailCtl.text.trim(),
+          phoneNumber: phoneNumberCtl.text.trim(),
+          password: passwordCtl.text.trim(),
+          userImagePath: ref.read(loginRegisterMediaFileProvider)!.path,
+        );
+    if (errorMessage.isNotEmpty) {
       ref.read(loginRegisterLoadingProvider.notifier).state = false;
-      showSnackBar(context, Icons.error_outline, Colors.red, "Register Failed",
-          Colors.red);
+      showSnackBar(
+          context, Icons.error_outline, Colors.red, errorMessage, Colors.red);
       return;
     } else {
       showSnackBar(context, Icons.done, Colors.greenAccent, "Register Success",
@@ -136,7 +134,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             File(imagePath!);
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('getMediaFromCamera: ${e.toString()}');
     }
   }
 
@@ -180,19 +178,26 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Login Register Screen");
     final currentUser = ref.watch(profileControllerProvider);
+
     ref.listen(profileControllerProvider, (previous, next) {
+      debugPrint('ref listen - profileControllerProvider - login-register');
+      debugPrint(next.value.toString());
       if (!next.hasValue || next.value == null) return;
-      final currentRole = ref
-          .read(roleControllerProvider.notifier)
-          .findById(next.value!.roleId);
+      // final currentRole = ref
+      //     .read(roleControllerProvider.notifier)
+      //     .findById(next.value!.role!.id);
+
+      /// TODO UserModel now has Role
+      // final currentRole = roleController.findById(next.value!.role!.id);
+      final currentRole = next.value!.role!;
       if (currentRole.name == RoleModelNameEnum.admin.name) {
         Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
       } else if (currentRole.name == RoleModelNameEnum.employee.name) {
         Navigator.popAndPushNamed(context, EmployeeHomeScreen.routeName);
       }
     });
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -203,7 +208,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       child: Scaffold(
         body: currentUser.when(
           data: (user) {
-            debugPrint(user.toString());
+            debugPrint('Current User: ${user.toString()}');
             if (user == null) return _body();
             return const Text('Debug Testing');
           },
@@ -276,7 +281,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               "LOGIN",
               ConstColor(context)
                   .getConstColor(ConstColorEnum.kNormalButtonColor.name),
-              () => userLogin(context),
+              () => login(context),
             ),
             sizedSpacer(
                 context: context, height: 10.0, width: 150.0, thickness: 1.0),
@@ -362,7 +367,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               "REGISTER",
               ConstColor(context)
                   .getConstColor(ConstColorEnum.kNormalButtonColor.name),
-              () => userRegister(context),
+              () => register(context),
             ),
             sizedSpacer(
                 context: context, height: 10.0, width: 150.0, thickness: 1.0),

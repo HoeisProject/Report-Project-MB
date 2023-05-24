@@ -12,11 +12,23 @@ DioClient dioClient(DioClientRef ref) {
 class DioClient {
   final Dio _dio;
 
+  Options tokenOptions(String token) {
+    return Options(
+      headers: {
+        "Authorization": 'Bearer $token',
+      },
+    );
+  }
+
   DioClient(this._dio) {
     _dio
-      ..options.baseUrl = ConstantApi.baseUrl
+      ..options.baseUrl = ConstantApi.baseUrl + ConstantApi.api
       ..options.connectTimeout = ConstantApi.connectionTimeout
       ..options.receiveTimeout = ConstantApi.receiveTimeout
+      ..options.headers = {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+      }
       ..options.responseType = ResponseType.json;
 
     _dio.interceptors.add(LogInterceptor(

@@ -14,13 +14,15 @@ class ReportController extends _$ReportController {
   late final ReportService _reportService;
   late final ProfileService _profileService;
 
+  /// TODO Not yet implemeted
   FutureOr<List<ReportModel>> _getReport() async {
     debugPrint('ReportController - _getReport');
-    final parseUser = await _profileService.currentUser();
-    if (parseUser == null) return [];
-    final res = await _reportService.getReport(parseUser);
-    final reports = res.map((e) => ReportModel.fromParseObject(e)).toList();
-    return reports;
+    // final parseUser = await _profileService.currentUser();
+    // if (parseUser == null) return [];
+    // final res = await _reportService.getReport(parseUser);
+    // final reports = res.map((e) => ReportModel.fromParseObject(e)).toList();
+    // return reports;
+    return [];
   }
 
   @override
@@ -31,6 +33,7 @@ class ReportController extends _$ReportController {
     return _getReport();
   }
 
+  /// TODO Not yet implemeted
   Future<bool> createProject({
     required String projectId,
     required String title,
@@ -40,22 +43,22 @@ class ReportController extends _$ReportController {
   }) async {
     debugPrint('ReportController - createProject');
 
-    /// Check current user
-    final currentUser = await _profileService.currentUser();
-    if (currentUser == null) return false;
+    // /// Check current user
+    // final currentUser = await _profileService.currentUser();
+    // if (currentUser == null) return false;
 
-    /// Find id for pending status as FK
-    final reportStatusId = ref
-        .read(reportStatusControllerProvider.notifier)
-        .findIdForStatusPending();
-    state = const AsyncValue.loading();
-    final res = await _reportService.create(projectId, currentUser,
-        reportStatusId, title, description, position, listMediaFile);
-    if (!res.success || res.results == null) {
-      return false;
-    }
-    final report = ReportModel.fromParseObject(res.results![0]);
-    state = AsyncValue.data([...state.value!, report]);
+    // /// Find id for pending status as FK
+    // final reportStatusId = ref
+    //     .read(reportStatusControllerProvider.notifier)
+    //     .findIdForStatusPending();
+    // state = const AsyncValue.loading();
+    // final res = await _reportService.create(projectId, currentUser,
+    //     reportStatusId, title, description, position, listMediaFile);
+    // if (!res.success || res.results == null) {
+    //   return false;
+    // }
+    // final report = ReportModel.fromParseObject(res.results![0]);
+    // state = AsyncValue.data([...state.value!, report]);
     return true;
   }
 }

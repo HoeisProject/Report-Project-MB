@@ -27,13 +27,10 @@ class ViewWithIcon extends StatelessWidget {
                 iconLeading,
                 color: Colors.teal,
               ),
-        title: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Text(
-            text,
-            style: kHeaderTextStyle,
-            maxLines: 1,
-          ),
+        title: Text(
+          text,
+          style: kHeaderTextStyle,
+          maxLines: 1,
         ),
         trailing: iconTrailing == null
             ? null

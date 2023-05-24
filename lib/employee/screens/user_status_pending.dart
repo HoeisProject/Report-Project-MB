@@ -7,13 +7,11 @@ class UserStatusPendingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Flexible(
-          child: Text(
-            "Your account still not verified,\nplease wait for admin verified your account!",
-            maxLines: 5,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-          ),
+        child: Text(
+          "Your account still not verified,\nplease wait for admin verified your account!",
+          maxLines: 5,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
         ),
       ),
     );

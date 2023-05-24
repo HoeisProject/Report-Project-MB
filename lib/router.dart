@@ -15,7 +15,7 @@ import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/employee/screens/create_report.dart';
 import 'package:report_project/employee/screens/detail_report.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
-import 'package:report_project/splash/screens/splash_screen.dart';
+import 'package:report_project/splash/splash_screen.dart';
 
 import 'common/widgets/error_screen.dart';
 

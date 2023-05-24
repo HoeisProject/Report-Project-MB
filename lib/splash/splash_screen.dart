@@ -7,12 +7,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
-import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/controller/theme_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/utilities/theme_utility.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
+import 'package:report_project/data/token_manager.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -64,7 +64,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('theme in');
+    /// THEME
     ref.watch(themeUtilityProvider).when(
           data: (data) {
             Future(() {
@@ -74,16 +74,28 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           error: (error, trace) => debugPrint('Error : $error'),
           loading: () => debugPrint('getTheme loading'),
         );
-    debugPrint("Splash Screen");
+    ref
+        .watch(tokenManagerProvider)
+        .read()
+        .then((value) => debugPrint('Token : $value'));
+
+    /// TODO
+    /// CHECK INTEGRITY
+    /// - Token
+    /// - Check Current User using Token
     final currentUser = ref.watch(profileControllerProvider);
     ref.listen(profileControllerProvider, (previous, next) {
-      debugPrint("Splash Screen - ref listen profileControllerProvider");
       if (!next.hasValue || next.value == null) {
         Navigator.popAndPushNamed(context, LoginRegisterScreen.routeName);
         return;
       }
-      final roleController = ref.read(roleControllerProvider.notifier);
-      final currentRole = roleController.findById(next.value!.roleId);
+      debugPrint('Current User: ');
+      debugPrint(next.value!.toString());
+
+      /// TODO UserModel now has Role
+      // final roleController = ref.read(roleControllerProvider.notifier);
+      // final currentRole = roleController.findById(next.value!.role!.id);
+      final currentRole = next.value!.role!;
       Timer(const Duration(seconds: 2), () {
         if (currentRole.name == RoleModelNameEnum.admin.name) {
           Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);
@@ -92,10 +104,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         }
       });
     });
+
     return Scaffold(
       body: currentUser.when(
         data: (user) {
-          debugPrint("User : $user");
           return _splashWidget();
         },
         error: (error, stackTrace) {

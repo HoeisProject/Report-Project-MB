@@ -26,13 +26,11 @@ class ThemeUtility {
 
   Future<bool> saveTheme(AppTheme selectedTheme) async {
     String theme = jsonEncode(selectedTheme.toString());
-    debugPrint('saveTheme $theme');
     return preferences.setString(keySelectedTheme, theme);
   }
 
   AppTheme? getTheme() {
     String? theme = preferences.getString(keySelectedTheme);
-    debugPrint('getTheme $theme');
     if (theme == null) {
       return AppTheme.lightTheme;
     }

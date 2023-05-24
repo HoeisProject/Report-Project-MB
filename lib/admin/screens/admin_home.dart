@@ -45,8 +45,11 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
             context, LoginRegisterScreen.routeName, (route) => false);
         return;
       }
-      final roleController = ref.read(roleControllerProvider.notifier);
-      final currentRole = roleController.findById(next.value!.roleId);
+      // final roleController = ref.read(roleControllerProvider.notifier);
+
+      /// TODO UserModel now has Role
+      // final currentRole = roleController.findById(next.value!.role!.id);
+      final currentRole = next.value!.role!;
       if (currentRole.name != RoleModelNameEnum.admin.name) {
         Navigator.pushNamedAndRemoveUntil(
             context, EmployeeHomeScreen.routeName, (route) => false);

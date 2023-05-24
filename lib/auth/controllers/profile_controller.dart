@@ -11,13 +11,8 @@ class ProfileController extends _$ProfileController {
   late final ProfileService _profileService;
 
   FutureOr<UserModel?> _getCurrentUser() async {
-    final parseUser = await _profileService.currentUser();
-    if (parseUser == null || parseUser.objectId == null) return null;
-
-    final currentUser =
-        await _profileService.getCurrentUser(parseUser.objectId!);
-    if (currentUser == null) return null;
-    return UserModel.fromParseObject(currentUser);
+    final res = await _profileService.currentUser();
+    return res.fold((l) => null, (r) => r);
   }
 
   @override
@@ -28,29 +23,29 @@ class ProfileController extends _$ProfileController {
 
   Future<void> refreshUser() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      return _getCurrentUser();
-    });
+    state = await AsyncValue.guard(() async => _getCurrentUser());
   }
 
+  /// TODO
   /// Update properties String, bool and File only. Based on UserModel properties
-  Future<bool> updateByProperties({
-    required UserModelEnum userModelEnum,
-    required dynamic newValue,
-  }) async {
-    final res = await _profileService.update(userModelEnum, newValue);
-    if (!res.success) return false;
-    await refreshUser();
-    return true;
-  }
+  // Future<bool> updateByProperties({
+  //   required UserModelEnum userModelEnum,
+  //   required dynamic newValue,
+  // }) async {
+  //   final res = await _profileService.update(userModelEnum, newValue);
+  //   if (!res.success) return false;
+  //   await refreshUser();
+  //   return true;
+  // }
 
-  Future<bool> verifyUser({
+  Future<String> verifyUser({
     required String nik,
-    required File ktp,
+    required String ktpImagePath,
   }) async {
-    final res = await _profileService.verifyUser(nik, ktp);
-    if (!res.success) return false;
-    await refreshUser();
-    return true;
+    final errorMsg = await _profileService.verify(nik, ktpImagePath);
+    if (errorMsg.isEmpty) {
+      await refreshUser();
+    }
+    return errorMsg;
   }
 }

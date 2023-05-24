@@ -46,22 +46,24 @@ class UserProfileEditText extends ConsumerWidget {
           "There is empty field!", Colors.red);
       return;
     }
-    final response =
-        await ref.read(profileControllerProvider.notifier).updateByProperties(
-              userModelEnum: userModelEnum,
-              newValue: newValueCtl.text.trim(),
-            );
-    if (response) {
-      debugPrint('Update ${userModelEnum.name} Field Complete');
-      Navigator.pop(context);
-      showSnackBar(context, Icons.done, Colors.greenAccent,
-          'Update ${userModelEnum.name} Field Complete', Colors.greenAccent);
-      Navigator.pop(context);
-    } else {
-      Navigator.pop(context);
-      showSnackBar(context, Icons.error_outline, Colors.red,
-          "Failed update ${userModelEnum.name}", Colors.red);
-    }
+
+    /// TODO Not yet implemented in controller
+    // final response =
+    //     await ref.read(profileControllerProvider.notifier).updateByProperties(
+    //           userModelEnum: userModelEnum,
+    //           newValue: newValueCtl.text.trim(),
+    //         );
+    // if (response) {
+    //   debugPrint('Update ${userModelEnum.name} Field Complete');
+    //   Navigator.pop(context);
+    //   showSnackBar(context, Icons.done, Colors.greenAccent,
+    //       'Update ${userModelEnum.name} Field Complete', Colors.greenAccent);
+    //   Navigator.pop(context);
+    // } else {
+    //   Navigator.pop(context);
+    //   showSnackBar(context, Icons.error_outline, Colors.red,
+    //       "Failed update ${userModelEnum.name}", Colors.red);
+    // }
   }
 
   @override

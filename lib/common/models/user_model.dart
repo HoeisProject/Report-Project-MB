@@ -3,7 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+
 import 'package:report_project/common/models/role_model.dart';
+import 'package:report_project/data/constant_data.dart';
 
 // https://stackoverflow.com/questions/38908285/how-do-i-add-methods-or-values-to-enums-in-dart
 enum UserStatus {
@@ -18,25 +20,27 @@ enum UserStatus {
 }
 
 enum UserModelEnum {
-  objectId,
-  roleId,
-  username,
-  nickname,
-  email,
+  id('id'),
+  roleId('role_id'),
+  role('role'),
+  username('username'),
+  nickname('nickname'),
+  email('email'),
+  nik('nik'),
+  phoneNumber('phone_number'),
+  status('status'),
+  password('password'),
+  userImage('user_image'),
+  ktpImage('ktp_image');
 
-  /// TODO After migration to Laravel
-  emailClone, // Only back4apps use case, because restricted permission
-  nik,
-  phoneNumber,
-  status,
-  userImage,
-  ktpImage,
+  const UserModelEnum(this.value);
+  final String value;
 }
 
 @immutable
 class UserModel {
   final String id;
-  final String roleId;
+  final RoleModel? role;
   final String username;
   final String nickname;
   final String email;
@@ -48,7 +52,7 @@ class UserModel {
 
   const UserModel({
     required this.id,
-    required this.roleId,
+    required this.role,
     required this.username,
     required this.nickname,
     required this.email,
@@ -62,10 +66,10 @@ class UserModel {
   factory UserModel.fromParseUser(ParseUser parse) {
     debugPrint("UserModel.fromParseUser : $parse");
     return UserModel(
-      id: parse.get<String>(UserModelEnum.objectId.name)!,
-      roleId: parse
-          .get<ParseObject>(UserModelEnum.roleId.name)!
-          .get(RoleModelEnum.objectId.name),
+      id: parse.get<String>(UserModelEnum.id.name)!,
+      role: parse
+          .get<ParseObject>(UserModelEnum.role.name)!
+          .get(RoleModelEnum.id.name),
       username: parse.get<String>(UserModelEnum.username.name)!,
       nickname: parse.get<String>(UserModelEnum.nickname.name)!,
       email: parse.get<String>(UserModelEnum.email.name)!,
@@ -80,13 +84,13 @@ class UserModel {
   factory UserModel.fromParseObject(ParseObject parse) {
     debugPrint("UserModel.fromParseObject : $parse");
     return UserModel(
-      id: parse.get<String>(UserModelEnum.objectId.name)!,
-      roleId: parse
-          .get<ParseObject>(UserModelEnum.roleId.name)!
-          .get(RoleModelEnum.objectId.name),
+      id: parse.get<String>(UserModelEnum.id.name)!,
+      role: parse
+          .get<ParseObject>(UserModelEnum.role.name)!
+          .get(RoleModelEnum.id.value),
       username: parse.get<String>(UserModelEnum.username.name)!,
       nickname: parse.get<String>(UserModelEnum.nickname.name)!,
-      email: parse.get<String>(UserModelEnum.emailClone.name)!,
+      email: parse.get<String>(UserModelEnum.email.name)!,
       nik: parse.get<String>(UserModelEnum.nik.name),
       phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
       status: parse.get<int>(UserModelEnum.status.name)!,
@@ -95,9 +99,24 @@ class UserModel {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      UserModelEnum.id.value: id,
+      UserModelEnum.role.value: role == null ? null : role!.toMap(),
+      UserModelEnum.username.value: username,
+      UserModelEnum.nickname.value: nickname,
+      UserModelEnum.email.value: email,
+      UserModelEnum.nik.value: nik,
+      UserModelEnum.phoneNumber.value: phoneNumber,
+      UserModelEnum.status.value: status,
+      UserModelEnum.userImage.value: userImage,
+      UserModelEnum.ktpImage.value: ktpImage,
+    };
+  }
+
   UserModel copyWith({
     String? id,
-    String? roleId,
+    RoleModel? role,
     String? username,
     String? nickname,
     String? email,
@@ -109,7 +128,7 @@ class UserModel {
   }) {
     return UserModel(
       id: id ?? this.id,
-      roleId: roleId ?? this.roleId,
+      role: role ?? this.role,
       username: username ?? this.username,
       nickname: nickname ?? this.nickname,
       email: email ?? this.email,
@@ -121,33 +140,28 @@ class UserModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'roleId': roleId,
-      'username': username,
-      'nickname': nickname,
-      'email': email,
-      'nik': nik,
-      'phoneNumber': phoneNumber,
-      'status': status,
-      'userImage': userImage,
-      'ktpImage': ktpImage,
-    };
-  }
-
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'] as String,
-      roleId: map['roleId'] as String,
-      username: map['username'] as String,
-      nickname: map['nickname'] as String,
-      email: map['email'] as String,
-      nik: map['nik'] != null ? map['nik'] as String : null,
-      phoneNumber: map['phoneNumber'] as String,
-      status: map['status'] as int,
-      userImage: map['userImage'] as String,
-      ktpImage: map['ktpImage'] != null ? map['ktpImage'] as String : null,
+      id: map[UserModelEnum.id.value] as String,
+      role: map[UserModelEnum.role.value] != null
+          ? RoleModel.fromMap(
+              map[UserModelEnum.role.value] as Map<String, dynamic>)
+          : null,
+      username: map[UserModelEnum.username.value] as String,
+      nickname: map[UserModelEnum.nickname.value] as String,
+      email: map[UserModelEnum.email.value] as String,
+      nik: map[UserModelEnum.nik.value] != null
+          ? map[UserModelEnum.nik.value] as String
+          : null,
+      phoneNumber: map[UserModelEnum.phoneNumber.value] as String,
+      // status: map[UserModelEnum.status.value] as int,
+      status: int.parse(map[UserModelEnum.status.value]),
+
+      /// TODO Remove base url after deploymeny maybe
+      userImage: ConstantApi.baseUrl + map[UserModelEnum.userImage.value],
+      ktpImage: map[UserModelEnum.ktpImage.value] != null
+          ? ConstantApi.baseUrl + map[UserModelEnum.ktpImage.value]
+          : null,
     );
   }
 
@@ -158,7 +172,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, roleId: $roleId, username: $username, nickname: $nickname, email: $email, nik: $nik, phoneNumber: $phoneNumber, status: $status, userImage: $userImage, ktpImage: $ktpImage)';
+    return 'UserModel(id: $id, role: $role, username: $username, nickname: $nickname, email: $email, nik: $nik, phoneNumber: $phoneNumber, status: $status, userImage: $userImage, ktpImage: $ktpImage)';
   }
 
   @override
@@ -166,7 +180,7 @@ class UserModel {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.roleId == roleId &&
+        other.role == role &&
         other.username == username &&
         other.nickname == nickname &&
         other.email == email &&
@@ -180,7 +194,7 @@ class UserModel {
   @override
   int get hashCode {
     return id.hashCode ^
-        roleId.hashCode ^
+        role.hashCode ^
         username.hashCode ^
         nickname.hashCode ^
         email.hashCode ^

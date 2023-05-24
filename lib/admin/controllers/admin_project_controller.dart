@@ -24,6 +24,7 @@ class AdminProjectController extends _$AdminProjectController {
     return _getProject();
   }
 
+  /// TODO
   Future<bool> createProject({
     required String name,
     required String description,
@@ -34,13 +35,13 @@ class AdminProjectController extends _$AdminProjectController {
     debugPrint(
         "$name $description ${startDate.toString()} ${endDate.toString()}");
     final parseuser = await _profileService.currentUser();
-    if (parseuser == null) return false;
-    state = const AsyncValue.loading();
-    final res = await _adminProjectService.create(
-        parseuser, name, description, startDate, endDate);
-    if (!res.success || res.results == null) return false;
-    final project = ProjectModel.fromParseObject(res.results![0]);
-    state = AsyncValue.data([...state.value!, project]);
+    // if (parseuser == null) return false;
+    // state = const AsyncValue.loading();
+    // final res = await _adminProjectService.create(
+    //     parseuser, name, description, startDate, endDate);
+    // if (!res.success || res.results == null) return false;
+    // final project = ProjectModel.fromParseObject(res.results![0]);
+    // state = AsyncValue.data([...state.value!, project]);
     return true;
   }
 }

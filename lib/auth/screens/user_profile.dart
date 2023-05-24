@@ -4,7 +4,6 @@ import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/widgets/account_verify.dart';
 import 'package:report_project/auth/widgets/user_profile_edit_image.dart';
 import 'package:report_project/auth/widgets/user_profile_edit_text.dart';
-import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant.dart';
@@ -35,10 +34,13 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           data: (data) {
             /// It should not be null, Because every home employee / admin has ref.listen to check authentication
             if (data == null) return Container();
-            final role = ref
-                .read(roleControllerProvider.notifier)
-                .findById(data.roleId)
-                .name;
+
+            /// TODO UserModel now has Role
+            // final role = ref
+            //     .read(roleControllerProvider.notifier)
+            //     .findById(data.roleId)
+            //     .name;
+            final role = data.role!.name;
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -199,7 +201,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                         );
                       },
                       child: Hero(
-                        tag: id,
+                        tag: userImagePath,
                         child: CircleAvatar(
                           backgroundColor: ConstColor(context)
                               .getConstColor(ConstColorEnum.kBgColor.name),
@@ -373,7 +375,7 @@ Widget ktpField(
                         );
                       },
                       child: Hero(
-                        tag: id,
+                        tag: ktpImagePath,
                         child: Center(
                           child: Image.network(
                             ktpImagePath,

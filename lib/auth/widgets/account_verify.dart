@@ -109,12 +109,12 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
           "There is empty field!", Colors.red);
       return;
     }
-    final response =
+    final errMsg =
         await ref.read(profileControllerProvider.notifier).verifyUser(
               nik: nikCtl.text.trim(),
-              ktp: ktp,
+              ktpImagePath: ktp.path,
             );
-    if (response) {
+    if (errMsg.isEmpty) {
       debugPrint('Verification request sent');
       Navigator.pop(context);
       showSnackBar(context, Icons.done, Colors.greenAccent,
@@ -122,8 +122,10 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
       Navigator.pop(context);
     } else {
       Navigator.pop(context);
-      showSnackBar(context, Icons.error_outline, Colors.red,
-          "Failed, please try again!", Colors.red);
+      showSnackBar(
+          context, Icons.error_outline, Colors.red, errMsg, Colors.red);
+      // showSnackBar(context, Icons.error_outline, Colors.red,
+      //     "Failed, please try again!", Colors.red);
     }
   }
 
