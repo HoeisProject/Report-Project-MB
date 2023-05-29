@@ -68,7 +68,7 @@ class AdminReportDetailScreenState
               children: [
                 viewTextField(context, "Project Title", report.title, false),
                 viewTextField(
-                    context, "Report by", report.userId.nickname, false),
+                    context, "Report by", report.user!.nickname, false),
                 viewTextField(context, "Time and Date",
                     DateFormat.yMMMEd().format(report.updatedAt), false),
                 FutureBuilder(

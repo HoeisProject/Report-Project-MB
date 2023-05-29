@@ -20,13 +20,14 @@ final adminReportRejectedFilteringReport =
 
   List<ReportModel> filteredReports = rawReports ?? [];
 
-  if (projectCategorySelected != "All") {
-    filteredReports = filteredReports
-        .where((reportModel) => reportModel.projectId
-            .toLowerCase()
-            .contains(projectCategorySelected.toLowerCase()))
-        .toList();
-  }
+  /// TODO Filtrasi
+  // if (projectCategorySelected != "All") {
+  //   filteredReports = filteredReports
+  //       .where((reportModel) => reportModel.projectId
+  //           .toLowerCase()
+  //           .contains(projectCategorySelected.toLowerCase()))
+  //       .toList();
+  // }
 
   return filteredReports;
 });

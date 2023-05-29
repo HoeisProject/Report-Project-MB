@@ -136,9 +136,10 @@ class AdminReportRejectedScreen extends ConsumerWidget {
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                final project = projects.asData?.value.firstWhere(
-                    (element) => element.id == data[index].projectId);
-                return _reportViewItem(context, data[index], project);
+                final report = data[index];
+                // final project = projects.asData?.value.firstWhere(
+                //     (element) => element.id == data[index].projectId);
+                return _reportViewItem(context, report, report.project);
               },
             );
           },
@@ -211,7 +212,7 @@ class AdminReportRejectedScreen extends ConsumerWidget {
                     ),
                   ),
                   _reportItemContent(
-                      'Report by : ${report.userId.nickname}', false),
+                      'Report by : ${report.user?.nickname}', false),
                   _reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
                   FutureBuilder(

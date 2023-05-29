@@ -7,7 +7,7 @@ part of 'admin_project_service.dart';
 // **************************************************************************
 
 String _$adminProjectServiceHash() =>
-    r'e89b7638149c75de7eb0d75dae8b62046dc3fe8b';
+    r'c314c2b9e1c5bcc5244c0060279bb311ca17386b';
 
 /// See also [adminProjectService].
 @ProviderFor(adminProjectService)

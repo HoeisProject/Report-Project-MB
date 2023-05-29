@@ -17,8 +17,8 @@ ProfileService profileService(ProfileServiceRef ref) {
 }
 
 class ProfileService {
-  late final DioClient _dioClient;
-  late final TokenManager _tokenManager;
+  final DioClient _dioClient;
+  final TokenManager _tokenManager;
 
   ProfileService(this._dioClient, this._tokenManager);
 
@@ -26,7 +26,7 @@ class ProfileService {
     try {
       final String? token = await _tokenManager.read();
       if (token == null) return left('Token not exist');
-      final Response res = await _dioClient.get(
+      final res = await _dioClient.get(
         EndPoint.currentUser,
         options: _dioClient.tokenOptions(token),
       );

@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/data/constant_data.dart';
@@ -62,42 +61,6 @@ class UserModel {
     required this.userImage,
     this.ktpImage,
   });
-
-  factory UserModel.fromParseUser(ParseUser parse) {
-    debugPrint("UserModel.fromParseUser : $parse");
-    return UserModel(
-      id: parse.get<String>(UserModelEnum.id.name)!,
-      role: parse
-          .get<ParseObject>(UserModelEnum.role.name)!
-          .get(RoleModelEnum.id.name),
-      username: parse.get<String>(UserModelEnum.username.name)!,
-      nickname: parse.get<String>(UserModelEnum.nickname.name)!,
-      email: parse.get<String>(UserModelEnum.email.name)!,
-      nik: parse.get<String>(UserModelEnum.nik.name),
-      phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
-      status: parse.get<int>(UserModelEnum.status.name)!,
-      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
-      ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url,
-    );
-  }
-
-  factory UserModel.fromParseObject(ParseObject parse) {
-    debugPrint("UserModel.fromParseObject : $parse");
-    return UserModel(
-      id: parse.get<String>(UserModelEnum.id.name)!,
-      role: parse
-          .get<ParseObject>(UserModelEnum.role.name)!
-          .get(RoleModelEnum.id.value),
-      username: parse.get<String>(UserModelEnum.username.name)!,
-      nickname: parse.get<String>(UserModelEnum.nickname.name)!,
-      email: parse.get<String>(UserModelEnum.email.name)!,
-      nik: parse.get<String>(UserModelEnum.nik.name),
-      phoneNumber: parse.get<String>(UserModelEnum.phoneNumber.name)!,
-      status: parse.get<int>(UserModelEnum.status.name)!,
-      userImage: parse.get<ParseFile>(UserModelEnum.userImage.name)?.url ?? '',
-      ktpImage: parse.get<ParseFile>(UserModelEnum.ktpImage.name)?.url,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

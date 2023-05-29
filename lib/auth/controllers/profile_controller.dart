@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,7 +24,7 @@ class ProfileController extends _$ProfileController {
     state = await AsyncValue.guard(() async => _getCurrentUser());
   }
 
-  /// TODO
+  /// TODO Not yet implemented
   /// Update properties String, bool and File only. Based on UserModel properties
   // Future<bool> updateByProperties({
   //   required UserModelEnum userModelEnum,

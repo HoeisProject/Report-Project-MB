@@ -12,8 +12,7 @@ class AdminUserController extends _$AdminUserController {
   FutureOr<List<UserModel>> _getUser() async {
     debugPrint('AdminUserController - _getUser');
     final res = await _adminUserService.get();
-
-    return res.map((e) => UserModel.fromParseObject(e)).toList();
+    return res.fold((l) => [], (r) => r);
   }
 
   @override
@@ -23,20 +22,19 @@ class AdminUserController extends _$AdminUserController {
     return _getUser();
   }
 
-  Future<bool> verifyUser({
+  Future<String> verifyUser({
     required String id,
-    required int value,
+    required UserStatus userStatus,
   }) async {
     debugPrint('AdminUserController - verifyUser');
-    final res = await _adminUserService.verify(id, value);
-    if (!res.success || res.results == null) {
-      return false;
-    }
-    final userList = state.value!.map((e) {
-      if (e.id != id) return e;
-      return e.copyWith(status: value);
-    }).toList();
-    state = AsyncValue.data(userList);
-    return true;
+    final res = await _adminUserService.updateStatus(id, userStatus);
+    return res.fold((l) => l, (r) {
+      final userList = state.value!.map((e) {
+        if (e.id != id) return e;
+        return e.copyWith(status: userStatus.value);
+      }).toList();
+      state = AsyncValue.data(userList);
+      return '';
+    });
   }
 }

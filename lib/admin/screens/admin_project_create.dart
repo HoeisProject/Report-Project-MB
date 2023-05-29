@@ -82,14 +82,14 @@ class _AdminProjectCreateScreen
       showSnackBar(context, Icons.error_outline, Colors.red,
           "Fill the requirement ", Colors.red);
     } else {
-      final isSuccess =
+      final errMsg =
           await ref.read(adminProjectControllerProvider.notifier).createProject(
                 name: _nameCtl.text.trim(),
                 description: _descCtl.text.trim(),
                 startDate: startDate!,
                 endDate: endDate!,
               );
-      if (isSuccess) {
+      if (errMsg.isEmpty) {
         showSnackBar(context, Icons.done, Colors.greenAccent,
             "Success, Project Created", Colors.greenAccent);
         Navigator.pop(context);

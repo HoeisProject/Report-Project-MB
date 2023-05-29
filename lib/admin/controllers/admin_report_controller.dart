@@ -17,11 +17,12 @@ class AdminReportController extends _$AdminReportController {
         _reportStatusController.findIdForStatusReject();
     final res = await _adminReportService.getReport(rejectReportStatusId);
     // return res.map((e) => ReportModel.fromParseObject(e)).toList();
-    return res
-        .map((e) => ReportModel.fromParseObject(e))
-        .toList()
-        .where((element) => element.reportStatusId != rejectReportStatusId)
-        .toList();
+    // return res
+    //     .map((e) => ReportModel.fromParseObject(e))
+    //     .toList()
+    //     .where((element) => element.reportStatusId != rejectReportStatusId)
+    //     .toList();
+    return [];
   }
 
   @override
@@ -61,9 +62,10 @@ FutureOr<List<ReportModel>> reportRejectedController(
       ref.watch(reportStatusControllerProvider.notifier);
   final rejectReportStatusId = reportStatusController.findIdForStatusReject();
   final res = await adminReportService.getReport(rejectReportStatusId);
-  return res
-      .map((e) => ReportModel.fromParseObject(e))
-      .toList()
-      .where((element) => element.reportStatusId == rejectReportStatusId)
-      .toList();
+  return [];
+  // return res
+  //     .map((e) => ReportModel.fromParseObject(e))
+  //     .toList()
+  //     .where((element) => element.reportStatusId == rejectReportStatusId)
+  //     .toList();
 }

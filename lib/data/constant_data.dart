@@ -6,12 +6,12 @@ class ConstantApi {
 
   /// https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
   static const String baseUrl = 'http://10.0.2.2:8000'; // Only Work On AVD
-  // static const String baseUrl = 'http://192.168.1.5:8000'; // Only Work On AVD
-  // static const String baseUrl = '192.168.1.5'; // Only Work On AVD
+  // static const String baseUrl = 'http://192.168.1.5:8000';
+  // static const String baseUrl = '192.168.1.5';
 
   static const String api = '/api';
 
-  static const String baseUrlImage = 'http://localhost:8000';
+  // static const String baseUrlImage = 'http://localhost:8000';
 
   /// Receive Timeout
   static const Duration receiveTimeout = Duration(seconds: 10);

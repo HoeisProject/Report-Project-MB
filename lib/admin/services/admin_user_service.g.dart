@@ -6,7 +6,7 @@ part of 'admin_user_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$adminUserServiceHash() => r'32f101613c176cbf0d50ec56e017aaebac5d9919';
+String _$adminUserServiceHash() => r'9d45152a48ec1e701fbddb1b00b0f2e3018e5c7a';
 
 /// See also [adminUserService].
 @ProviderFor(adminUserService)

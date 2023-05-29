@@ -2,51 +2,42 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+
 import 'package:report_project/common/models/user_model.dart';
 
 enum ProjectModelEnum {
-  objectId,
-  name,
-  userId,
-  description,
-  startDate,
-  endDate,
+  id('id'),
+  name('name'),
+  userId('user_id'),
+  user('user'),
+  description('description'),
+  startDate('start_date'),
+  endDate('end_date');
+
+  const ProjectModelEnum(this.value);
+  final String value;
 }
 
 @immutable
 class ProjectModel {
   final String id;
-  final String userId;
+  final UserModel? user;
   final String name;
   final String description;
   final DateTime startDate;
   final DateTime endDate;
   const ProjectModel({
     required this.id,
-    required this.userId,
+    required this.user,
     required this.name,
     required this.description,
     required this.startDate,
     required this.endDate,
   });
 
-  factory ProjectModel.fromParseObject(ParseObject parse) {
-    return ProjectModel(
-      id: parse.get<String>(ProjectModelEnum.objectId.name)!,
-      userId: parse
-          .get<ParseUser>(ProjectModelEnum.userId.name)!
-          .get(UserModelEnum.id.name),
-      name: parse.get<String>(ProjectModelEnum.name.name)!,
-      description: parse.get<String>(ProjectModelEnum.description.name)!,
-      startDate: parse.get<DateTime>(ProjectModelEnum.startDate.name)!,
-      endDate: parse.get<DateTime>(ProjectModelEnum.endDate.name)!,
-    );
-  }
-
   ProjectModel copyWith({
     String? id,
-    String? userId,
+    UserModel? user,
     String? name,
     String? description,
     DateTime? startDate,
@@ -54,7 +45,7 @@ class ProjectModel {
   }) {
     return ProjectModel(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
+      user: user ?? this.user,
       name: name ?? this.name,
       description: description ?? this.description,
       startDate: startDate ?? this.startDate,
@@ -64,21 +55,28 @@ class ProjectModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'startDate': startDate.millisecondsSinceEpoch,
-      'endDate': endDate.millisecondsSinceEpoch,
+      ProjectModelEnum.id.value: id,
+      ProjectModelEnum.user.value: user?.toMap(),
+      ProjectModelEnum.name.value: name,
+      ProjectModelEnum.description.value: description,
+      ProjectModelEnum.startDate.value: startDate.millisecondsSinceEpoch,
+      ProjectModelEnum.endDate.value: endDate.millisecondsSinceEpoch,
     };
   }
 
   factory ProjectModel.fromMap(Map<String, dynamic> map) {
     return ProjectModel(
-      id: map['id'] as String,
-      userId: map['userId'] as String,
-      name: map['name'] as String,
-      description: map['description'] as String,
-      startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int),
-      endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate'] as int),
+      id: map[ProjectModelEnum.id.value] as String,
+      user: map[ProjectModelEnum.user.value] != null
+          ? UserModel.fromMap(
+              map[ProjectModelEnum.user.value] as Map<String, dynamic>)
+          : null,
+      name: map[ProjectModelEnum.name.value] as String,
+      description: map[ProjectModelEnum.description.value] as String,
+      startDate: DateTime.parse(map[ProjectModelEnum.startDate.value]),
+      endDate: DateTime.parse(map[ProjectModelEnum.endDate.value]),
+      // endDate: DateTime.fromMillisecondsSinceEpoch(
+      //     map[ProjectModelEnum.endDate.value] as int),
     );
   }
 
@@ -89,7 +87,7 @@ class ProjectModel {
 
   @override
   String toString() {
-    return 'ProjectModel(id: $id, userId: $userId name: $name, description: $description, startDate: $startDate, endDate: $endDate)';
+    return 'ProjectModel(id: $id, user: $user, name: $name, description: $description, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -97,7 +95,7 @@ class ProjectModel {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.userId == userId &&
+        other.user == user &&
         other.name == name &&
         other.description == description &&
         other.startDate == startDate &&
@@ -107,7 +105,7 @@ class ProjectModel {
   @override
   int get hashCode {
     return id.hashCode ^
-        userId.hashCode ^
+        user.hashCode ^
         name.hashCode ^
         description.hashCode ^
         startDate.hashCode ^

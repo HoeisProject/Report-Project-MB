@@ -10,7 +10,6 @@ import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/controller/report_status_controller.dart';
-import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/role_model.dart';
@@ -206,12 +205,13 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
                 final report = data[index];
-                final project = projects.asData?.value
-                    .firstWhere((element) => element.id == report.projectId);
+                // final project = projects.asData?.value
+                //     .firstWhere((element) => element.id == report.project?.id);
+                /// TODO First
                 return _reportViewItem(
-                  report,
-                  project,
-                  reportStatus.findIndexById(report.reportStatusId),
+                  report, report.project, 1,
+                  // report.reportStatus.id
+                  // reportStatus.findIndexById(report.reportStatusId),
                 );
               },
             );
@@ -279,7 +279,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                     ),
                   ),
                   _reportItemContent(
-                      'Report by : ${report.userId.nickname}', false),
+                      'Report by : ${report.user?.nickname}', false),
                   _reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
                   FutureBuilder(

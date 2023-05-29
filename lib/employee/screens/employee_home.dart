@@ -204,13 +204,14 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
               padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
-                final reports = data[index];
-                final project = projects.asData?.value
-                    .firstWhere((element) => element.id == reports.projectId);
+                /// TODO First
+                final report = data[index];
+                // final project = projects.asData?.value
+                //     .firstWhere((element) => element.id == reports.projectId);
                 return _reportViewItem(
-                  reports,
-                  project,
-                  reportStatus.findIndexById(reports.reportStatusId),
+                  report,
+                  report.project, 1,
+                  // reportStatus.findIndexById(reports.reportStatusId),
                 );
               },
             );

@@ -1,15 +1,84 @@
+import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
+import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/common/models/project_model.dart';
+import 'package:report_project/common/models/user_model.dart';
+import 'package:report_project/data/constant_data.dart';
+import 'package:report_project/data/dio_client.dart';
+import 'package:report_project/data/token_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'admin_project_service.g.dart';
 
 @Riverpod(keepAlive: true)
 AdminProjectService adminProjectService(AdminProjectServiceRef ref) {
-  return AdminProjectService();
+  return AdminProjectService(
+    ref.watch(dioClientProvider),
+    ref.watch(tokenManagerProvider),
+    ref.watch(profileServiceProvider),
+  );
 }
 
 class AdminProjectService {
+  final DioClient _dioClient;
+  final TokenManager _tokenManager;
+  final ProfileService _profileService;
+
+  AdminProjectService(
+    this._dioClient,
+    this._tokenManager,
+    this._profileService,
+  );
+
+  Future<Either<String, List<ProjectModel>>> get() async {
+    try {
+      final String? token = await _tokenManager.read();
+      if (token == null) return left('Token not exist');
+      final res = await _dioClient.get(
+        EndPoint.project,
+        options: _dioClient.tokenOptions(token),
+      );
+      final data = res.data['data'] as List;
+      return right(data.map((e) => ProjectModel.fromMap(e)).toList());
+    } on DioError catch (e) {
+      return left(e.toString());
+    }
+  }
+
+  Future<Either<String, ProjectModel>> create(
+    String name,
+    String description,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    try {
+      final String? token = await _tokenManager.read();
+      if (token == null) return left('Token not exist');
+      final UserModel? currentUser =
+          (await _profileService.currentUser()).fold((l) => null, (r) => r);
+      if (currentUser == null || currentUser.role!.name != 'admin') {
+        return left('Unauthenticated');
+      }
+
+      final res = await _dioClient.post(EndPoint.project,
+          options: _dioClient.tokenOptions(token),
+          data: {
+            ProjectModelEnum.userId.value: currentUser.id,
+            ProjectModelEnum.name.value: name,
+            ProjectModelEnum.description.value: description,
+            ProjectModelEnum.startDate.value: startDate,
+            ProjectModelEnum.endDate.value: endDate,
+          });
+      final data = res.data['data'];
+      return right(ProjectModel.fromMap(data));
+    } on DioError catch (e) {
+      return left(e.toString());
+    }
+  }
+}
+
+class AdminProjectServicess {
   Future<List<ParseObject>> get() async {
     final queryProject = QueryBuilder<ParseObject>(ParseObject('Project'));
     final res = await queryProject.query();

@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
@@ -6,34 +9,40 @@ import 'package:report_project/common/models/report_status_model.dart';
 import 'package:report_project/common/models/user_model.dart';
 
 enum ReportModelEnum {
-  objectId,
-  projectId,
-  userId,
-  reportStatusId,
-  title,
-  description,
-  position,
-  createdAt,
-  updatedAt
+  id('id'),
+  project('project'),
+  projectId('project_id'),
+  user('user'),
+  userId('user_id'),
+  reportStatus('report_status'),
+  reportStatusId('report_status_id'),
+  title('title'),
+  description('description'),
+  position('position'),
+  createdAt('created_at'),
+  updatedAt('updated_at');
+
+  const ReportModelEnum(this.value);
+  final String value;
 }
 
 @immutable
 class ReportModel {
   final String id;
-  final String projectId;
-  final UserModel userId;
-  final String reportStatusId;
+  final ProjectModel? project;
+  final UserModel? user;
+  final ReportStatusModel? reportStatus;
   final String title;
   final String description;
-  final ParseGeoPoint position;
+  final String position;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   const ReportModel({
     required this.id,
-    required this.projectId,
-    required this.userId,
-    required this.reportStatusId,
+    this.project,
+    this.user,
+    this.reportStatus,
     required this.title,
     required this.description,
     required this.position,
@@ -41,43 +50,22 @@ class ReportModel {
     required this.updatedAt,
   });
 
-  factory ReportModel.fromParseObject(ParseObject parse) {
-    debugPrint(parse.toString());
-    return ReportModel(
-      id: parse.get<String>(ReportModelEnum.objectId.name)!,
-      projectId: parse
-          .get<ParseObject>(ReportModelEnum.projectId.name)!
-          .get(ProjectModelEnum.objectId.name)!,
-      userId: UserModel.fromParseObject(
-          parse.get<ParseObject>(ReportModelEnum.userId.name)!),
-      reportStatusId: parse
-          .get<ParseObject>(ReportModelEnum.reportStatusId.name)!
-          .get(ReportStatusModelEnum.objectId.name),
-      title: parse.get<String>(ReportModelEnum.title.name)!,
-      description: parse.get<String>(ReportModelEnum.description.name)!,
-      position: parse.get<ParseGeoPoint>(ReportModelEnum.position.name)!,
-      createdAt: parse.get<DateTime>(ReportModelEnum.createdAt.name)!,
-      updatedAt: parse.get<DateTime>(ReportModelEnum.updatedAt.name) ??
-          parse.get<DateTime>(ReportModelEnum.createdAt.name)!,
-    );
-  }
-
   ReportModel copyWith({
     String? id,
-    String? projectId,
-    UserModel? userId,
-    String? reportStatusId,
+    ProjectModel? project,
+    UserModel? user,
+    ReportStatusModel? reportStatus,
     String? title,
     String? description,
-    ParseGeoPoint? position,
+    String? position,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return ReportModel(
       id: id ?? this.id,
-      projectId: projectId ?? this.projectId,
-      userId: userId ?? this.userId,
-      reportStatusId: reportStatusId ?? this.reportStatusId,
+      project: project ?? this.project,
+      user: user ?? this.user,
+      reportStatus: reportStatus ?? this.reportStatus,
       title: title ?? this.title,
       description: description ?? this.description,
       position: position ?? this.position,
@@ -86,41 +74,49 @@ class ReportModel {
     );
   }
 
-  // Map<String, dynamic> toMap() {
-  //   return <String, dynamic>{
-  //     'id': id,
-  //     'projectId': projectId,
-  //     'userId': userId,
-  //     'reportStatusId': reportStatusId,
-  //     'title': title,
-  //     'description': description,
-  //     'position': position.toMap(),
-  //     'createdAt': createdAt.millisecondsSinceEpoch,
-  //     'updatedAt': updatedAt.millisecondsSinceEpoch,
-  //   };
-  // }
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'project': project?.toMap(),
+      'user': user?.toMap(),
+      'reportStatus': reportStatus?.toMap(),
+      'title': title,
+      'description': description,
+      'position': position,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
+    };
+  }
 
-  // factory ReportModel.fromMap(Map<String, dynamic> map) {
-  //   return ReportModel(
-  //     id: map['id'] as String,
-  //     projectId: map['projectId'] as String,
-  //     userId: map['userId'] as String,
-  //     reportStatusId: map['reportStatusId'] as String,
-  //     title: map['title'] as String,
-  //     description: map['description'] as String,
-  //     position: ParseGeoPoint.fromMap(map['position'] as Map<String,dynamic>),
-  //     createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-  //     updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
-  //   );
-  // }
+  factory ReportModel.fromMap(Map<String, dynamic> map) {
+    return ReportModel(
+      id: map['id'] as String,
+      project: map['project'] != null
+          ? ProjectModel.fromMap(map['project'] as Map<String, dynamic>)
+          : null,
+      user: map['user'] != null
+          ? UserModel.fromMap(map['user'] as Map<String, dynamic>)
+          : null,
+      reportStatus: map['reportStatus'] != null
+          ? ReportStatusModel.fromMap(
+              map['reportStatus'] as Map<String, dynamic>)
+          : null,
+      title: map['title'] as String,
+      description: map['description'] as String,
+      position: map['position'] as String,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
+    );
+  }
 
-  // String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap());
 
-  // factory ReportModel.fromJson(String source) => ReportModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ReportModel.fromJson(String source) =>
+      ReportModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'ReportModel(id: $id, projectId: $projectId, userId: $userId, reportStatusId: $reportStatusId, title: $title, description: $description, position: $position, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ReportModel(id: $id, project: $project, user: $user, reportStatus: $reportStatus, title: $title, description: $description, position: $position, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -128,9 +124,9 @@ class ReportModel {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.projectId == projectId &&
-        other.userId == userId &&
-        other.reportStatusId == reportStatusId &&
+        other.project == project &&
+        other.user == user &&
+        other.reportStatus == reportStatus &&
         other.title == title &&
         other.description == description &&
         other.position == position &&
@@ -141,9 +137,9 @@ class ReportModel {
   @override
   int get hashCode {
     return id.hashCode ^
-        projectId.hashCode ^
-        userId.hashCode ^
-        reportStatusId.hashCode ^
+        project.hashCode ^
+        user.hashCode ^
+        reportStatus.hashCode ^
         title.hashCode ^
         description.hashCode ^
         position.hashCode ^

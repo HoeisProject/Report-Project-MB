@@ -12,6 +12,7 @@ import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
+import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
 class AccountVerify extends ConsumerStatefulWidget {
   const AccountVerify({super.key});
@@ -62,10 +63,21 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 sizedSpacer(context: context, height: 5.0),
-                inputMediaField(context, "ktp Image",
-                    ref.watch(accountVerifyMediaFileProvider), () {
-                  getMediaFromCamera();
-                }),
+                inputMediaField(
+                  context,
+                  "ktp Image",
+                  ref.watch(accountVerifyMediaFileProvider),
+                  () {
+                    // showSelectMediaDialog(
+                    //     context: context,
+                    //     title: 'Choose Media',
+                    //     defaultActionText: 'Close',
+                    //     onPressedGallery: onPressedGallery,
+                    //     onPressedCamera: getMediaFromCamera,
+                    //     onButtonPressed: onButtonPressed);
+                    getMediaFromCamera();
+                  },
+                ),
                 sizedSpacer(context: context, height: 5.0),
                 inputTextField(
                   context,

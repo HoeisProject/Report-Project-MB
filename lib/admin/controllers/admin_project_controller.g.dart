@@ -7,7 +7,7 @@ part of 'admin_project_controller.dart';
 // **************************************************************************
 
 String _$adminProjectControllerHash() =>
-    r'20d27de02b0dbcfa0eb1d51c2fc5744d7766b2af';
+    r'432c890276fb945531467168d7698e842908269f';
 
 /// See also [AdminProjectController].
 @ProviderFor(AdminProjectController)

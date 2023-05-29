@@ -29,28 +29,29 @@ final employeeHomeFilteringReport = StateProvider<List<ReportModel>>((ref) {
 
   List<ReportModel> filteredReports = rawReports ?? [];
 
-  if (statusSelectedItem != 0) {
-    filteredReports = filteredReports
-        .where((reportModel) =>
-            reportModel.reportStatusId ==
-            reportStatus[(statusSelectedItem - 1)].id)
-        .toList();
-  }
+  /// TODO Filtrasi
+  // if (statusSelectedItem != 0) {
+  //   filteredReports = filteredReports
+  //       .where((reportModel) =>
+  //           reportModel.reportStatusId ==
+  //           reportStatus[(statusSelectedItem - 1)].id)
+  //       .toList();
+  // }
 
-  if (projectCategorySelected != "All") {
-    filteredReports = filteredReports
-        .where((reportModel) => reportModel.projectId
-            .toLowerCase()
-            .contains(projectCategorySelected.toLowerCase()))
-        .toList();
-  }
+  // if (projectCategorySelected != "All") {
+  //   filteredReports = filteredReports
+  //       .where((reportModel) => reportModel.projectId
+  //           .toLowerCase()
+  //           .contains(projectCategorySelected.toLowerCase()))
+  //       .toList();
+  // }
 
-  if (searchText != '') {
-    filteredReports = filteredReports
-        .where((reportModel) =>
-            reportModel.title.toLowerCase().contains(searchText.toLowerCase()))
-        .toList();
-  }
+  // if (searchText != '') {
+  //   filteredReports = filteredReports
+  //       .where((reportModel) =>
+  //           reportModel.title.toLowerCase().contains(searchText.toLowerCase()))
+  //       .toList();
+  // }
 
   return filteredReports;
 });

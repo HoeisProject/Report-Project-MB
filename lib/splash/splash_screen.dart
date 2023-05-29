@@ -78,6 +78,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         .watch(tokenManagerProvider)
         .read()
         .then((value) => debugPrint('Token : $value'));
+    // ref.watch()
 
     /// TODO
     /// CHECK INTEGRITY

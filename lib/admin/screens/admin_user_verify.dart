@@ -21,13 +21,13 @@ class AdminUserVerifyScreen extends ConsumerWidget {
 
   final UserModel user;
 
-  void submit(context, int isApprove, WidgetRef ref) async {
+  void submit(context, UserStatus userStatus, WidgetRef ref) async {
     ref.read(adminUserVerifyIsLoadingProvider.notifier).state = true;
-    final isSuccess = await ref
+    final errMsg = await ref
         .read(adminUserControllerProvider.notifier)
-        .verifyUser(id: user.id, value: isApprove);
+        .verifyUser(id: user.id, userStatus: userStatus);
 
-    if (isSuccess) {
+    if (errMsg.isEmpty) {
       showSnackBar(context, Icons.done, Colors.greenAccent,
           "Success, user approved", Colors.greenAccent);
       Navigator.pop(context);
@@ -87,7 +87,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                           ref.watch(adminUserVerifyIsLoadingProvider),
                           "REJECT",
                           Colors.red,
-                          () => submit(context, UserStatus.reject.value, ref)),
+                          () => submit(context, UserStatus.reject, ref)),
                     ),
                     const SizedBox(width: 10.0),
                     Flexible(
@@ -96,7 +96,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                           ref.watch(adminUserVerifyIsLoadingProvider),
                           "APPROVE",
                           Colors.greenAccent,
-                          () => submit(context, UserStatus.approve.value, ref)),
+                          () => submit(context, UserStatus.approve, ref)),
                     )
                   ],
                 ),

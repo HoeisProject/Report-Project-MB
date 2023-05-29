@@ -34,72 +34,54 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           data: (data) {
             /// It should not be null, Because every home employee / admin has ref.listen to check authentication
             if (data == null) return Container();
-
-            /// TODO UserModel now has Role
-            // final role = ref
-            //     .read(roleControllerProvider.notifier)
-            //     .findById(data.roleId)
-            //     .name;
             final role = data.role!.name;
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  profileHeader(
+                  /// Profile Header
+                  _profileHeader(
                     ConstColor(context)
                         .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
                     data.nickname,
                     data.userImage,
                     data.id,
                   ),
-                  Visibility(
-                    visible: UserStatus.reject.value == data.status,
-                    child: Center(
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Flexible(
-                            child: Text(
-                              "your account got rejected,\nplease resend ktp image and NIK\nby pressing edit button",
-                              style: kTitleReportItem.apply(
-                                  color: Theme.of(context).primaryColor),
-                              maxLines: 4,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+
+                  /// Nickname
+                  ViewWithIcon(
+                    text: data.nickname,
+                    iconLeading: Icons.person,
+                    iconTrailing: Icons.edit,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return UserProfileEditText(
+                            label: "Nickname",
+                            oldValue: data.nickname,
+                            iconLeading: Icons.person,
+                            onPressed: () {},
+                            inputType: TextInputType.text,
+                            obscureText: false,
+                            userModelEnum: UserModelEnum.nickname,
+                          );
+                        },
+                      );
+                    },
                   ),
-                  Visibility(
-                    visible: UserStatus.pending.value == data.status &&
-                        data.ktpImage != null,
-                    child: Center(
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Flexible(
-                            child: Text(
-                              "Wait for admin to verify your account\nfor full access",
-                              style: kTitleReportItem.apply(
-                                  color: Theme.of(context).primaryColor),
-                              maxLines: 3,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+
+                  /// Status Message by UserStatus enum
+                  _statusMessage(context, data),
+
                   sizedSpacer(
                     context: context,
                     height: 20,
                     width: 225,
                     thickness: 1.0,
                   ),
+
+                  /// Phone Number
                   ViewWithIcon(
                     text: data.phoneNumber,
                     iconLeading: Icons.phone,
@@ -122,6 +104,8 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                       );
                     },
                   ),
+
+                  /// Email
                   ViewWithIcon(
                     text: data.email,
                     iconLeading: Icons.email,
@@ -144,8 +128,10 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                       );
                     },
                   ),
+
+                  /// Ktp Image,  Status, and Account Verification
                   role == RoleModelNameEnum.employee.name
-                      ? ktpField(
+                      ? _ktpField(
                           context,
                           data.nik,
                           data.ktpImage,
@@ -169,134 +155,147 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     );
   }
 
-  Widget profileHeader(
-      Color color, String nickname, String userImagePath, String id) {
-    return Column(
-      children: [
-        Center(
-          child: SizedBox(
-            width: 144.0,
-            height: 144.0,
-            child: Stack(
-              children: [
-                Center(
-                  child: CircleAvatar(
-                    radius: 72,
-                    backgroundColor: ConstColor(context)
-                        .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShowImageFullFunc(
-                              id: id,
-                              listMediaFilePath: [userImagePath],
-                              backgroundDecoration: const BoxDecoration(
-                                color: Colors.black,
+  Widget _profileHeader(
+    Color color,
+    String nickname,
+    String userImagePath,
+    String id,
+  ) {
+    return Center(
+      child: SizedBox(
+        width: 144.0,
+        height: 144.0,
+        child: Stack(
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 72,
+                backgroundColor: ConstColor(context)
+                    .getConstColor(ConstColorEnum.kOutlineBorderColor.name),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowImageFullFunc(
+                          id: id,
+                          listMediaFilePath: [userImagePath],
+                          backgroundDecoration: const BoxDecoration(
+                            color: Colors.black,
+                          ),
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Hero(
+                    tag: userImagePath,
+                    child: CircleAvatar(
+                      backgroundColor: ConstColor(context)
+                          .getConstColor(ConstColorEnum.kBgColor.name),
+                      radius: 70,
+                      child: ClipOval(
+                        child: Image.network(
+                          userImagePath,
+                          fit: BoxFit.fill,
+                          width: 140.0,
+                          loadingBuilder: (context, child, event) {
+                            if (event == null) return child;
+                            return Center(
+                              child: SizedBox(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircularProgressIndicator(
+                                  value: event.cumulativeBytesLoaded /
+                                      (event.expectedTotalBytes ?? 1),
+                                ),
                               ),
-                              scrollDirection: Axis.horizontal,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: userImagePath,
-                        child: CircleAvatar(
-                          backgroundColor: ConstColor(context)
-                              .getConstColor(ConstColorEnum.kBgColor.name),
-                          radius: 70,
-                          child: ClipOval(
-                            child: Image.network(
-                              userImagePath,
-                              fit: BoxFit.fill,
-                              width: 140.0,
-                              loadingBuilder: (context, child, event) {
-                                if (event == null) return child;
-                                return Center(
-                                  child: SizedBox(
-                                    width: 20.0,
-                                    height: 20.0,
-                                    child: CircularProgressIndicator(
-                                      value: event.cumulativeBytesLoaded /
-                                          (event.expectedTotalBytes ?? 1),
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                  child: Icon(Icons.image_not_supported),
-                                );
-                              },
-                            ),
-                          ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(Icons.image_not_supported),
+                            );
+                          },
                         ),
                       ),
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 100.0,
-                  left: 100.0,
-                  child: FloatingActionButton(
-                    heroTag: "btn1",
-                    mini: true,
-                    elevation: 0.0,
-                    shape: const CircleBorder(),
-                    tooltip: "Change Image",
-                    child: const Icon(
-                      Icons.edit,
-                      size: 15.0,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext dialogContext) {
-                          return UserProfileEditImage(
-                            label: "profile image",
-                            oldImage: userImagePath,
-                            userModelEnum: UserModelEnum.userImage,
-                            onPressed: () {},
-                          );
-                        },
+              ),
+            ),
+            Positioned(
+              top: 100.0,
+              left: 100.0,
+              child: FloatingActionButton(
+                heroTag: "btn1",
+                mini: true,
+                elevation: 0.0,
+                shape: const CircleBorder(),
+                tooltip: "Change Image",
+                child: const Icon(
+                  Icons.edit,
+                  size: 15.0,
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext dialogContext) {
+                      return UserProfileEditImage(
+                        label: "profile image",
+                        oldImage: userImagePath,
+                        userModelEnum: UserModelEnum.userImage,
+                        onPressed: () {},
                       );
                     },
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
-          ),
+          ],
         ),
-        ViewWithIcon(
-          text: nickname,
-          iconLeading: Icons.person,
-          iconTrailing: Icons.edit,
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (BuildContext dialogContext) {
-                return UserProfileEditText(
-                  label: "Nickname",
-                  oldValue: nickname,
-                  iconLeading: Icons.person,
-                  onPressed: () {},
-                  inputType: TextInputType.text,
-                  obscureText: false,
-                  userModelEnum: UserModelEnum.nickname,
-                );
-              },
-            );
-          },
-        ),
-      ],
+      ),
     );
   }
 }
 
-Widget ktpField(
+Widget _statusMessage(context, UserModel user) {
+  String message = '';
+  int maxLines = 1;
+  if (UserStatus.reject.value == user.status) {
+    message =
+        'your account got rejected,\nplease resend ktp image and NIK\nby pressing edit button';
+    maxLines = 4;
+  } else if (UserStatus.pending.value == user.status && user.ktpImage != null) {
+    message = 'Wait for admin to verify your account\nfor full access';
+    maxLines = 3;
+  }
+  return Visibility(
+    visible: (UserStatus.reject.value == user.status) ||
+        (UserStatus.pending.value == user.status && user.ktpImage != null),
+    child: Center(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Flexible(
+            child: Text(
+              message,
+              style:
+                  kTitleReportItem.apply(color: Theme.of(context).primaryColor),
+              maxLines: maxLines,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _ktpField(
   context,
   String? nik,
   String? ktpImagePath,

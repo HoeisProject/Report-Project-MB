@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
-import 'package:report_project/common/controller/role_controller.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/data/constant_data.dart';
 import 'package:report_project/data/dio_client.dart';
@@ -16,16 +14,14 @@ AuthService authService(AuthServiceRef ref) {
   return AuthService(
     ref.watch(dioClientProvider),
     ref.watch(tokenManagerProvider),
-    ref.watch(roleControllerProvider.notifier),
   );
 }
 
 class AuthService {
   final DioClient _dioClient;
   final TokenManager _tokenManager;
-  final RoleController _roleController;
 
-  AuthService(this._dioClient, this._tokenManager, this._roleController);
+  AuthService(this._dioClient, this._tokenManager);
 
   Future<Either<String, UserModel>> register(
     String username,
@@ -35,10 +31,7 @@ class AuthService {
     String userImagePath,
   ) async {
     try {
-      final roleId = _roleController.findIdForRoleEmployee();
-
       FormData formData = FormData.fromMap({
-        UserModelEnum.roleId.value: roleId,
         UserModelEnum.username.value: username,
         UserModelEnum.nickname.value: username,
         UserModelEnum.email.value: email,
@@ -53,7 +46,6 @@ class AuthService {
         data: formData,
       );
 
-      debugPrint('Res : ' + res.toString());
       final token = res.data['token'] as String;
       await _tokenManager.store(token);
 
@@ -61,7 +53,6 @@ class AuthService {
       final user = UserModel.fromMap(data);
       return right(user);
     } on DioError catch (e) {
-      debugPrint('Error : ' + e.toString());
       return left(e.toString());
     }
   }
@@ -96,38 +87,5 @@ class AuthService {
       debugPrint(e.toString());
       return e.toString();
     }
-  }
-}
-
-class AuthServicess {
-  // Future<ParseResponse> register(
-  //   String username,
-  //   String email,
-  //   String phoneNumber,
-  //   String password,
-  //   String userImage,
-  // ) async {
-  //   ParseFile parseUserImage = ParseFile(File(userImage));
-
-  //   await parseUserImage.save();
-
-  //   final newUser = ParseUser.createUser(username, password, email)
-  //     ..set(UserModelEnum.roleId.name, ParseObject('_Role')..objectId = roleId)
-  //     ..set(UserModelEnum.nickname.name, username)
-  //     ..set(UserModelEnum.phoneNumber.name, phoneNumber)
-  //     ..set(UserModelEnum.status.name, UserStatus.noupload.value)
-  //     ..set(UserModelEnum.userImage.name, parseUserImage);
-
-  //   return newUser.signUp();
-  // }
-
-  // Future<ParseResponse> login(String email, String password) async {
-  //   final user = ParseUser.createUser(email, password, null);
-  //   return user.login();
-  // }
-
-  Future<ParseResponse> logout() async {
-    final user = await ParseUser.currentUser() as ParseUser;
-    return user.logout();
   }
 }
