@@ -24,26 +24,27 @@ class ProfileController extends _$ProfileController {
     state = await AsyncValue.guard(() async => _getCurrentUser());
   }
 
-  /// TODO Not yet implemented
   /// Update properties String, bool and File only. Based on UserModel properties
-  // Future<bool> updateByProperties({
-  //   required UserModelEnum userModelEnum,
-  //   required dynamic newValue,
-  // }) async {
-  //   final res = await _profileService.update(userModelEnum, newValue);
-  //   if (!res.success) return false;
-  //   await refreshUser();
-  //   return true;
-  // }
+  /// Username, Email, Phone Number, NIK, Ktp Image
+  Future<String> updateByProperties({
+    required UserModelEnum userModelEnum,
+    required dynamic newValue,
+  }) async {
+    final errorMsg = await _profileService.updateByProperties(
+      userModelEnum,
+      newValue,
+    );
+    if (errorMsg.isEmpty) await refreshUser();
+    return errorMsg;
+  }
 
   Future<String> verifyUser({
     required String nik,
     required String ktpImagePath,
   }) async {
     final errorMsg = await _profileService.verify(nik, ktpImagePath);
-    if (errorMsg.isEmpty) {
-      await refreshUser();
-    }
+    if (errorMsg.isEmpty) await refreshUser();
+
     return errorMsg;
   }
 }

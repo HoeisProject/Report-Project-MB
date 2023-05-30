@@ -118,7 +118,6 @@ class AdminReportRejectedScreen extends ConsumerWidget {
 
   Widget _listReportView(WidgetRef ref) {
     final reports = ref.watch(adminReportRejectedFutureFilteredList);
-    final projects = ref.watch(adminProjectControllerProvider);
     return SizedBox(
       height: 375.0,
       child: Card(

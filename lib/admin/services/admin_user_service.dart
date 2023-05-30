@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:report_project/auth/services/profile_service.dart';
-import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/data/constant_data.dart';
 import 'package:report_project/data/dio_client.dart';

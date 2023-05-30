@@ -22,6 +22,49 @@ class UserProfileScreen extends ConsumerStatefulWidget {
 }
 
 class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
+  void _accountVerification(context, String? nik) async {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) {
+        return const AccountVerify();
+      },
+    );
+  }
+
+  void _changeNik(context, String? nik) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return UserProfileEditText(
+          label: "NIK",
+          oldValue: nik ?? '-',
+          iconLeading: Icons.credit_card,
+          onPressed: () {},
+          inputType: TextInputType.number,
+          obscureText: false,
+          userModelEnum: UserModelEnum.nik,
+        );
+      },
+    );
+  }
+
+  void _changeKtpImage(context, String ktpImagePath) async {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return UserProfileEditImage(
+          label: "ktp image",
+          oldImage: ktpImagePath,
+          userModelEnum: UserModelEnum.ktpImage,
+          onPressed: () {},
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(profileControllerProvider);
@@ -109,24 +152,8 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   ViewWithIcon(
                     text: data.email,
                     iconLeading: Icons.email,
-                    iconTrailing: Icons.edit,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext dialogContext) {
-                          return UserProfileEditText(
-                            label: "email",
-                            oldValue: data.email,
-                            iconLeading: Icons.email,
-                            onPressed: () {},
-                            inputType: TextInputType.emailAddress,
-                            obscureText: false,
-                            userModelEnum: UserModelEnum.email,
-                          );
-                        },
-                      );
-                    },
+                    iconTrailing: Icons.edit_off,
+                    onPressed: () {}, // Email cannot be modified
                   ),
 
                   /// Ktp Image,  Status, and Account Verification
@@ -258,187 +285,153 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       ),
     );
   }
-}
 
-Widget _statusMessage(context, UserModel user) {
-  String message = '';
-  int maxLines = 1;
-  if (UserStatus.reject.value == user.status) {
-    message =
-        'your account got rejected,\nplease resend ktp image and NIK\nby pressing edit button';
-    maxLines = 4;
-  } else if (UserStatus.pending.value == user.status && user.ktpImage != null) {
-    message = 'Wait for admin to verify your account\nfor full access';
-    maxLines = 3;
-  }
-  return Visibility(
-    visible: (UserStatus.reject.value == user.status) ||
-        (UserStatus.pending.value == user.status && user.ktpImage != null),
-    child: Center(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Flexible(
-            child: Text(
-              message,
-              style:
-                  kTitleReportItem.apply(color: Theme.of(context).primaryColor),
-              maxLines: maxLines,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              softWrap: true,
+  Widget _statusMessage(context, UserModel user) {
+    String message = '';
+    int maxLines = 1;
+    if (UserStatus.reject.value == user.status) {
+      message =
+          'your account got rejected,\nplease resend ktp image and NIK\nby pressing edit button';
+      maxLines = 4;
+    } else if (UserStatus.pending.value == user.status &&
+        user.ktpImage != null) {
+      message = 'Wait for admin to verify your account\nfor full access';
+      maxLines = 3;
+    }
+    return Visibility(
+      visible: (UserStatus.reject.value == user.status) ||
+          (UserStatus.pending.value == user.status && user.ktpImage != null),
+      child: Center(
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Flexible(
+              child: Text(
+                message,
+                style: kTitleReportItem.apply(
+                    color: Theme.of(context).primaryColor),
+                maxLines: maxLines,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+              ),
             ),
           ),
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _ktpField(
-  context,
-  String? nik,
-  String? ktpImagePath,
-  String id,
-  int status,
-) {
-  if (UserStatus.noupload.value == status) {
-    return Container(
-      margin: const EdgeInsets.only(top: 25.0),
-      height: 50.0,
-      width: 250.0,
-      child: ElevatedButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (dialogContext) {
-              return const AccountVerify();
-            },
-          );
-        },
-        child: const Text(
-          "Account Verification",
-          style: kButtonTextStyle,
         ),
       ),
     );
   }
 
-  return Column(
-    children: [
-      ViewWithIcon(
-        text: nik ?? '-',
-        iconLeading: Icons.credit_card,
-        iconTrailing: Icons.edit,
-        onPressed: () {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext dialogContext) {
-              return UserProfileEditText(
-                label: "NIK",
-                oldValue: nik ?? '-',
-                iconLeading: Icons.credit_card,
-                onPressed: () {},
-                inputType: TextInputType.number,
-                obscureText: false,
-                userModelEnum: UserModelEnum.nik,
-              );
-            },
-          );
-        },
-      ),
-      sizedSpacer(context: context, height: 25.0),
-      Center(
-        child: SizedBox(
-          width: 225.0,
-          height: 175.0,
-          child: ktpImagePath != null
-              ? Stack(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShowImageFullFunc(
-                              id: id,
-                              listMediaFilePath: [ktpImagePath],
-                              backgroundDecoration: const BoxDecoration(
-                                color: Colors.black,
-                              ),
-                              scrollDirection: Axis.horizontal,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: ktpImagePath,
-                        child: Center(
-                          child: Image.network(
-                            ktpImagePath,
-                            width: 200,
-                            height: 150,
-                            loadingBuilder: (context, child, event) {
-                              if (event == null) return child;
-                              return Center(
-                                child: SizedBox(
-                                  width: 20.0,
-                                  height: 20.0,
-                                  child: CircularProgressIndicator(
-                                    value: event.cumulativeBytesLoaded /
-                                        (event.expectedTotalBytes ?? 1),
-                                  ),
+  Widget _ktpField(
+    context,
+    String? nik,
+    String? ktpImagePath,
+    String id,
+    int status,
+  ) {
+    if (UserStatus.noupload.value == status) {
+      return Container(
+        margin: const EdgeInsets.only(top: 25.0),
+        height: 50.0,
+        width: 250.0,
+        child: ElevatedButton(
+          onPressed: () => _accountVerification(context, nik),
+          child: const Text(
+            "Account Verification",
+            style: kButtonTextStyle,
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        ViewWithIcon(
+          text: nik ?? '-',
+          iconLeading: Icons.credit_card,
+          iconTrailing: Icons.edit,
+          onPressed: () => _changeNik(context, nik),
+        ),
+        sizedSpacer(context: context, height: 25.0),
+        Center(
+          child: SizedBox(
+            width: 225.0,
+            height: 175.0,
+            child: ktpImagePath != null
+                ? Stack(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShowImageFullFunc(
+                                id: id,
+                                listMediaFilePath: [ktpImagePath],
+                                backgroundDecoration: const BoxDecoration(
+                                  color: Colors.black,
                                 ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(Icons.image_not_supported),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 125.0,
-                      left: 175.0,
-                      child: FloatingActionButton(
-                        heroTag: "btn2",
-                        mini: true,
-                        elevation: 0.0,
-                        shape: const CircleBorder(),
-                        tooltip: "Change Image",
-                        child: const Icon(
-                          Icons.edit,
-                          size: 15.0,
-                        ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext dialogContext) {
-                              return UserProfileEditImage(
-                                label: "ktp image",
-                                oldImage: ktpImagePath,
-                                userModelEnum: UserModelEnum.ktpImage,
-                                onPressed: () {},
-                              );
-                            },
+                                scrollDirection: Axis.horizontal,
+                              ),
+                            ),
                           );
                         },
+                        child: Hero(
+                          tag: ktpImagePath,
+                          child: Center(
+                            child: Image.network(
+                              ktpImagePath,
+                              width: 200,
+                              height: 150,
+                              loadingBuilder: (context, child, event) {
+                                if (event == null) return child;
+                                return Center(
+                                  child: SizedBox(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    child: CircularProgressIndicator(
+                                      value: event.cumulativeBytesLoaded /
+                                          (event.expectedTotalBytes ?? 1),
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(Icons.image_not_supported),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              : const InkWell(
-                  onTap: null,
-                  child: Icon(Icons.add_a_photo, size: 50.0),
-                ),
+                      Positioned(
+                        top: 125.0,
+                        left: 175.0,
+                        child: FloatingActionButton(
+                          heroTag: "btn2",
+                          mini: true,
+                          elevation: 0.0,
+                          shape: const CircleBorder(),
+                          tooltip: "Change Image",
+                          child: const Icon(
+                            Icons.edit,
+                            size: 15.0,
+                          ),
+                          onPressed: () {
+                            _changeKtpImage(context, ktpImagePath);
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                : const InkWell(
+                    onTap: null,
+                    child: Icon(Icons.add_a_photo, size: 50.0),
+                  ),
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }

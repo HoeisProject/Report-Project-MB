@@ -49,4 +49,5 @@ class EndPoint {
   /// User
   static const String user = '/user';
   static const String userVerify = '/user-verify';
+  static const String userUpdateProperties = '/user/update-properties';
 }
