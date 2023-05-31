@@ -13,16 +13,12 @@ class AdminReportController extends _$AdminReportController {
 
   FutureOr<List<ReportModel>> _getReport() async {
     debugPrint('AdminReportController - _getReport');
-    final rejectReportStatusId =
-        _reportStatusController.findIdForStatusReject();
-    final res = await _adminReportService.getReport(rejectReportStatusId);
-    // return res.map((e) => ReportModel.fromParseObject(e)).toList();
-    // return res
-    //     .map((e) => ReportModel.fromParseObject(e))
-    //     .toList()
-    //     .where((element) => element.reportStatusId != rejectReportStatusId)
-    //     .toList();
-    return [];
+    final res = await _adminReportService.get(
+      project: true,
+      user: true,
+      reportStatus: true,
+    );
+    return res.fold((l) => [], (r) => r);
   }
 
   @override
@@ -33,27 +29,25 @@ class AdminReportController extends _$AdminReportController {
     return _getReport();
   }
 
-  Future<bool> updateReportStatus({
+  Future<String> updateReportStatus({
     required String id,
-    required int status,
+    required String reportStatusId,
   }) async {
     debugPrint('AdminReportController - updateReportStatus');
     state = const AsyncValue.loading();
-    final reportStatus = ref.read(reportStatusControllerProvider);
-    final res = await _adminReportService.updateReportStatus(
-      id,
-      reportStatus[status].id,
+    // final reportStatus = ref.read(reportStatusControllerProvider);
+    final errMsg = await _adminReportService.updateStatus(
+      id, '1',
+      // reportStatus[status].id,
     );
-    if (!res.success || res.results == null) {
-      return false;
-    }
     state = await AsyncValue.guard(() async {
       return _getReport();
     });
-    return true;
+    return errMsg;
   }
 }
 
+// TODO Report Rejected
 @Riverpod(keepAlive: true)
 FutureOr<List<ReportModel>> reportRejectedController(
     ReportRejectedControllerRef ref) async {
@@ -61,7 +55,7 @@ FutureOr<List<ReportModel>> reportRejectedController(
   final reportStatusController =
       ref.watch(reportStatusControllerProvider.notifier);
   final rejectReportStatusId = reportStatusController.findIdForStatusReject();
-  final res = await adminReportService.getReport(rejectReportStatusId);
+  // final res = await adminReportService.getReport(rejectReportStatusId);
   return [];
   // return res
   //     .map((e) => ReportModel.fromParseObject(e))

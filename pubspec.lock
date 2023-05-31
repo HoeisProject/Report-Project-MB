@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  awesome_notifications:
+    dependency: transitive
+    description:
+      name: awesome_notifications
+      sha256: "04c124e4a109a8182aa9842f345f0e5bde857ae6eaeca9b54f3500d50df26066"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.5-dev.2+1"
   boolean_selector:
     dependency: transitive
     description:
@@ -764,18 +772,18 @@ packages:
     dependency: transitive
     description:
       name: parse_server_sdk
-      sha256: "2291652f2dfeb71b474d55f092bd6e4a105b44fa60607dbf92db3691629d8662"
+      sha256: bf85c1a807849efc380432b8f6c3e91597b6283e7fbbf0151db244de3bef0a5e
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.2"
   parse_server_sdk_flutter:
     dependency: "direct main"
     description:
       name: parse_server_sdk_flutter
-      sha256: "4bf959ce87a506569e86add9a97ecd9e04d487b4acff8364ea496799c1c4e3f7"
+      sha256: "84218af34b20b442e683d7ed1bc41ae067b929e33624b9cf6996a149645110eb"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.0"
+    version: "5.1.0"
   path:
     dependency: "direct main"
     description:
@@ -1004,10 +1012,10 @@ packages:
     dependency: transitive
     description:
       name: sembast
-      sha256: a784dbcf313ff38a7f57249694c64a6bcf79f704dbec127958459a7737716830
+      sha256: "74f6c57e2d230c55287372830239701286628b81ceb06a5507d7686a6d7d4b44"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.4"
+    version: "3.4.5"
   sembast_web:
     dependency: transitive
     description:
@@ -1286,5 +1294,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.0 <3.1.0"
+  dart: ">=3.0.0 <4.0.0"
   flutter: ">=3.10.0"

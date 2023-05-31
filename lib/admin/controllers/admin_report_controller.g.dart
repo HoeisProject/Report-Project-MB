@@ -7,7 +7,7 @@ part of 'admin_report_controller.dart';
 // **************************************************************************
 
 String _$reportRejectedControllerHash() =>
-    r'239fea4c79b6459654c49496f5e614febf6d2bd0';
+    r'c03376d86fcbbdea2973a6515ac598ea816fbf33';
 
 /// See also [reportRejectedController].
 @ProviderFor(reportRejectedController)
@@ -24,7 +24,7 @@ final reportRejectedControllerProvider =
 
 typedef ReportRejectedControllerRef = FutureProviderRef<List<ReportModel>>;
 String _$adminReportControllerHash() =>
-    r'b39c6abffeaf6caf81b4e647998811b7913c1d0a';
+    r'292536ff032b83b0b6f0e1833dfb3069dcbb0ce5';
 
 /// See also [AdminReportController].
 @ProviderFor(AdminReportController)

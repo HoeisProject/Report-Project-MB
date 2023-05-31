@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/admin/screens/admin_report_detail.dart';
 import 'package:report_project/admin/screens/admin_project_detail.dart';
+import 'package:report_project/admin/screens/admin_report_home.dart';
 import 'package:report_project/admin/screens/admin_report_rejected.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
@@ -75,6 +76,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AdminReportRejectedScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const AdminReportRejectedScreen());
+    case AdminReportHome.routeName:
+      return MaterialPageRoute(builder: (context) => const AdminReportHome());
 
     /// Other
     default:

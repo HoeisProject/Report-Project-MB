@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:report_project/admin/controllers/admin_project_controller.dart';
+import 'package:report_project/admin/screens/admin_report_home.dart';
 import 'package:report_project/admin/screens/admin_report_rejected.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
@@ -9,7 +9,6 @@ import 'package:report_project/admin/widgets/admin_home_filter.dart';
 import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
-import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/role_model.dart';
@@ -84,7 +83,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           child: Column(
             children: [
               _menuBar(),
-              _searchAndFilter(),
+              // _searchAndFilter(),
               _listReportView(),
             ],
           ),
@@ -104,6 +103,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           children: [
             _menuBarItem(Icons.work_outline, 'Project', () {
               Navigator.pushNamed(context, AdminProjectHomeScreen.routeName);
+            }),
+            _menuBarItem(Icons.insert_drive_file_outlined, "Report", () {
+              Navigator.pushNamed(context, AdminReportHome.routeName);
             }),
             _menuBarItem(Icons.supervised_user_circle_outlined, "User", () {
               Navigator.pushNamed(context, AdminUserHomeScreen.routeName);
@@ -181,10 +183,9 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
 
   Widget _listReportView() {
     final reports = ref.watch(adminHomeFutureFilteredList);
-    final reportStatus = ref.read(reportStatusControllerProvider.notifier);
-    final projects = ref.watch(adminProjectControllerProvider);
     return SizedBox(
-      height: 375.0,
+      // height: 375.0,
+      height: MediaQuery.of(context).size.height * 0.70,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),

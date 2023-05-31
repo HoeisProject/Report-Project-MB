@@ -7,7 +7,7 @@ part of 'admin_user_controller.dart';
 // **************************************************************************
 
 String _$adminUserControllerHash() =>
-    r'ba72a92a4850bf17a0cdbb8112cbd09129d9b4cc';
+    r'bbee1d452c8b3d6e0cc0bc74d04b9ccf0a028e1a';
 
 /// See also [AdminUserController].
 @ProviderFor(AdminUserController)

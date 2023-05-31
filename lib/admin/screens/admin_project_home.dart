@@ -15,7 +15,6 @@ class AdminProjectHomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    debugPrint("Project Management Home Screen");
     return Scaffold(
       appBar: customAppbar("Project Management"),
       body: _body(context, ref),
