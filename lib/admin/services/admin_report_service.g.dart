@@ -7,7 +7,7 @@ part of 'admin_report_service.dart';
 // **************************************************************************
 
 String _$adminReportServiceHash() =>
-    r'bc98f2bbb7013e5384e62a5c4534789010cc210a';
+    r'cecb92073a2e3c2e43886e20edf240511ee05a76';
 
 /// See also [adminReportService].
 @ProviderFor(adminReportService)

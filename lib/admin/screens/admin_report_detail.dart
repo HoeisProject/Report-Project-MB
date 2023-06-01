@@ -134,46 +134,46 @@ class AdminReportDetailScreenState
 
   void rejectReport() {
     showLoadingDialog(context);
-    ref
-        .read(adminReportControllerProvider.notifier)
-        .updateReportStatus(
-          id: report.id,
-          status: ReportStatusEnum.reject.index,
-        )
-        .then((value) {
-      Navigator.pop(context);
-      if (value) {
-        showSnackBar(context, Icons.done, Colors.greenAccent,
-            "Rejection Success", Colors.greenAccent);
-        Navigator.pop(context);
-      } else {
-        showSnackBar(context, Icons.error_outline, Colors.red,
-            "Rejection Failed", Colors.red);
-      }
-    });
+    // ref
+    //     .read(adminReportControllerProvider.notifier)
+    //     .updateReportStatus(
+    //       id: report.id,
+    //       status: ReportStatusEnum.reject.index,
+    //     )
+    //     .then((value) {
+    //   Navigator.pop(context);
+    //   if (value) {
+    //     showSnackBar(context, Icons.done, Colors.greenAccent,
+    //         "Rejection Success", Colors.greenAccent);
+    //     Navigator.pop(context);
+    //   } else {
+    //     showSnackBar(context, Icons.error_outline, Colors.red,
+    //         "Rejection Failed", Colors.red);
+    //   }
+    // });
   }
 
   void approveReport() {
     showLoadingDialog(context);
-    ref
-        .read(adminReportControllerProvider.notifier)
-        .updateReportStatus(
-          id: report.id,
-          status: ReportStatusEnum.approve.index,
-        )
-        .then(
-      (value) {
-        Navigator.pop(context);
-        if (value) {
-          showSnackBar(context, Icons.done, Colors.greenAccent,
-              "Approval Success", Colors.greenAccent);
-          downloadImages(context);
-        } else {
-          showSnackBar(context, Icons.error_outline, Colors.red,
-              "Approval Failed", Colors.red);
-        }
-      },
-    );
+    // ref
+    //     .read(adminReportControllerProvider.notifier)
+    //     .updateReportStatus(
+    //       id: report.id,
+    //       status: ReportStatusEnum.approve.index,
+    //     )
+    //     .then(
+    //   (value) {
+    //     Navigator.pop(context);
+    //     if (value) {
+    //       showSnackBar(context, Icons.done, Colors.greenAccent,
+    //           "Approval Success", Colors.greenAccent);
+    //       downloadImages(context);
+    //     } else {
+    //       showSnackBar(context, Icons.error_outline, Colors.red,
+    //           "Approval Failed", Colors.red);
+    //     }
+    //   },
+    // );
   }
 
   void downloadImages(context) async {

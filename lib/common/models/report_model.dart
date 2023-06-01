@@ -75,36 +75,38 @@ class ReportModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
-      'project': project?.toMap(),
-      'user': user?.toMap(),
-      'reportStatus': reportStatus?.toMap(),
-      'title': title,
-      'description': description,
-      'position': position,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      ReportModelEnum.id.value: id,
+      ReportModelEnum.project.value: project?.toMap(),
+      ReportModelEnum.user.value: user?.toMap(),
+      ReportModelEnum.reportStatus.value: reportStatus?.toMap(),
+      ReportModelEnum.title.value: title,
+      ReportModelEnum.description.value: description,
+      ReportModelEnum.position.value: position,
+      ReportModelEnum.createdAt.value: createdAt.millisecondsSinceEpoch,
+      ReportModelEnum.updatedAt.value: updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory ReportModel.fromMap(Map<String, dynamic> map) {
     return ReportModel(
-      id: map['id'] as String,
-      project: map['project'] != null
-          ? ProjectModel.fromMap(map['project'] as Map<String, dynamic>)
+      id: map[ReportModelEnum.id.value] as String,
+      project: map[ReportModelEnum.project.value] != null
+          ? ProjectModel.fromMap(
+              map[ReportModelEnum.project.value] as Map<String, dynamic>)
           : null,
-      user: map['user'] != null
-          ? UserModel.fromMap(map['user'] as Map<String, dynamic>)
+      user: map[ReportModelEnum.user.value] != null
+          ? UserModel.fromMap(
+              map[ReportModelEnum.user.value] as Map<String, dynamic>)
           : null,
-      reportStatus: map['reportStatus'] != null
+      reportStatus: map[ReportModelEnum.reportStatus.value] != null
           ? ReportStatusModel.fromMap(
-              map['reportStatus'] as Map<String, dynamic>)
+              map[ReportModelEnum.reportStatus.value] as Map<String, dynamic>)
           : null,
-      title: map['title'] as String,
-      description: map['description'] as String,
-      position: map['position'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
+      title: map[ReportModelEnum.title.value] as String,
+      description: map[ReportModelEnum.description.value] as String,
+      position: map[ReportModelEnum.position.value] as String,
+      createdAt: DateTime.parse(map[ReportModelEnum.createdAt.value]),
+      updatedAt: DateTime.parse(map[ReportModelEnum.updatedAt.value]),
     );
   }
 

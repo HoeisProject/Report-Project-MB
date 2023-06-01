@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'report_media_controller.dart';
+part of 'translate_position.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getReportMediaHash() => r'd52bcd2f8ed537d76800ec2e34cc071b94baf0e4';
+String _$translatePositionHash() => r'5d776033d01f4d0528ed7e1ed4b7c435d9b7ea51';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,33 +29,32 @@ class _SystemHash {
   }
 }
 
-typedef GetReportMediaRef
-    = AutoDisposeFutureProviderRef<List<ReportMediaModel>>;
+typedef TranslatePositionRef = AutoDisposeFutureProviderRef<String>;
 
-/// See also [getReportMedia].
-@ProviderFor(getReportMedia)
-const getReportMediaProvider = GetReportMediaFamily();
+/// See also [translatePosition].
+@ProviderFor(translatePosition)
+const translatePositionProvider = TranslatePositionFamily();
 
-/// See also [getReportMedia].
-class GetReportMediaFamily extends Family<AsyncValue<List<ReportMediaModel>>> {
-  /// See also [getReportMedia].
-  const GetReportMediaFamily();
+/// See also [translatePosition].
+class TranslatePositionFamily extends Family<AsyncValue<String>> {
+  /// See also [translatePosition].
+  const TranslatePositionFamily();
 
-  /// See also [getReportMedia].
-  GetReportMediaProvider call({
-    required String reportId,
+  /// See also [translatePosition].
+  TranslatePositionProvider call({
+    required String position,
   }) {
-    return GetReportMediaProvider(
-      reportId: reportId,
+    return TranslatePositionProvider(
+      position: position,
     );
   }
 
   @override
-  GetReportMediaProvider getProviderOverride(
-    covariant GetReportMediaProvider provider,
+  TranslatePositionProvider getProviderOverride(
+    covariant TranslatePositionProvider provider,
   ) {
     return call(
-      reportId: provider.reportId,
+      position: provider.position,
     );
   }
 
@@ -71,42 +70,41 @@ class GetReportMediaFamily extends Family<AsyncValue<List<ReportMediaModel>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getReportMediaProvider';
+  String? get name => r'translatePositionProvider';
 }
 
-/// See also [getReportMedia].
-class GetReportMediaProvider
-    extends AutoDisposeFutureProvider<List<ReportMediaModel>> {
-  /// See also [getReportMedia].
-  GetReportMediaProvider({
-    required this.reportId,
+/// See also [translatePosition].
+class TranslatePositionProvider extends AutoDisposeFutureProvider<String> {
+  /// See also [translatePosition].
+  TranslatePositionProvider({
+    required this.position,
   }) : super.internal(
-          (ref) => getReportMedia(
+          (ref) => translatePosition(
             ref,
-            reportId: reportId,
+            position: position,
           ),
-          from: getReportMediaProvider,
-          name: r'getReportMediaProvider',
+          from: translatePositionProvider,
+          name: r'translatePositionProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getReportMediaHash,
-          dependencies: GetReportMediaFamily._dependencies,
+                  : _$translatePositionHash,
+          dependencies: TranslatePositionFamily._dependencies,
           allTransitiveDependencies:
-              GetReportMediaFamily._allTransitiveDependencies,
+              TranslatePositionFamily._allTransitiveDependencies,
         );
 
-  final String reportId;
+  final String position;
 
   @override
   bool operator ==(Object other) {
-    return other is GetReportMediaProvider && other.reportId == reportId;
+    return other is TranslatePositionProvider && other.position == position;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, reportId.hashCode);
+    hash = _SystemHash.combine(hash, position.hashCode);
 
     return _SystemHash.finish(hash);
   }

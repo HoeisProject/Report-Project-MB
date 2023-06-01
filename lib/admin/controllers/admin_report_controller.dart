@@ -6,6 +6,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'admin_report_controller.g.dart';
 
+@riverpod
+FutureOr<List<ReportModel>> getAdminReportByProject(
+  GetAdminReportByProjectRef ref, {
+  required String projectId,
+}) async {
+  if (projectId.isEmpty) return [];
+  final adminReportService = ref.watch(adminReportServiceProvider);
+  final res = await adminReportService.getByProjectId(
+    projectId: projectId,
+    project: false,
+    user: true,
+    reportStatus: true,
+  );
+  return res.fold((l) => [], (r) => r);
+}
+
 @Riverpod(keepAlive: true)
 class AdminReportController extends _$AdminReportController {
   late final AdminReportService _adminReportService;

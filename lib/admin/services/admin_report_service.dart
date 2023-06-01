@@ -52,6 +52,35 @@ class AdminReportService {
     }
   }
 
+  /// Get report by project
+  Future<Either<String, List<ReportModel>>> getByProjectId({
+    int page = 1,
+    required String projectId,
+    required bool project,
+    required bool user,
+    required bool reportStatus,
+  }) async {
+    final String? token = await _tokenManager.read();
+    if (token == null) return left('Token not exist');
+    final Map<String, dynamic> dataMap = {};
+    dataMap['page'] = page;
+    if (project) dataMap['project'] = project;
+    if (user) dataMap['user'] = user;
+    if (reportStatus) dataMap['reportStatus'] = reportStatus;
+
+    try {
+      final res = await _dioClient.get(
+        '${EndPoint.project}/$projectId/${EndPoint.report}',
+        options: _dioClient.tokenOptions(token),
+        queryParameters: dataMap,
+      );
+      final data = res.data['data'] as List;
+      return right(data.map((e) => ReportModel.fromMap(e)).toList());
+    } on DioError catch (e) {
+      return left(e.toString());
+    }
+  }
+
   Future<String> updateStatus(String reportId, String reportStatusId) async {
     final String? token = await _tokenManager.read();
     if (token == null) return 'Token not exist';
@@ -69,7 +98,20 @@ class AdminReportService {
 
   Future<Either<String, List<ReportMediaModel>>> getReportMedia(
     String reportId,
-  ) async {}
+  ) async {
+    final String? token = await _tokenManager.read();
+    if (token == null) return left('Token not exist');
+    try {
+      final res = await _dioClient.get(
+        '${EndPoint.report}/$reportId/report-media',
+        options: _dioClient.tokenOptions(token),
+      );
+      final data = res.data['data'] as List;
+      return right(data.map((e) => ReportMediaModel.fromMap(e)).toList());
+    } on DioError catch (e) {
+      return left(e.toString());
+    }
+  }
 }
 
 class AdminReportServicess {

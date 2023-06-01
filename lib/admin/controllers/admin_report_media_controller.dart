@@ -7,11 +7,12 @@ part 'admin_report_media_controller.g.dart';
 
 @riverpod
 FutureOr<List<ReportMediaModel>> getAdminReportMedia(
+  // getAdminReportMediaByReport - change function name TODO
   GetAdminReportMediaRef ref, {
   required String reportId,
 }) async {
   debugPrint('FutureOr<List<ReportMediaModel>> - getAdminReportMedia');
-  final adminService = ref.watch(adminReportServiceProvider);
-  final res = await adminService.getReportMedia(reportId);
-  return res.map((e) => ReportMediaModel.fromParseObject(e)).toList();
+  final reportService = ref.watch(adminReportServiceProvider);
+  final res = await reportService.getReportMedia(reportId);
+  return res.fold((l) => [], (r) => r);
 }

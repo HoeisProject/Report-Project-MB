@@ -26,14 +26,12 @@ class AdminProjectHomeScreen extends ConsumerWidget {
       width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _menuBar(context),
-              _listProjectView(context, ref),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _menuBar(context),
+            Expanded(child: _listProjectView(context, ref)),
+          ],
         ),
       ),
     );
@@ -115,9 +113,7 @@ class AdminProjectHomeScreen extends ConsumerWidget {
             ));
           },
           loading: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),

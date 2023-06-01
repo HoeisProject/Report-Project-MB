@@ -2,33 +2,26 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 enum ReportMediaModelEnum {
-  objectId,
-  reportId,
-  attachment,
+  id('id'),
+  reportId('report_id'),
+  attachment('attachment');
+
+  const ReportMediaModelEnum(this.value);
+  final String value;
 }
 
 @immutable
 class ReportMediaModel {
   final String id;
-  final String reportId;
+  final String? reportId;
   final String attachment;
   const ReportMediaModel({
     required this.id,
-    required this.reportId,
+    this.reportId,
     required this.attachment,
   });
-
-  factory ReportMediaModel.fromParseObject(ParseObject parse) {
-    return ReportMediaModel(
-      id: parse.get<String>(ReportMediaModelEnum.objectId.name)!,
-      reportId: parse.get<String>(ReportMediaModelEnum.reportId.name)!,
-      attachment:
-          parse.get<ParseFile>(ReportMediaModelEnum.attachment.name)!.url ?? '',
-    );
-  }
 
   ReportMediaModel copyWith({
     String? id,
@@ -44,17 +37,17 @@ class ReportMediaModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
-      'reportId': reportId,
-      'attachment': attachment,
+      ReportMediaModelEnum.id.value: id,
+      ReportMediaModelEnum.reportId.value: reportId,
+      ReportMediaModelEnum.attachment.value: attachment,
     };
   }
 
   factory ReportMediaModel.fromMap(Map<String, dynamic> map) {
     return ReportMediaModel(
-      id: map['id'] as String,
-      reportId: map['reportId'] as String,
-      attachment: map['attachment'] as String,
+      id: map[ReportMediaModelEnum.id.value] as String,
+      reportId: map[ReportMediaModelEnum.reportId.value],
+      attachment: map[ReportMediaModelEnum.attachment.value] as String,
     );
   }
 
