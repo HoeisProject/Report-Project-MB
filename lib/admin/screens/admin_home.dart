@@ -105,7 +105,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
               Navigator.pushNamed(context, AdminProjectHomeScreen.routeName);
             }),
             _menuBarItem(Icons.insert_drive_file_outlined, "Report", () {
-              Navigator.pushNamed(context, AdminReportHome.routeName);
+              Navigator.pushNamed(context, AdminReportHomeScreen.routeName);
             }),
             _menuBarItem(Icons.supervised_user_circle_outlined, "User", () {
               Navigator.pushNamed(context, AdminUserHomeScreen.routeName);

@@ -39,7 +39,7 @@ class AdminProjectHomeScreen extends ConsumerWidget {
 
   Widget _menuBar(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 20.0, bottom: 15.0),
+      margin: const EdgeInsets.only(bottom: 5),
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -82,80 +82,84 @@ class AdminProjectHomeScreen extends ConsumerWidget {
 
   Widget _listProjectView(context, WidgetRef ref) {
     final projects = ref.watch(adminProjectControllerProvider);
-    return SizedBox(
-      height: 425,
-      child: Card(
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.black38),
-          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-        ),
-        elevation: 5.0,
-        child: projects.when(
-          data: (data) {
-            if (data.isEmpty) {
-              return const Center(
-                  child: Text('NO DATA', style: TextStyle(fontSize: 36.0)));
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.only(top: 10.0),
-              itemCount: data.length,
-              itemBuilder: (BuildContext context, int index) {
-                final project = data[index];
-                return _projectViewItem(context, project);
-              },
-            );
-          },
-          error: (error, stackTrace) {
-            return Center(
-                child: Text(
-              '${error.toString()} occurred',
-              style: const TextStyle(fontSize: 18),
-            ));
-          },
-          loading: () {
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+    return Card(
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.black38),
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+      ),
+      elevation: 5.0,
+      child: projects.when(
+        data: (data) {
+          if (data.isEmpty) {
+            return const Center(
+                child: Text('NO DATA', style: TextStyle(fontSize: 36.0)));
+          }
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return _projectViewItem(context, data[index]);
+            },
+          );
+        },
+        error: (error, stackTrace) {
+          return Center(
+              child: Text(
+            '${error.toString()} occurred',
+            style: const TextStyle(fontSize: 18),
+          ));
+        },
+        loading: () {
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
 
-  Widget _projectViewItem(BuildContext context, ProjectModel data) {
+  Widget _projectViewItem(BuildContext context, ProjectModel project) {
     return Container(
-      margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
-      height: 150.0,
+      margin: const EdgeInsets.all(5.0),
+      constraints: const BoxConstraints(
+        minHeight: 100,
+      ),
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
-        child: Material(
-          child: InkWell(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                AdminProjectDetail.routeName,
-                arguments: data,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _projectItemContent(null, data.name, false),
-                  _projectItemContent(
-                      Icons.calendar_month,
-                      "Start : ${DateFormat.yMMMEd().format(data.startDate)}",
-                      false),
-                  _projectItemContent(
-                      Icons.calendar_month,
-                      "end   : ${DateFormat.yMMMEd().format(data.endDate)}",
-                      false),
-                  _projectItemContent(null, data.description, true),
-                ],
-              ),
+        child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              AdminProjectDetail.routeName,
+              arguments: project,
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name,
+                        style: kTitleReportItem,
+                      ),
+                    ),
+                  ],
+                ),
+                _projectItemContentWithIcon(
+                  Icons.calendar_month,
+                  "Start : ${DateFormat.yMMMEd().format(project.startDate)}",
+                ),
+                _projectItemContentWithIcon(
+                  Icons.calendar_month,
+                  "end   : ${DateFormat.yMMMEd().format(project.endDate)}",
+                ),
+                _projectItemContent(project.description, true),
+              ],
             ),
           ),
         ),
@@ -163,21 +167,36 @@ class AdminProjectHomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _projectItemContent(IconData? icon, String content, bool isDesc) {
-    return Flexible(
-      flex: isDesc ? 2 : 1,
-      child: Container(
-        margin: const EdgeInsets.only(top: 2.5, bottom: 2.5),
-        child: ListTile(
-          leading: icon == null ? null : Icon(icon),
-          title: Text(
+  Widget _projectItemContent(String content, bool isDesc) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2.5),
+      child: Text(
+        content,
+        style: kContentReportItem,
+        softWrap: true,
+        maxLines: isDesc ? 3 : 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget _projectItemContentWithIcon(
+    IconData icon,
+    String content,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2.5),
+      child: Row(
+        children: [
+          Icon(icon),
+          const SizedBox(width: 5),
+          Text(
             content,
             style: kContentReportItem,
             softWrap: true,
-            maxLines: isDesc ? 3 : 1,
             overflow: TextOverflow.ellipsis,
           ),
-        ),
+        ],
       ),
     );
   }

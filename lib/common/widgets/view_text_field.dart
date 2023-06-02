@@ -11,7 +11,7 @@ Widget viewTextField(
         Container(
           margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
           child: Text(
-            "$fieldLabel : ",
+            fieldLabel,
             style: kHeaderTextStyle,
           ),
         ),

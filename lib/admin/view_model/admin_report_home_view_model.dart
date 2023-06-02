@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final adminReportRejectedProjectCategorySelectedProvider =
+final adminReportHomeProjectCategorySelectedProvider =
     StateProvider<String>((ref) {
   return '';
 });

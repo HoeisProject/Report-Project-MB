@@ -5,15 +5,21 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 enum ReportStatusEnum {
-  pending, // 0
-  approve, // 1
-  reject, // 2
+  pending('pending'),
+  approve('approve'),
+  reject('reject');
+
+  const ReportStatusEnum(this.value);
+  final String value;
 }
 
 enum ReportStatusModelEnum {
-  objectId,
-  name,
-  description,
+  id('id'),
+  name('name'),
+  description('description');
+
+  const ReportStatusModelEnum(this.value);
+  final String value;
 }
 
 @immutable

@@ -19,6 +19,10 @@ class ProfileController extends _$ProfileController {
     return _getCurrentUser();
   }
 
+  FutureOr<UserModel?> currentUser() {
+    return state.value;
+  }
+
   Future<void> refreshUser() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async => _getCurrentUser());

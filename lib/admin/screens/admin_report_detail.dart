@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/admin/controllers/admin_report_media_controller.dart';
+import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/controller/show_image_full_func_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
-import 'package:report_project/common/models/report_status_model.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_download_loading_dialog.dart';
@@ -71,16 +71,17 @@ class AdminReportDetailScreenState
                     context, "Report by", report.user!.nickname, false),
                 viewTextField(context, "Time and Date",
                     DateFormat.yMMMEd().format(report.updatedAt), false),
-                FutureBuilder(
-                  future: TranslatePosition(position: report.position)
-                      .translatePos(),
-                  builder: (context, snapshot) {
-                    return viewTextField(
-                        context, "Location", snapshot.data ?? '-', false);
-                  },
-                ),
+                ref
+                    .watch(translatePositionProvider(position: report.position))
+                    .when(
+                      data: (data) =>
+                          viewTextField(context, 'Location', data, false),
+                      error: (error, stackTrace) =>
+                          const Text('Not a valid address'),
+                      loading: () => const CircularProgressIndicator(),
+                    ),
                 viewTextField(
-                    context, "Project Description", report.description, true),
+                    context, "Project Description", report.description, false),
                 reportsMedia.when(
                   data: (data) {
                     final listMediaFilePath =
@@ -111,17 +112,13 @@ class AdminReportDetailScreenState
                   },
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Flexible(
-                      child: customButton(context, isLoadingReject, "REJECT",
-                          Colors.red, rejectReport),
-                    ),
+                    customButton(context, isLoadingReject, "REJECT", Colors.red,
+                        () => _rejectReport(context)),
                     const SizedBox(width: 10.0),
-                    Flexible(
-                      child: customButton(context, isLoadingApprove, "APPROVE",
-                          Colors.greenAccent, approveReport),
-                    )
+                    customButton(context, isLoadingApprove, "APPROVE",
+                        Colors.greenAccent, () => _approveReport(context)),
                   ],
                 ),
               ],
@@ -132,48 +129,50 @@ class AdminReportDetailScreenState
     );
   }
 
-  void rejectReport() {
+  void _rejectReport(context) async {
     showLoadingDialog(context);
-    // ref
-    //     .read(adminReportControllerProvider.notifier)
-    //     .updateReportStatus(
-    //       id: report.id,
-    //       status: ReportStatusEnum.reject.index,
-    //     )
-    //     .then((value) {
-    //   Navigator.pop(context);
-    //   if (value) {
-    //     showSnackBar(context, Icons.done, Colors.greenAccent,
-    //         "Rejection Success", Colors.greenAccent);
-    //     Navigator.pop(context);
-    //   } else {
-    //     showSnackBar(context, Icons.error_outline, Colors.red,
-    //         "Rejection Failed", Colors.red);
-    //   }
-    // });
+
+    final rejectStatusId = ref
+        .read(reportStatusControllerProvider.notifier)
+        .findIdByName('reject');
+    final errMsg = await ref
+        .read(adminReportControllerProvider.notifier)
+        .updateReportStatus(
+          id: report.id,
+          reportStatusId: rejectStatusId,
+        );
+    Navigator.pop(context); // close loading dialog
+    if (errMsg.isEmpty) {
+      showSnackBar(context, Icons.done, Colors.greenAccent, "Rejection Success",
+          Colors.greenAccent);
+      Navigator.pop(context);
+    } else {
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "Rejection Failed $errMsg", Colors.red);
+    }
   }
 
-  void approveReport() {
+  void _approveReport(context) async {
     showLoadingDialog(context);
-    // ref
-    //     .read(adminReportControllerProvider.notifier)
-    //     .updateReportStatus(
-    //       id: report.id,
-    //       status: ReportStatusEnum.approve.index,
-    //     )
-    //     .then(
-    //   (value) {
-    //     Navigator.pop(context);
-    //     if (value) {
-    //       showSnackBar(context, Icons.done, Colors.greenAccent,
-    //           "Approval Success", Colors.greenAccent);
-    //       downloadImages(context);
-    //     } else {
-    //       showSnackBar(context, Icons.error_outline, Colors.red,
-    //           "Approval Failed", Colors.red);
-    //     }
-    //   },
-    // );
+
+    final rejectStatusId = ref
+        .read(reportStatusControllerProvider.notifier)
+        .findIdByName('approve');
+    final errMsg = await ref
+        .read(adminReportControllerProvider.notifier)
+        .updateReportStatus(
+          id: report.id,
+          reportStatusId: rejectStatusId,
+        );
+    Navigator.pop(context); // close loading dialog
+    if (errMsg.isEmpty) {
+      showSnackBar(context, Icons.done, Colors.greenAccent, "Approval Success",
+          Colors.greenAccent);
+      downloadImages(context);
+    } else {
+      showSnackBar(context, Icons.error_outline, Colors.red,
+          "Approval Failed $errMsg", Colors.red);
+    }
   }
 
   void downloadImages(context) async {

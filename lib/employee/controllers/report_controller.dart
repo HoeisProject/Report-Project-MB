@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
-import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/auth/services/profile_service.dart';
 import 'package:report_project/employee/services/report_service.dart';

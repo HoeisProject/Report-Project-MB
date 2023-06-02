@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:intl/intl.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
-import 'package:report_project/auth/services/profile_service.dart';
+import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/data/constant_data.dart';
@@ -16,19 +17,19 @@ AdminProjectService adminProjectService(AdminProjectServiceRef ref) {
   return AdminProjectService(
     ref.watch(dioClientProvider),
     ref.watch(tokenManagerProvider),
-    ref.watch(profileServiceProvider),
+    ref.watch(profileControllerProvider.notifier),
   );
 }
 
 class AdminProjectService {
   final DioClient _dioClient;
   final TokenManager _tokenManager;
-  final ProfileService _profileService;
+  final ProfileController _profileController;
 
   AdminProjectService(
     this._dioClient,
     this._tokenManager,
-    this._profileService,
+    this._profileController,
   );
 
   Future<Either<String, List<ProjectModel>>> get() async {
@@ -55,20 +56,21 @@ class AdminProjectService {
     try {
       final String? token = await _tokenManager.read();
       if (token == null) return left('Token not exist');
-      final UserModel? currentUser =
-          (await _profileService.currentUser()).fold((l) => null, (r) => r);
+      final UserModel? currentUser = await _profileController.currentUser();
       if (currentUser == null || currentUser.role!.name != 'admin') {
         return left('Unauthenticated');
       }
-
+      // debugPrint(DateFormat('yyyy-MM-dd HH:mm:ss').format(startDate));
       final res = await _dioClient.post(EndPoint.project,
           options: _dioClient.tokenOptions(token),
           data: {
             ProjectModelEnum.userId.value: currentUser.id,
             ProjectModelEnum.name.value: name,
             ProjectModelEnum.description.value: description,
-            ProjectModelEnum.startDate.value: startDate,
-            ProjectModelEnum.endDate.value: endDate,
+            ProjectModelEnum.startDate.value:
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(startDate),
+            ProjectModelEnum.endDate.value:
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(endDate),
           });
       final data = res.data['data'];
       return right(ProjectModel.fromMap(data));

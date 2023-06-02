@@ -105,7 +105,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
 
   Widget _menuBar() {
     return Container(
-      margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+      margin: const EdgeInsets.symmetric(vertical: 5.0),
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,

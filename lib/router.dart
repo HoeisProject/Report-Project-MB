@@ -76,8 +76,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AdminReportRejectedScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const AdminReportRejectedScreen());
-    case AdminReportHome.routeName:
-      return MaterialPageRoute(builder: (context) => const AdminReportHome());
+    case AdminReportHomeScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const AdminReportHomeScreen());
 
     /// Other
     default:

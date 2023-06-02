@@ -3,19 +3,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/admin/screens/admin_report_detail.dart';
-import 'package:report_project/admin/view_model/report_home_view_model.dart';
+import 'package:report_project/admin/view_model/admin_report_home_view_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/employee/widgets/project_category_dropdown.dart';
 
-class AdminReportHome extends ConsumerWidget {
+class AdminReportHomeScreen extends ConsumerStatefulWidget {
   static const routeName = '/admin-report-home';
-  const AdminReportHome({super.key});
+  const AdminReportHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AdminReportHomeScreenState();
+}
+
+class _AdminReportHomeScreenState extends ConsumerState<AdminReportHomeScreen> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar('Report Management'),
       body: _body(context, ref),
@@ -42,28 +48,36 @@ class AdminReportHome extends ConsumerWidget {
     final projects = ref.watch(adminProjectControllerProvider);
 
     final projectCategorySelected =
-        ref.watch(reportHomeProjectCategorySelectedProvider);
+        ref.watch(adminReportHomeProjectCategorySelectedProvider);
     return projects.when(
       data: (data) {
         final projectCategories = [
           const DropdownMenuItem(
             value: '',
-            child: Text('Choose Category'),
+            child: Text('Choose Project'),
           ),
           ...data.map((e) {
             return DropdownMenuItem(value: e.id, child: Text(e.name));
           }).toList()
         ];
-        return projectCategoryDropdown(
-          context,
-          "Project Category",
-          projectCategorySelected,
-          projectCategories,
-          (value) {
-            ref.read(reportHomeProjectCategorySelectedProvider.notifier).state =
-                value ?? '';
-          },
-          const Icon(Icons.keyboard_arrow_down),
+        return Card(
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black38),
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+          elevation: 5,
+          child: projectCategoryDropdown(
+            context,
+            "Project Category",
+            projectCategorySelected,
+            projectCategories,
+            (value) {
+              ref
+                  .read(adminReportHomeProjectCategorySelectedProvider.notifier)
+                  .state = value ?? '';
+            },
+            const Icon(Icons.keyboard_arrow_down),
+          ),
         );
       },
       error: (error, stackTrace) {
@@ -77,7 +91,8 @@ class AdminReportHome extends ConsumerWidget {
 
   Widget _listReportView(context, WidgetRef ref) {
     final reports = ref.watch(getAdminReportByProjectProvider(
-      projectId: ref.watch(reportHomeProjectCategorySelectedProvider),
+      projectId: ref.watch(adminReportHomeProjectCategorySelectedProvider),
+      showOnlyRejected: false,
     ));
     return Card(
       shape: const RoundedRectangleBorder(
@@ -135,7 +150,11 @@ class AdminReportHome extends ConsumerWidget {
               context,
               AdminReportDetailScreen.routeName,
               arguments: report,
-            );
+            ).then((value) {
+              ref
+                  .read(adminReportHomeProjectCategorySelectedProvider.notifier)
+                  .update((state) => '');
+            });
           },
           child: Padding(
             padding: const EdgeInsets.all(5.0),

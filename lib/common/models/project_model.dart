@@ -66,7 +66,7 @@ class ProjectModel {
 
   factory ProjectModel.fromMap(Map<String, dynamic> map) {
     return ProjectModel(
-      id: map[ProjectModelEnum.id.value] as String,
+      id: map[ProjectModelEnum.id.value].toString(),
       user: map[ProjectModelEnum.user.value] != null
           ? UserModel.fromMap(
               map[ProjectModelEnum.user.value] as Map<String, dynamic>)

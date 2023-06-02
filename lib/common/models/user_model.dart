@@ -105,7 +105,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map[UserModelEnum.id.value] as String,
+      id: map[UserModelEnum.id.value].toString(),
       role: map[UserModelEnum.role.value] != null
           ? RoleModel.fromMap(
               map[UserModelEnum.role.value] as Map<String, dynamic>)

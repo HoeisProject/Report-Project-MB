@@ -64,14 +64,13 @@ class _AdminProjectCreateScreen
     DateTime? startDate,
     DateTime? endDate,
   ) {
-    if (_nameCtl.text.isNotEmpty ||
-        _descCtl.text.isNotEmpty ||
-        startDate != null ||
+    if (_nameCtl.text.isNotEmpty &&
+        _descCtl.text.isNotEmpty &&
+        startDate != null &&
         endDate != null) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   void submit(context) async {
@@ -79,25 +78,27 @@ class _AdminProjectCreateScreen
     final endDate = ref.read(adminProjectCreateEndDateProvider);
     ref.read(adminProjectCreateIsLoadingProvider.notifier).state = true;
     if (!fieldValidation(startDate, endDate)) {
+      ref.read(adminProjectCreateIsLoadingProvider.notifier).state = false;
       showSnackBar(context, Icons.error_outline, Colors.red,
           "Fill the requirement ", Colors.red);
-    } else {
-      final errMsg =
-          await ref.read(adminProjectControllerProvider.notifier).createProject(
-                name: _nameCtl.text.trim(),
-                description: _descCtl.text.trim(),
-                startDate: startDate!,
-                endDate: endDate!,
-              );
-      if (errMsg.isEmpty) {
-        showSnackBar(context, Icons.done, Colors.greenAccent,
-            "Success, Project Created", Colors.greenAccent);
-        Navigator.pop(context);
-        return;
-      }
-      showSnackBar(context, Icons.error_outline, Colors.red,
-          "Failed, please try again!", Colors.red);
+      return;
     }
+    final errMsg =
+        await ref.read(adminProjectControllerProvider.notifier).createProject(
+              name: _nameCtl.text.trim(),
+              description: _descCtl.text.trim(),
+              startDate: startDate!,
+              endDate: endDate!,
+            );
+    if (errMsg.isEmpty) {
+      showSnackBar(context, Icons.done, Colors.greenAccent,
+          "Success, Project Created", Colors.greenAccent);
+      Navigator.pop(context);
+      return;
+    }
+    showSnackBar(context, Icons.error_outline, Colors.red,
+        "Failed, please try again!", Colors.red);
+
     ref.read(adminProjectCreateIsLoadingProvider.notifier).state = false;
   }
 

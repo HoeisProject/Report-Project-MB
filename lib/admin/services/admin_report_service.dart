@@ -25,12 +25,11 @@ class AdminReportService {
   AdminReportService(this._dioClient, this._tokenManager);
 
   /// Ascending by updated_at properties
-  Future<Either<String, List<ReportModel>>> get({
-    int page = 1,
-    required bool project,
-    required bool user,
-    required bool reportStatus,
-  }) async {
+  Future<Either<String, List<ReportModel>>> get(
+      {int page = 1,
+      required bool project,
+      required bool user,
+      required bool reportStatus}) async {
     final String? token = await _tokenManager.read();
     if (token == null) return left('Token not exist');
     final Map<String, dynamic> dataMap = {};
@@ -59,14 +58,16 @@ class AdminReportService {
     required bool project,
     required bool user,
     required bool reportStatus,
+    required bool showOnlyRejected,
   }) async {
     final String? token = await _tokenManager.read();
     if (token == null) return left('Token not exist');
     final Map<String, dynamic> dataMap = {};
     dataMap['page'] = page;
-    if (project) dataMap['project'] = project;
-    if (user) dataMap['user'] = user;
-    if (reportStatus) dataMap['reportStatus'] = reportStatus;
+    if (project) dataMap['project'] = true;
+    if (user) dataMap['user'] = true;
+    if (reportStatus) dataMap['reportStatus'] = true;
+    if (showOnlyRejected) dataMap['showOnlyRejected'] = true;
 
     try {
       final res = await _dioClient.get(

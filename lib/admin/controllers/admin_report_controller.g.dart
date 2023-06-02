@@ -7,7 +7,7 @@ part of 'admin_report_controller.dart';
 // **************************************************************************
 
 String _$getAdminReportByProjectHash() =>
-    r'3ae29e4a4de1a905e30dd4d341942999c8b23df7';
+    r'd108b5183ce26d34e0d539089af8cdde5f8a5f69';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -46,9 +46,11 @@ class GetAdminReportByProjectFamily
   /// See also [getAdminReportByProject].
   GetAdminReportByProjectProvider call({
     required String projectId,
+    required bool showOnlyRejected,
   }) {
     return GetAdminReportByProjectProvider(
       projectId: projectId,
+      showOnlyRejected: showOnlyRejected,
     );
   }
 
@@ -58,6 +60,7 @@ class GetAdminReportByProjectFamily
   ) {
     return call(
       projectId: provider.projectId,
+      showOnlyRejected: provider.showOnlyRejected,
     );
   }
 
@@ -82,10 +85,12 @@ class GetAdminReportByProjectProvider
   /// See also [getAdminReportByProject].
   GetAdminReportByProjectProvider({
     required this.projectId,
+    required this.showOnlyRejected,
   }) : super.internal(
           (ref) => getAdminReportByProject(
             ref,
             projectId: projectId,
+            showOnlyRejected: showOnlyRejected,
           ),
           from: getAdminReportByProjectProvider,
           name: r'getAdminReportByProjectProvider',
@@ -99,41 +104,27 @@ class GetAdminReportByProjectProvider
         );
 
   final String projectId;
+  final bool showOnlyRejected;
 
   @override
   bool operator ==(Object other) {
     return other is GetAdminReportByProjectProvider &&
-        other.projectId == projectId;
+        other.projectId == projectId &&
+        other.showOnlyRejected == showOnlyRejected;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, projectId.hashCode);
+    hash = _SystemHash.combine(hash, showOnlyRejected.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-String _$reportRejectedControllerHash() =>
-    r'6c0a7650a17f5d094b9db8eb5e03f5d0b222e189';
-
-/// See also [reportRejectedController].
-@ProviderFor(reportRejectedController)
-final reportRejectedControllerProvider =
-    FutureProvider<List<ReportModel>>.internal(
-  reportRejectedController,
-  name: r'reportRejectedControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$reportRejectedControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef ReportRejectedControllerRef = FutureProviderRef<List<ReportModel>>;
 String _$adminReportControllerHash() =>
-    r'8138340e36f930bf174980c9076d7d90eab4a7c5';
+    r'3eb0b143105966ba7b466e8ef965e449d26e6276';
 
 /// See also [AdminReportController].
 @ProviderFor(AdminReportController)

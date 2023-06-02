@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/admin/services/admin_report_service.dart';
-import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,6 +9,7 @@ part 'admin_report_controller.g.dart';
 FutureOr<List<ReportModel>> getAdminReportByProject(
   GetAdminReportByProjectRef ref, {
   required String projectId,
+  required bool showOnlyRejected,
 }) async {
   if (projectId.isEmpty) return [];
   final adminReportService = ref.watch(adminReportServiceProvider);
@@ -18,6 +18,7 @@ FutureOr<List<ReportModel>> getAdminReportByProject(
     project: false,
     user: true,
     reportStatus: true,
+    showOnlyRejected: showOnlyRejected,
   );
   return res.fold((l) => [], (r) => r);
 }
@@ -25,7 +26,6 @@ FutureOr<List<ReportModel>> getAdminReportByProject(
 @Riverpod(keepAlive: true)
 class AdminReportController extends _$AdminReportController {
   late final AdminReportService _adminReportService;
-  late final ReportStatusController _reportStatusController;
 
   FutureOr<List<ReportModel>> _getReport() async {
     debugPrint('AdminReportController - _getReport');
@@ -40,8 +40,6 @@ class AdminReportController extends _$AdminReportController {
   @override
   FutureOr<List<ReportModel>> build() {
     _adminReportService = ref.watch(adminReportServiceProvider);
-    _reportStatusController =
-        ref.watch(reportStatusControllerProvider.notifier);
     return _getReport();
   }
 
@@ -51,31 +49,13 @@ class AdminReportController extends _$AdminReportController {
   }) async {
     debugPrint('AdminReportController - updateReportStatus');
     state = const AsyncValue.loading();
-    // final reportStatus = ref.read(reportStatusControllerProvider);
     final errMsg = await _adminReportService.updateStatus(
-      id, '1',
-      // reportStatus[status].id,
+      id,
+      reportStatusId,
     );
     state = await AsyncValue.guard(() async {
       return _getReport();
     });
     return errMsg;
   }
-}
-
-// TODO Report Rejected
-@Riverpod(keepAlive: true)
-FutureOr<List<ReportModel>> reportRejectedController(
-    ReportRejectedControllerRef ref) async {
-  final adminReportService = ref.watch(adminReportServiceProvider);
-  final reportStatusController =
-      ref.watch(reportStatusControllerProvider.notifier);
-  final rejectReportStatusId = reportStatusController.findIdForStatusReject();
-  // final res = await adminReportService.getReport(rejectReportStatusId);
-  return [];
-  // return res
-  //     .map((e) => ReportModel.fromParseObject(e))
-  //     .toList()
-  //     .where((element) => element.reportStatusId == rejectReportStatusId)
-  //     .toList();
 }
