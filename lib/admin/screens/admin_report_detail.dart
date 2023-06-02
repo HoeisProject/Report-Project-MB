@@ -35,6 +35,7 @@ class AdminReportDetailScreenState
     extends ConsumerState<AdminReportDetailScreen> {
   bool isLoadingReject = false;
   bool isLoadingApprove = false;
+  bool isLoadingDownload = false;
 
   ReportModel get report => widget.report;
 
@@ -121,6 +122,8 @@ class AdminReportDetailScreenState
                         Colors.greenAccent, () => _approveReport(context)),
                   ],
                 ),
+                customButton(context, isLoadingDownload, "DOWNLOAD",
+                    Colors.yellow.shade800, () => downloadImages(context)),
               ],
             ),
           ),
@@ -168,7 +171,6 @@ class AdminReportDetailScreenState
     if (errMsg.isEmpty) {
       showSnackBar(context, Icons.done, Colors.greenAccent, "Approval Success",
           Colors.greenAccent);
-      downloadImages(context);
     } else {
       showSnackBar(context, Icons.error_outline, Colors.red,
           "Approval Failed $errMsg", Colors.red);
