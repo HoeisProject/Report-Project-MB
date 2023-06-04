@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:report_project/common/models/report_model.dart';
-import 'package:report_project/auth/services/profile_service.dart';
+import 'package:report_project/employee/services/report_media_service.dart';
 import 'package:report_project/employee/services/report_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,29 +12,28 @@ part 'report_controller.g.dart';
 @Riverpod(keepAlive: true)
 class ReportController extends _$ReportController {
   late final ReportService _reportService;
-  late final ProfileService _profileService;
+  late final ReportMediaService _reportMediaService;
 
-  /// TODO Not yet implemeted
-  FutureOr<List<ReportModel>> _getReport() async {
+  /// TODO Not yet testing
+  FutureOr<List<ReportModel>> _get() async {
     debugPrint('ReportController - _getReport');
-    // final parseUser = await _profileService.currentUser();
-    // if (parseUser == null) return [];
-    // final res = await _reportService.getReport(parseUser);
-    // final reports = res.map((e) => ReportModel.fromParseObject(e)).toList();
-    // return reports;
-    return [];
+    final res = await _reportService.get(
+      project: true,
+      reportStatus: true,
+      user: false,
+    );
+    return res.fold((l) => [], (r) => r);
   }
 
   @override
   FutureOr<List<ReportModel>> build() {
     debugPrint('ReportController - build');
     _reportService = ref.watch(reportServiceProvider);
-    _profileService = ref.watch(profileServiceProvider);
-    return _getReport();
+    _reportMediaService = ref.watch(reportMediaServiceProvider);
+    return _get();
   }
 
-  /// TODO Not yet implemeted
-  Future<bool> createProject({
+  Future<String> create({
     required String projectId,
     required String title,
     required Position position,
@@ -42,7 +42,26 @@ class ReportController extends _$ReportController {
   }) async {
     debugPrint('ReportController - createProject');
 
-    // /// Check current user
+    final Either<String, ReportModel> res =
+        await _reportService.create(projectId, title, position, description);
+
+    return res.fold((l) => l, (r) async {
+      state = const AsyncValue.loading();
+      state = await AsyncValue.guard(() async => _get());
+      final List<Future<String>> collectionCreateFuture =
+          listMediaFile.map((imageFile) {
+        return _reportMediaService.create(r.id, imageFile.path);
+      }).toList();
+      final List<String> res = await Future.wait(collectionCreateFuture);
+
+      /// If there is any error, return error message instead
+      for (int i = 0; i < res.length; i++) {
+        if (res[i].isNotEmpty) return res[i];
+      }
+      return '';
+    });
+
+    /// Check current user
     // final currentUser = await _profileService.currentUser();
     // if (currentUser == null) return false;
 
@@ -58,6 +77,5 @@ class ReportController extends _$ReportController {
     // }
     // final report = ReportModel.fromParseObject(res.results![0]);
     // state = AsyncValue.data([...state.value!, report]);
-    return true;
   }
 }

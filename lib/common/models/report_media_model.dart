@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:report_project/data/constant_data.dart';
 
 enum ReportMediaModelEnum {
   id('id'),
@@ -47,7 +48,8 @@ class ReportMediaModel {
     return ReportMediaModel(
       id: map[ReportMediaModelEnum.id.value] as String,
       reportId: map[ReportMediaModelEnum.reportId.value],
-      attachment: map[ReportMediaModelEnum.attachment.value] as String,
+      attachment:
+          ConstantApi.baseUrl + map[ReportMediaModelEnum.attachment.value],
     );
   }
 

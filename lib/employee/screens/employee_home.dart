@@ -12,8 +12,8 @@ import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
-import 'package:report_project/employee/screens/create_report.dart';
-import 'package:report_project/employee/screens/detail_report.dart';
+import 'package:report_project/employee/screens/employee_report_create.dart';
+import 'package:report_project/employee/screens/employee_report_detail.dart';
 import 'package:report_project/employee/screens/user_status_no_upload.dart';
 import 'package:report_project/employee/screens/user_status_pending.dart';
 import 'package:report_project/employee/screens/user_status_rejected.dart';
@@ -23,7 +23,7 @@ import 'package:report_project/employee/widgets/employee_home_filter.dart';
 import 'package:report_project/employee/widgets/employee_home_search_bar.dart';
 
 class EmployeeHomeScreen extends ConsumerStatefulWidget {
-  static const routeName = '/home-employee';
+  static const routeName = '/employee-home';
 
   const EmployeeHomeScreen({super.key});
 
@@ -89,15 +89,13 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
       width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _menuBar(),
-              _searchAndFilter(),
-              _listReportView(),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _menuBar(),
+            _searchAndFilter(),
+            Expanded(child: _listReportView()),
+          ],
         ),
       ),
     );
@@ -113,7 +111,8 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _menuBarItem(Icons.assignment_outlined, "Report", () {
-              Navigator.pushNamed(context, CreateReportScreen.routeName);
+              Navigator.pushNamed(
+                  context, EmployeeCreateReportScreen.routeName);
             }),
           ],
         ),
@@ -184,58 +183,47 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
 
   Widget _listReportView() {
     final reports = ref.watch(employeeHomeFutureFilteredList);
-    final reportStatus = ref.read(reportStatusControllerProvider.notifier);
-    final projects = ref.watch(adminProjectControllerProvider);
-    return SizedBox(
-      height: 375.0,
-      child: Card(
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.black38),
-          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-        ),
-        elevation: 5.0,
-        child: reports.when(
-          data: (data) {
-            if (data.isEmpty) {
-              return const Center(
-                  child: Text('NO DATA', style: kHeaderTextStyle));
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-              itemCount: data.length,
-              itemBuilder: (BuildContext context, int index) {
-                /// TODO First
-                final report = data[index];
-                // final project = projects.asData?.value
-                //     .firstWhere((element) => element.id == reports.projectId);
-                return _reportViewItem(
-                  report,
-                  report.project, 1,
-                  // reportStatus.findIndexById(reports.reportStatusId),
-                );
-              },
-            );
-          },
-          error: (error, stackTrace) {
-            return Center(
-              child: Text(
-                '${error.toString()} occurred',
-                style: const TextStyle(fontSize: 18),
-              ),
-            );
-          },
-          loading: () {
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+    return Card(
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.black38),
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+      ),
+      elevation: 5.0,
+      child: reports.when(
+        data: (data) {
+          if (data.isEmpty) {
+            return const Center(
+                child: Text('NO DATA', style: kHeaderTextStyle));
+          }
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              final report = data[index];
+              return _reportViewItem(report);
+            },
+          );
+        },
+        error: (error, stackTrace) {
+          return Center(
+            child: Text(
+              '${error.toString()} occurred',
+              style: const TextStyle(fontSize: 18),
+            ),
+          );
+        },
+        loading: () {
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
 
-  Widget _reportViewItem(ReportModel data, ProjectModel? project, int status) {
+  Widget _reportViewItem(ReportModel report) {
     return Container(
-      margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
-      height: 200.0,
+      margin: const EdgeInsets.all(5.0),
+      constraints: const BoxConstraints(
+        minHeight: 100,
+      ),
       child: Card(
         elevation: 5.0,
         clipBehavior: Clip.hardEdge,
@@ -247,8 +235,8 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
             onTap: () {
               Navigator.pushNamed(
                 context,
-                DetailReportScreen.routeName,
-                arguments: data,
+                EmployeeDetailReportScreen.routeName,
+                arguments: report,
               );
             },
             child: Padding(
@@ -256,33 +244,30 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            data.title,
-                            style: kTitleReportItem,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          report.title,
+                          style: kTitleReportItem,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        _reportStatus(status)
-                      ],
-                    ),
+                      ),
+                      _reportStatus(report.reportStatus?.name ?? '')
+                    ],
                   ),
                   _reportItemContent(
-                      DateFormat.yMMMEd().format(data.updatedAt), false),
+                      DateFormat.yMMMEd().format(report.updatedAt), false),
                   FutureBuilder(
-                    future: TranslatePosition(position: data.position)
+                    future: TranslatePosition(position: report.position)
                         .translatePos(),
                     builder: (context, snapshot) {
                       return _reportItemContent(snapshot.data ?? '-', false);
                     },
                   ),
-                  _reportItemContent('From project : ${project?.name}', false),
-                  _reportItemContent(data.description, true),
+                  _reportItemContent(
+                      'From project : ${report.project?.name}', false),
+                  _reportItemContent(report.description, true),
                 ],
               ),
             ),
@@ -293,47 +278,45 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
   }
 
   Widget _reportItemContent(String content, bool isDesc) {
-    return Flexible(
-      flex: isDesc ? 3 : 1,
-      child: Container(
-        margin: const EdgeInsets.only(top: 2.5, bottom: 2.5),
-        child: Text(
-          content,
-          style: kContentReportItem,
-          softWrap: true,
-          maxLines: isDesc ? 3 : 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+    return Container(
+      margin: const EdgeInsets.only(top: 2.5, bottom: 2.5),
+      child: Text(
+        content,
+        style: kContentReportItem,
+        softWrap: true,
+        maxLines: isDesc ? 3 : 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _reportStatus(int status) {
-    IconData? statusIcon;
-    Color? iconColor;
+  Widget _reportStatus(String status) {
+    IconData statusIcon;
+    Color iconColor;
     switch (status) {
-      case 0:
+      case 'pending':
         statusIcon = Icons.timelapse;
         iconColor = Colors.yellow;
         break;
-      case 1:
+      case 'approve':
         statusIcon = Icons.done;
         iconColor = Colors.green;
         break;
-      case 2:
+      case 'reject':
         statusIcon = Icons.cancel_outlined;
         iconColor = Colors.red;
         break;
       default:
-        statusIcon = Icons.timelapse;
-        iconColor = Colors.yellow;
+        statusIcon = Icons.error;
+        iconColor = Colors.blue;
         break;
     }
     return Center(
-        child: Icon(
-      statusIcon,
-      size: 20.0,
-      color: iconColor,
-    ));
+      child: Icon(
+        statusIcon,
+        size: 20.0,
+        color: iconColor,
+      ),
+    );
   }
 }

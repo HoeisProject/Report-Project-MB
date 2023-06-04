@@ -23,16 +23,17 @@ import 'package:report_project/employee/widgets/project_category_dropdown.dart';
 import 'package:report_project/employee/widgets/report_attach_media.dart';
 import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
-class CreateReportScreen extends ConsumerStatefulWidget {
-  static const routeName = '/report-create';
+class EmployeeCreateReportScreen extends ConsumerStatefulWidget {
+  static const routeName = '/employee-report-create';
 
-  const CreateReportScreen({super.key});
+  const EmployeeCreateReportScreen({super.key});
 
   @override
-  ConsumerState<CreateReportScreen> createState() => _ReportCreateState();
+  ConsumerState<EmployeeCreateReportScreen> createState() =>
+      _ReportCreateState();
 }
 
-class _ReportCreateState extends ConsumerState<CreateReportScreen> {
+class _ReportCreateState extends ConsumerState<EmployeeCreateReportScreen> {
   final _keyReportTitle = GlobalKey<FormState>();
   final _keyReportDesc = GlobalKey<FormState>();
 
@@ -274,15 +275,14 @@ class _ReportCreateState extends ConsumerState<CreateReportScreen> {
           "There is empty field!", Colors.red);
       return;
     }
-    final response =
-        await ref.read(reportControllerProvider.notifier).createProject(
-              projectId: projectCategorySelected,
-              title: _reportTitleCtl.text.trim(),
-              position: position!,
-              description: _reportDescCtl.text.trim(),
-              listMediaFile: listMediaPickerFile,
-            );
-    if (response) {
+    final errMsg = await ref.read(reportControllerProvider.notifier).create(
+          projectId: projectCategorySelected,
+          title: _reportTitleCtl.text.trim(),
+          position: position!,
+          description: _reportDescCtl.text.trim(),
+          listMediaFile: listMediaPickerFile,
+        );
+    if (errMsg.isEmpty) {
       debugPrint('Done Create Report');
       Navigator.pop(context);
       showSnackBar(context, Icons.done, Colors.greenAccent, "Report Created",

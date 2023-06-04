@@ -8,12 +8,12 @@ import 'package:report_project/employee/controllers/report_media_controller.dart
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailReportScreen extends ConsumerWidget {
-  static const routeName = '/report-detail';
+class EmployeeDetailReportScreen extends ConsumerWidget {
+  static const routeName = '/employee-report-detail';
 
   final ReportModel report;
 
-  const DetailReportScreen({
+  const EmployeeDetailReportScreen({
     super.key,
     required this.report,
   });

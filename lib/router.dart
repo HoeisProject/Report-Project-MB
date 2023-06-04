@@ -13,8 +13,8 @@ import 'package:report_project/auth/screens/user_profile.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/employee/screens/create_report.dart';
-import 'package:report_project/employee/screens/detail_report.dart';
+import 'package:report_project/employee/screens/employee_report_create.dart';
+import 'package:report_project/employee/screens/employee_report_detail.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 import 'package:report_project/splash/splash_screen.dart';
 
@@ -35,13 +35,13 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case EmployeeHomeScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const EmployeeHomeScreen());
-    case CreateReportScreen.routeName:
+    case EmployeeCreateReportScreen.routeName:
       return MaterialPageRoute(
-          builder: (context) => const CreateReportScreen());
-    case DetailReportScreen.routeName:
+          builder: (context) => const EmployeeCreateReportScreen());
+    case EmployeeDetailReportScreen.routeName:
       final report = routeSettings.arguments as ReportModel;
       return MaterialPageRoute(
-          builder: (context) => DetailReportScreen(report: report));
+          builder: (context) => EmployeeDetailReportScreen(report: report));
 
     /// ADMIN
     /// Project

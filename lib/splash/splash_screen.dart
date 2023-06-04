@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:report_project/admin/screens/admin_home.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
+import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/controller/theme_controller.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/utilities/theme_utility.dart';
@@ -78,12 +79,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         .watch(tokenManagerProvider)
         .read()
         .then((value) => debugPrint('Token : $value'));
-    // ref.watch()
+    ref.watch(reportStatusControllerProvider).whenData((value) => null);
 
-    /// TODO
-    /// CHECK INTEGRITY
-    /// - Token
-    /// - Check Current User using Token
     final currentUser = ref.watch(profileControllerProvider);
     ref.listen(profileControllerProvider, (previous, next) {
       if (!next.hasValue || next.value == null) {
@@ -93,9 +90,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       debugPrint('Current User: ');
       debugPrint(next.value!.toString());
 
-      /// TODO UserModel now has Role
-      // final roleController = ref.read(roleControllerProvider.notifier);
-      // final currentRole = roleController.findById(next.value!.role!.id);
       final currentRole = next.value!.role!;
       Timer(const Duration(seconds: 2), () {
         if (currentRole.name == RoleModelNameEnum.admin.name) {

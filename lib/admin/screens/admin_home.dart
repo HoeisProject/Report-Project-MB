@@ -272,7 +272,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        reportStatus(status)
+                        _reportStatus(status)
                       ],
                     ),
                   ),
@@ -314,7 +314,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     );
   }
 
-  Widget reportStatus(int status) {
+  Widget _reportStatus(int status) {
     IconData statusIcon;
     Color iconColor;
     switch (status) {

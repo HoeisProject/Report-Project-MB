@@ -53,13 +53,13 @@ class AdminProjectService {
     DateTime startDate,
     DateTime endDate,
   ) async {
+    final String? token = await _tokenManager.read();
+    if (token == null) return left('Token not exist');
+    final UserModel? currentUser = await _profileController.currentUser();
+    if (currentUser == null || currentUser.role!.name != 'admin') {
+      return left('Unauthenticated');
+    }
     try {
-      final String? token = await _tokenManager.read();
-      if (token == null) return left('Token not exist');
-      final UserModel? currentUser = await _profileController.currentUser();
-      if (currentUser == null || currentUser.role!.name != 'admin') {
-        return left('Unauthenticated');
-      }
       // debugPrint(DateFormat('yyyy-MM-dd HH:mm:ss').format(startDate));
       final res = await _dioClient.post(EndPoint.project,
           options: _dioClient.tokenOptions(token),

@@ -122,8 +122,10 @@ class AdminReportDetailScreenState
                         Colors.greenAccent, () => _approveReport(context)),
                   ],
                 ),
-                customButton(context, isLoadingDownload, "DOWNLOAD",
-                    Colors.yellow.shade800, () => downloadImages(context)),
+
+                /// TODO Enable again after skripshiy
+                // customButton(context, isLoadingDownload, "DOWNLOAD",
+                //     Colors.yellow.shade800, () => downloadImages(context)),
               ],
             ),
           ),
