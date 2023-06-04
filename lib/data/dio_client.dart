@@ -28,12 +28,15 @@ class DioClient {
       ..options.headers = {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
+        // 'Content-Type': 'application/json',
+        // 'Accept': 'application/json',
       }
       ..options.responseType = ResponseType.json;
 
     _dio.interceptors.add(LogInterceptor(
       responseBody: true,
       requestBody: true,
+      error: true,
     ));
   }
 

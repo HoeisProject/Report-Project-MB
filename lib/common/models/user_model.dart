@@ -119,9 +119,9 @@ class UserModel {
       phoneNumber: map[UserModelEnum.phoneNumber.value] as String,
       // status: map[UserModelEnum.status.value] as int,
       status: int.parse(map[UserModelEnum.status.value]),
-
-      /// TODO Remove base url after deploymeny maybe
-      userImage: ConstantApi.baseUrl + map[UserModelEnum.userImage.value],
+      userImage: (map[UserModelEnum.userImage.value] as String).contains('http')
+          ? map[UserModelEnum.userImage.value]
+          : ConstantApi.baseUrl + map[UserModelEnum.userImage.value],
       ktpImage: map[UserModelEnum.ktpImage.value] != null
           ? ConstantApi.baseUrl + map[UserModelEnum.ktpImage.value]
           : null,

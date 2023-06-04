@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:report_project/common/models/report_media_model.dart';
 import 'package:report_project/common/models/report_model.dart';
@@ -75,9 +76,12 @@ class AdminReportService {
         options: _dioClient.tokenOptions(token),
         queryParameters: dataMap,
       );
+      debugPrint(res.data.toString());
       final data = res.data['data'] as List;
+
       return right(data.map((e) => ReportModel.fromMap(e)).toList());
     } on DioError catch (e) {
+      debugPrint(e.toString());
       return left(e.toString());
     }
   }

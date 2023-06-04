@@ -48,8 +48,10 @@ class ReportMediaModel {
     return ReportMediaModel(
       id: map[ReportMediaModelEnum.id.value] as String,
       reportId: map[ReportMediaModelEnum.reportId.value],
-      attachment:
-          ConstantApi.baseUrl + map[ReportMediaModelEnum.attachment.value],
+      attachment: (map[ReportMediaModelEnum.attachment.value] as String)
+              .contains('http')
+          ? map[ReportMediaModelEnum.attachment.value]
+          : ConstantApi.baseUrl + map[ReportMediaModelEnum.attachment.value],
     );
   }
 

@@ -5,9 +5,12 @@ class ConstantApi {
   // static const String baseUrl = 'http://localhost:8000/api';
 
   /// https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
-  static const String baseUrl = 'http://10.0.2.2:8000'; // Only Work On AVD
+  // static const String baseUrl = 'http://10.0.2.2:8000'; // Only Work On AVD
   // static const String baseUrl = 'http://192.168.1.5:8000';
   // static const String baseUrl = '192.168.1.5';
+
+  /// GCP
+  static const String baseUrl = 'http://34.128.127.133:8000';
 
   static const String api = '/api';
 
