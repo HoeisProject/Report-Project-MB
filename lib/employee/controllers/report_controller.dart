@@ -9,12 +9,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'report_controller.g.dart';
 
+@riverpod
+FutureOr<List<ReportModel>> getReportByProject(
+  GetReportByProjectRef ref, {
+  required String projectId,
+  required bool showOnlyRejected,
+}) async {
+  if (projectId.isEmpty) return [];
+  final reportService = ref.watch(reportServiceProvider);
+  final res = await reportService.getByProjectId(
+    projectId: projectId,
+    project: false,
+    user: true,
+    reportStatus: true,
+    showOnlyRejected: showOnlyRejected,
+  );
+  return res.fold((l) => [], (r) => r);
+}
+
 @Riverpod(keepAlive: true)
 class ReportController extends _$ReportController {
   late final ReportService _reportService;
   late final ReportMediaService _reportMediaService;
 
-  /// TODO Not yet testing
   FutureOr<List<ReportModel>> _get() async {
     debugPrint('ReportController - _getReport');
     final res = await _reportService.get(

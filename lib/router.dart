@@ -16,6 +16,7 @@ import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/employee/screens/employee_report_create.dart';
 import 'package:report_project/employee/screens/employee_report_detail.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
+import 'package:report_project/employee/screens/employee_report_rejected.dart';
 import 'package:report_project/splash/splash_screen.dart';
 
 import 'common/widgets/error_screen.dart';
@@ -35,13 +36,16 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case EmployeeHomeScreen.routeName:
       return MaterialPageRoute(
           builder: (context) => const EmployeeHomeScreen());
-    case EmployeeCreateReportScreen.routeName:
+    case EmployeeReportCreateScreen.routeName:
       return MaterialPageRoute(
-          builder: (context) => const EmployeeCreateReportScreen());
-    case EmployeeDetailReportScreen.routeName:
+          builder: (context) => const EmployeeReportCreateScreen());
+    case EmployeeReportDetailScreen.routeName:
       final report = routeSettings.arguments as ReportModel;
       return MaterialPageRoute(
-          builder: (context) => EmployeeDetailReportScreen(report: report));
+          builder: (context) => EmployeeReportDetailScreen(report: report));
+    case EmployeeReportRejectedScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const EmployeeReportRejectedScreen());
 
     /// ADMIN
     /// Project

@@ -6,6 +6,121 @@ part of 'report_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$getReportByProjectHash() =>
+    r'2c02397fa6fa3a83a5432a0d89cbe972024a654c';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+typedef GetReportByProjectRef = AutoDisposeFutureProviderRef<List<ReportModel>>;
+
+/// See also [getReportByProject].
+@ProviderFor(getReportByProject)
+const getReportByProjectProvider = GetReportByProjectFamily();
+
+/// See also [getReportByProject].
+class GetReportByProjectFamily extends Family<AsyncValue<List<ReportModel>>> {
+  /// See also [getReportByProject].
+  const GetReportByProjectFamily();
+
+  /// See also [getReportByProject].
+  GetReportByProjectProvider call({
+    required String projectId,
+    required bool showOnlyRejected,
+  }) {
+    return GetReportByProjectProvider(
+      projectId: projectId,
+      showOnlyRejected: showOnlyRejected,
+    );
+  }
+
+  @override
+  GetReportByProjectProvider getProviderOverride(
+    covariant GetReportByProjectProvider provider,
+  ) {
+    return call(
+      projectId: provider.projectId,
+      showOnlyRejected: provider.showOnlyRejected,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getReportByProjectProvider';
+}
+
+/// See also [getReportByProject].
+class GetReportByProjectProvider
+    extends AutoDisposeFutureProvider<List<ReportModel>> {
+  /// See also [getReportByProject].
+  GetReportByProjectProvider({
+    required this.projectId,
+    required this.showOnlyRejected,
+  }) : super.internal(
+          (ref) => getReportByProject(
+            ref,
+            projectId: projectId,
+            showOnlyRejected: showOnlyRejected,
+          ),
+          from: getReportByProjectProvider,
+          name: r'getReportByProjectProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getReportByProjectHash,
+          dependencies: GetReportByProjectFamily._dependencies,
+          allTransitiveDependencies:
+              GetReportByProjectFamily._allTransitiveDependencies,
+        );
+
+  final String projectId;
+  final bool showOnlyRejected;
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetReportByProjectProvider &&
+        other.projectId == projectId &&
+        other.showOnlyRejected == showOnlyRejected;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, projectId.hashCode);
+    hash = _SystemHash.combine(hash, showOnlyRejected.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
 String _$reportControllerHash() => r'b3d3fb1c9f294cdcc3e6f1934088ebe33cc772fe';
 
 /// See also [ReportController].

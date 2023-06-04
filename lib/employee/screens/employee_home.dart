@@ -14,6 +14,7 @@ import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
 import 'package:report_project/employee/screens/employee_report_create.dart';
 import 'package:report_project/employee/screens/employee_report_detail.dart';
+import 'package:report_project/employee/screens/employee_report_rejected.dart';
 import 'package:report_project/employee/screens/user_status_no_upload.dart';
 import 'package:report_project/employee/screens/user_status_pending.dart';
 import 'package:report_project/employee/screens/user_status_rejected.dart';
@@ -41,13 +42,10 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
     if (UserStatus.pending.value == status) {
       return const UserStatusPendingScreen();
     }
-
     if (UserStatus.approve.value == status) return _body();
-
     if (UserStatus.reject.value == status) {
       return const UserStatusRejectedScreen();
     }
-
     return const UserStatusNoUploadScreen();
   }
 
@@ -112,7 +110,11 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
           children: [
             _menuBarItem(Icons.assignment_outlined, "Report", () {
               Navigator.pushNamed(
-                  context, EmployeeCreateReportScreen.routeName);
+                  context, EmployeeReportCreateScreen.routeName);
+            }),
+            _menuBarItem(Icons.cancel_outlined, "Rejected\nReport", () {
+              Navigator.pushNamed(
+                  context, EmployeeReportRejectedScreen.routeName);
             }),
           ],
         ),
@@ -235,7 +237,7 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
             onTap: () {
               Navigator.pushNamed(
                 context,
-                EmployeeDetailReportScreen.routeName,
+                EmployeeReportDetailScreen.routeName,
                 arguments: report,
               );
             },

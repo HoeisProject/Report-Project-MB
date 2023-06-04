@@ -23,17 +23,17 @@ import 'package:report_project/employee/widgets/project_category_dropdown.dart';
 import 'package:report_project/employee/widgets/report_attach_media.dart';
 import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
-class EmployeeCreateReportScreen extends ConsumerStatefulWidget {
+class EmployeeReportCreateScreen extends ConsumerStatefulWidget {
   static const routeName = '/employee-report-create';
 
-  const EmployeeCreateReportScreen({super.key});
+  const EmployeeReportCreateScreen({super.key});
 
   @override
-  ConsumerState<EmployeeCreateReportScreen> createState() =>
+  ConsumerState<EmployeeReportCreateScreen> createState() =>
       _ReportCreateState();
 }
 
-class _ReportCreateState extends ConsumerState<EmployeeCreateReportScreen> {
+class _ReportCreateState extends ConsumerState<EmployeeReportCreateScreen> {
   final _keyReportTitle = GlobalKey<FormState>();
   final _keyReportDesc = GlobalKey<FormState>();
 

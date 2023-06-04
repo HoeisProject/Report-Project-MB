@@ -54,7 +54,6 @@ class AdminReportService {
 
   /// Get report by project
   Future<Either<String, List<ReportModel>>> getByProjectId({
-    int page = 1,
     required String projectId,
     required bool project,
     required bool user,
@@ -64,7 +63,7 @@ class AdminReportService {
     final String? token = await _tokenManager.read();
     if (token == null) return left('Token not exist');
     final Map<String, dynamic> dataMap = {};
-    dataMap['page'] = page;
+    // dataMap['page'] = page;
     if (project) dataMap['project'] = true;
     if (user) dataMap['user'] = true;
     if (reportStatus) dataMap['reportStatus'] = true;

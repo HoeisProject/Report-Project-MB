@@ -89,6 +89,35 @@ class ReportService {
       return left(e.toString());
     }
   }
+
+  /// Get report by project
+  Future<Either<String, List<ReportModel>>> getByProjectId({
+    required String projectId,
+    required bool project,
+    required bool user,
+    required bool reportStatus,
+    required bool showOnlyRejected,
+  }) async {
+    final String? token = await _tokenManager.read();
+    if (token == null) return left('Token not exist');
+    final Map<String, dynamic> dataMap = {};
+    if (project) dataMap['project'] = true;
+    if (user) dataMap['user'] = true;
+    if (reportStatus) dataMap['reportStatus'] = true;
+    if (showOnlyRejected) dataMap['showOnlyRejected'] = true;
+
+    try {
+      final res = await _dioClient.get(
+        '${EndPoint.project}/$projectId/${EndPoint.report}',
+        options: _dioClient.tokenOptions(token),
+        queryParameters: dataMap,
+      );
+      final data = res.data['data'] as List;
+      return right(data.map((e) => ReportModel.fromMap(e)).toList());
+    } on DioError catch (e) {
+      return left(e.toString());
+    }
+  }
 }
 
 class ReportServices {
