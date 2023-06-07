@@ -76,30 +76,34 @@ class AdminUserVerifyScreen extends ConsumerWidget {
                   iconTrailing: null,
                   onPressed: () {},
                 ),
-                _ktpImageHolder(context, user.id),
+                user.role!.name == 'admin'
+                    ? Container()
+                    : _ktpImageHolder(context, user.id),
                 sizedSpacer(context: context, height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: customButton(
-                          context,
-                          ref.watch(adminUserVerifyIsLoadingProvider),
-                          "REJECT",
-                          Colors.red,
-                          () => submit(context, UserStatus.reject, ref)),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Flexible(
-                      child: customButton(
-                          context,
-                          ref.watch(adminUserVerifyIsLoadingProvider),
-                          "APPROVE",
-                          Colors.greenAccent,
-                          () => submit(context, UserStatus.approve, ref)),
-                    )
-                  ],
-                ),
+                user.role!.name == 'admin'
+                    ? Container()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: customButton(
+                                context,
+                                ref.watch(adminUserVerifyIsLoadingProvider),
+                                "REJECT",
+                                Colors.red,
+                                () => submit(context, UserStatus.reject, ref)),
+                          ),
+                          const SizedBox(width: 10.0),
+                          Flexible(
+                            child: customButton(
+                                context,
+                                ref.watch(adminUserVerifyIsLoadingProvider),
+                                "APPROVE",
+                                Colors.greenAccent,
+                                () => submit(context, UserStatus.approve, ref)),
+                          )
+                        ],
+                      ),
               ],
             ),
           ),
@@ -205,6 +209,14 @@ class AdminUserVerifyScreen extends ConsumerWidget {
   }
 
   Widget _ktpImageHolder(context, String id) {
+    if (user.ktpImage == null) {
+      return Center(
+        child: SizedBox(
+          child: Image.network(
+              "https://images.unsplash.com/photo-1494790108377-be9c29b29330"),
+        ),
+      );
+    }
     return Center(
       child: SizedBox(
         height: 200.0,
@@ -227,7 +239,7 @@ class AdminUserVerifyScreen extends ConsumerWidget {
           child: Hero(
             tag: "$id${user.ktpImage ?? user.nik}",
             child: Image.network(
-              user.ktpImage ?? '-',
+              user.ktpImage!,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Center(
