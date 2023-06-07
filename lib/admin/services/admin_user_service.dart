@@ -40,7 +40,7 @@ class AdminUserService {
       );
       final data = res.data['data'] as List;
       return right(data.map((e) => UserModel.fromMap(e)).toList());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }
@@ -64,7 +64,7 @@ class AdminUserService {
 
       final data = res.data['data'];
       return right(UserModel.fromMap(data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }

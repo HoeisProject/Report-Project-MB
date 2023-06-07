@@ -48,7 +48,7 @@ class AdminReportService {
       );
       final data = res.data['data'] as List;
       return right(data.map((e) => ReportModel.fromMap(e)).toList());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }
@@ -80,7 +80,7 @@ class AdminReportService {
       final data = res.data['data'] as List;
 
       return right(data.map((e) => ReportModel.fromMap(e)).toList());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       debugPrint(e.toString());
       return left(e.toString());
     }
@@ -96,7 +96,7 @@ class AdminReportService {
         data: {'status': reportStatusId},
       );
       return '';
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return e.toString();
     }
   }
@@ -113,7 +113,7 @@ class AdminReportService {
       );
       final data = res.data['data'] as List;
       return right(data.map((e) => ReportMediaModel.fromMap(e)).toList());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }

@@ -6,7 +6,6 @@ import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
 import 'package:report_project/admin/view_model/admin_home_view_model.dart';
 import 'package:report_project/admin/widgets/admin_home_filter.dart';
-import 'package:report_project/admin/widgets/admin_home_search_bar.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/models/project_model.dart';
@@ -31,7 +30,7 @@ class AdminHomeScreen extends ConsumerStatefulWidget {
 }
 
 class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
-  final _searchController = TextEditingController();
+  // final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -167,19 +166,19 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         icon: const Icon(Icons.filter_list));
   }
 
-  Widget _searchAndFilter() {
-    return Row(
-      children: [
-        Flexible(
-          flex: 4,
-          child: adminHomeSearchBar(context, ref, _searchController),
-        ),
-        Flexible(
-          child: showFilterMenu(context, ref),
-        ),
-      ],
-    );
-  }
+  // Widget _searchAndFilter() {
+  //   return Row(
+  //     children: [
+  //       Flexible(
+  //         flex: 4,
+  //         child: adminHomeSearchBar(context, ref, _searchController),
+  //       ),
+  //       Flexible(
+  //         child: showFilterMenu(context, ref),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _listReportView() {
     final reports = ref.watch(adminHomeFutureFilteredList);

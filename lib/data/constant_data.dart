@@ -12,9 +12,10 @@ class ConstantApi {
   /// GCP
   static const String baseUrl = 'http://34.128.127.133:8000';
 
-  static const String api = '/api';
+  /// Real Device
+  // static const String baseUrl = 'http://127.0.0.1:8000';
 
-  // static const String baseUrlImage = 'http://localhost:8000';
+  static const String api = '/api';
 
   /// Receive Timeout
   static const Duration receiveTimeout = Duration(seconds: 10);

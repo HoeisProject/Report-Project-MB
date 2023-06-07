@@ -32,7 +32,7 @@ class ReportMediaService {
       );
       final data = res.data['data'] as List;
       return right(data.map((e) => ReportMediaModel.fromMap(e)).toList());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }
@@ -55,7 +55,7 @@ class ReportMediaService {
         data: formData,
       );
       return '';
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return e.toString();
     }
   }

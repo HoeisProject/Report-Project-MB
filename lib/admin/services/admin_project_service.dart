@@ -42,7 +42,7 @@ class AdminProjectService {
       );
       final data = res.data['data'] as List;
       return right(data.map((e) => ProjectModel.fromMap(e)).toList());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }
@@ -74,7 +74,7 @@ class AdminProjectService {
           });
       final data = res.data['data'];
       return right(ProjectModel.fromMap(data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }

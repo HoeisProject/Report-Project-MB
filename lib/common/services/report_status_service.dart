@@ -32,7 +32,7 @@ class ReportStatusService {
       );
       final data = res.data['data'] as List;
       return right(data.map((e) => ReportStatusModel.fromMap(e)).toList());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }

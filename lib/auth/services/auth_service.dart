@@ -52,7 +52,7 @@ class AuthService {
       final data = (res.data['data']);
       final user = UserModel.fromMap(data);
       return right(user);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }
@@ -70,7 +70,7 @@ class AuthService {
       await _tokenManager.store(token);
       final data = (res.data['data']);
       return right(UserModel.fromMap(data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }
@@ -83,7 +83,7 @@ class AuthService {
         options: _dioClient.tokenOptions(token),
       );
       return _tokenManager.delete();
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       debugPrint(e.toString());
       return e.toString();
     }

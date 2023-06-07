@@ -31,7 +31,7 @@ class ProfileService {
       );
       final data = res.data['data'];
       return right(UserModel.fromMap(data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return left(e.toString());
     }
   }
@@ -62,7 +62,7 @@ class ProfileService {
         data: formData,
       );
       return '';
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return e.toString();
     }
   }
@@ -81,7 +81,7 @@ class ProfileService {
         data: formData,
       );
       return '';
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return e.toString();
     }
   }
