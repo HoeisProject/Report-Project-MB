@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:images_picker/images_picker.dart';
 import 'package:report_project/common/models/report_media_model.dart';
-import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/data/constant_data.dart';
 import 'package:report_project/data/dio_client.dart';
 import 'package:report_project/data/token_manager.dart';

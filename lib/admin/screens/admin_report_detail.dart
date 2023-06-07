@@ -49,7 +49,7 @@ class AdminReportDetailScreenState
   }
 
   Widget _body() {
-    final reportsMedia = ref.watch(getAdminReportMediaProvider(
+    final reportsMedia = ref.watch(getAdminReportMediaByReportProvider(
       reportId: report.id,
     ));
     return Container(

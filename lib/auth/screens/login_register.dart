@@ -184,12 +184,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       debugPrint('ref listen - profileControllerProvider - login-register');
       debugPrint(next.value.toString());
       if (!next.hasValue || next.value == null) return;
-      // final currentRole = ref
-      //     .read(roleControllerProvider.notifier)
-      //     .findById(next.value!.role!.id);
 
-      /// TODO UserModel now has Role
-      // final currentRole = roleController.findById(next.value!.role!.id);
       final currentRole = next.value!.role!;
       if (currentRole.name == RoleModelNameEnum.admin.name) {
         Navigator.popAndPushNamed(context, AdminHomeScreen.routeName);

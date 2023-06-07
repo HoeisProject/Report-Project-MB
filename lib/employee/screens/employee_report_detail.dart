@@ -48,14 +48,15 @@ class EmployeeReportDetailScreen extends ConsumerWidget {
                 viewTextField(context, "Report Title", report.title, false),
                 viewTextField(context, "Report Created At",
                     DateFormat.yMMMEd().format(report.updatedAt), false),
-                FutureBuilder(
-                  future: TranslatePosition(position: report.position)
-                      .translatePos(),
-                  builder: (context, snapshot) {
-                    return viewTextField(context, "Report Location",
-                        snapshot.data ?? '-', false);
-                  },
-                ),
+                ref
+                    .watch(translatePositionProvider(position: report.position))
+                    .when(
+                      data: (data) => viewTextField(
+                          context, "Report Location", data, false),
+                      error: (error, stackTrace) =>
+                          const Text('Not a valid address'),
+                      loading: () => const CircularProgressIndicator(),
+                    ),
                 viewTextField(
                     context, "Report Description", report.description, true),
                 reportsMedia.when(

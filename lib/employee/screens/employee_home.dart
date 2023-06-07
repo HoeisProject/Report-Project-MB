@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
-import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/user_model.dart';
@@ -260,13 +258,15 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
                   ),
                   _reportItemContent(
                       DateFormat.yMMMEd().format(report.updatedAt), false),
-                  FutureBuilder(
-                    future: TranslatePosition(position: report.position)
-                        .translatePos(),
-                    builder: (context, snapshot) {
-                      return _reportItemContent(snapshot.data ?? '-', false);
-                    },
-                  ),
+                  ref
+                      .watch(
+                          translatePositionProvider(position: report.position))
+                      .when(
+                        data: (data) => _reportItemContent(data, false),
+                        error: (error, stackTrace) =>
+                            const Text('Not a valid address'),
+                        loading: () => const CircularProgressIndicator(),
+                      ),
                   _reportItemContent(
                       'From project : ${report.project?.name}', false),
                   _reportItemContent(report.description, true),

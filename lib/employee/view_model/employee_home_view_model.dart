@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:report_project/common/controller/report_status_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/employee/controllers/report_controller.dart';
 
@@ -19,13 +18,13 @@ final employeeHomeFutureFilteredList = FutureProvider<List<ReportModel>>((ref) {
 
 final employeeHomeFilteringReport = StateProvider<List<ReportModel>>((ref) {
   final rawReports = ref.watch(reportControllerProvider).asData?.value;
-  final searchText = ref.watch(employeeHomeSearchTextProvider);
+  // final searchText = ref.watch(employeeHomeSearchTextProvider);
 
-  final statusSelectedItem = ref.watch(employeeHomeStatusSelectedProvider);
-  final reportStatus = ref.watch(reportStatusControllerProvider);
+  // final statusSelectedItem = ref.watch(employeeHomeStatusSelectedProvider);
+  // final reportStatus = ref.watch(reportStatusControllerProvider);
 
-  final projectCategorySelected =
-      ref.watch(employeeHomeProjectCategorySelectedProvider);
+  // final projectCategorySelected =
+  //     ref.watch(employeeHomeProjectCategorySelectedProvider);
 
   List<ReportModel> filteredReports = rawReports ?? [];
 

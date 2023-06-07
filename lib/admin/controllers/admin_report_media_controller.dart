@@ -6,9 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'admin_report_media_controller.g.dart';
 
 @riverpod
-FutureOr<List<ReportMediaModel>> getAdminReportMedia(
-  // getAdminReportMediaByReport - change function name TODO
-  GetAdminReportMediaRef ref, {
+FutureOr<List<ReportMediaModel>> getAdminReportMediaByReport(
+  GetAdminReportMediaByReportRef ref, {
   required String reportId,
 }) async {
   debugPrint('FutureOr<List<ReportMediaModel>> - getAdminReportMedia');

@@ -6,8 +6,8 @@ part of 'admin_report_media_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAdminReportMediaHash() =>
-    r'1acbced9b3a0277629e5265f38230b19a732a254';
+String _$getAdminReportMediaByReportHash() =>
+    r'9cf5c593e386f63afce74302be58445e6ae4e226';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,31 +30,31 @@ class _SystemHash {
   }
 }
 
-typedef GetAdminReportMediaRef
+typedef GetAdminReportMediaByReportRef
     = AutoDisposeFutureProviderRef<List<ReportMediaModel>>;
 
-/// See also [getAdminReportMedia].
-@ProviderFor(getAdminReportMedia)
-const getAdminReportMediaProvider = GetAdminReportMediaFamily();
+/// See also [getAdminReportMediaByReport].
+@ProviderFor(getAdminReportMediaByReport)
+const getAdminReportMediaByReportProvider = GetAdminReportMediaByReportFamily();
 
-/// See also [getAdminReportMedia].
-class GetAdminReportMediaFamily
+/// See also [getAdminReportMediaByReport].
+class GetAdminReportMediaByReportFamily
     extends Family<AsyncValue<List<ReportMediaModel>>> {
-  /// See also [getAdminReportMedia].
-  const GetAdminReportMediaFamily();
+  /// See also [getAdminReportMediaByReport].
+  const GetAdminReportMediaByReportFamily();
 
-  /// See also [getAdminReportMedia].
-  GetAdminReportMediaProvider call({
+  /// See also [getAdminReportMediaByReport].
+  GetAdminReportMediaByReportProvider call({
     required String reportId,
   }) {
-    return GetAdminReportMediaProvider(
+    return GetAdminReportMediaByReportProvider(
       reportId: reportId,
     );
   }
 
   @override
-  GetAdminReportMediaProvider getProviderOverride(
-    covariant GetAdminReportMediaProvider provider,
+  GetAdminReportMediaByReportProvider getProviderOverride(
+    covariant GetAdminReportMediaByReportProvider provider,
   ) {
     return call(
       reportId: provider.reportId,
@@ -73,36 +73,37 @@ class GetAdminReportMediaFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getAdminReportMediaProvider';
+  String? get name => r'getAdminReportMediaByReportProvider';
 }
 
-/// See also [getAdminReportMedia].
-class GetAdminReportMediaProvider
+/// See also [getAdminReportMediaByReport].
+class GetAdminReportMediaByReportProvider
     extends AutoDisposeFutureProvider<List<ReportMediaModel>> {
-  /// See also [getAdminReportMedia].
-  GetAdminReportMediaProvider({
+  /// See also [getAdminReportMediaByReport].
+  GetAdminReportMediaByReportProvider({
     required this.reportId,
   }) : super.internal(
-          (ref) => getAdminReportMedia(
+          (ref) => getAdminReportMediaByReport(
             ref,
             reportId: reportId,
           ),
-          from: getAdminReportMediaProvider,
-          name: r'getAdminReportMediaProvider',
+          from: getAdminReportMediaByReportProvider,
+          name: r'getAdminReportMediaByReportProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getAdminReportMediaHash,
-          dependencies: GetAdminReportMediaFamily._dependencies,
+                  : _$getAdminReportMediaByReportHash,
+          dependencies: GetAdminReportMediaByReportFamily._dependencies,
           allTransitiveDependencies:
-              GetAdminReportMediaFamily._allTransitiveDependencies,
+              GetAdminReportMediaByReportFamily._allTransitiveDependencies,
         );
 
   final String reportId;
 
   @override
   bool operator ==(Object other) {
-    return other is GetAdminReportMediaProvider && other.reportId == reportId;
+    return other is GetAdminReportMediaByReportProvider &&
+        other.reportId == reportId;
   }
 
   @override

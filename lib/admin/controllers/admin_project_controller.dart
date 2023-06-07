@@ -22,7 +22,6 @@ class AdminProjectController extends _$AdminProjectController {
     return _get();
   }
 
-  /// TODO Not yet testing
   Future<String> createProject({
     required String name,
     required String description,

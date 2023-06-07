@@ -203,13 +203,10 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
                 final report = data[index];
-                // final project = projects.asData?.value
-                //     .firstWhere((element) => element.id == report.project?.id);
-                /// TODO First
                 return _reportViewItem(
-                  report, report.project, 1,
-                  // report.reportStatus.id
-                  // reportStatus.findIndexById(report.reportStatusId),
+                  report,
+                  report.project,
+                  report.reportStatus!.name,
                 );
               },
             );
@@ -235,7 +232,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   Widget _reportViewItem(
     ReportModel report,
     ProjectModel? project,
-    int status,
+    String status,
   ) {
     return Container(
       margin: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
@@ -280,13 +277,15 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
                       'Report by : ${report.user?.nickname}', false),
                   _reportItemContent(
                       DateFormat.yMMMEd().format(DateTime.now()), false),
-                  FutureBuilder(
-                    future: TranslatePosition(position: report.position)
-                        .translatePos(),
-                    builder: (context, snapshot) {
-                      return _reportItemContent(snapshot.data ?? '-', false);
-                    },
-                  ),
+                  ref
+                      .watch(
+                          translatePositionProvider(position: report.position))
+                      .when(
+                        data: (data) => _reportItemContent(data, false),
+                        error: (error, stackTrace) =>
+                            const Text('Not a valid address'),
+                        loading: () => const CircularProgressIndicator(),
+                      ),
                   _reportItemContent('From project : ${project?.name}', false),
                   _reportItemContent(report.description, true),
                 ],
@@ -314,25 +313,25 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     );
   }
 
-  Widget _reportStatus(int status) {
+  Widget _reportStatus(String status) {
     IconData statusIcon;
     Color iconColor;
     switch (status) {
-      case 0:
+      case 'pending':
         statusIcon = Icons.timelapse;
         iconColor = Colors.yellow;
         break;
-      case 1:
+      case 'approve':
         statusIcon = Icons.done;
         iconColor = Colors.green;
         break;
-      case 2:
+      case 'reject':
         statusIcon = Icons.cancel_outlined;
         iconColor = Colors.red;
         break;
       default:
-        statusIcon = Icons.timelapse;
-        iconColor = Colors.yellow;
+        statusIcon = Icons.error;
+        iconColor = Colors.blue;
         break;
     }
     return Center(
