@@ -8,7 +8,7 @@ import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_report_detail.dart';
 import 'package:report_project/employee/view_model/employee_report_rejected_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
-import 'package:report_project/employee/widgets/project_category_dropdown.dart';
+import 'package:report_project/common/widgets/category_dropdown.dart';
 
 class EmployeeReportRejectedScreen extends ConsumerWidget {
   static const routeName = '/report-rejected-home';
@@ -60,7 +60,7 @@ class EmployeeReportRejectedScreen extends ConsumerWidget {
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
           ),
           elevation: 5,
-          child: projectCategoryDropdown(
+          child: categoryDropdown(
             context,
             "Project Category",
             projectCategorySelected,

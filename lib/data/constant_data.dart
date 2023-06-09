@@ -5,12 +5,11 @@ class ConstantApi {
   // static const String baseUrl = 'http://localhost:8000/api';
 
   /// https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
-  // static const String baseUrl = 'http://10.0.2.2:8000'; // Only Work On AVD
-  // static const String baseUrl = 'http://192.168.1.5:8000';
-  // static const String baseUrl = '192.168.1.5';
+  /// Emulator
+  static const String baseUrl = 'http://10.0.2.2:8000';
 
   /// GCP
-  static const String baseUrl = 'http://34.128.127.133:8000';
+  // static const String baseUrl = 'http://34.128.127.133:8000';
 
   /// Real Device
   // static const String baseUrl = 'http://127.0.0.1:8000';
@@ -54,4 +53,16 @@ class EndPoint {
   static const String user = '/user';
   static const String userVerify = '/user-verify';
   static const String userUpdateProperties = '/user/update-properties';
+
+  /// Project Priority
+  static const String projectPriority = '/project-priority';
+  static const String projectPriorityCalculate = '$projectPriority/calculate';
+  static const String projectPriorityTimeSpan = '$projectPriority/time-span';
+  static const String projectPriorityMoneyEstimate =
+      '$projectPriority/money-estimate';
+  static const String projectPriorityManpower = '$projectPriority/manpower';
+  static const String projectPriorityMaterialFeasibility =
+      '$projectPriority/material-feasibility';
+
+  static const Map<String, String> pro = {};
 }

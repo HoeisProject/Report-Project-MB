@@ -71,7 +71,7 @@ class AdminHomeFilterMenuState extends ConsumerState<AdminHomeFilterMenu> {
                       context,
                       "Project Category",
                       ref,
-                      projectCategoryDropdown(context, ref, projectCategories),
+                      categoryDropdown(context, ref, projectCategories),
                     );
                   },
                   error: (error, stackTrace) {
@@ -157,7 +157,7 @@ class AdminHomeFilterMenuState extends ConsumerState<AdminHomeFilterMenu> {
     );
   }
 
-  Widget projectCategoryDropdown(BuildContext context, WidgetRef ref,
+  Widget categoryDropdown(BuildContext context, WidgetRef ref,
       List<DropdownMenuItem<String>>? items) {
     return DropdownButton(
       value: ref.watch(adminHomeProjectCategorySelectedProvider),

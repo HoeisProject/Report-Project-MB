@@ -6,8 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'admin_report_controller.g.dart';
 
 @riverpod
-FutureOr<List<ReportModel>> getAdminReportByProject(
-  GetAdminReportByProjectRef ref, {
+FutureOr<List<ReportModel>> findAdminReportByProject(
+  FindAdminReportByProjectRef ref, {
   required String projectId,
   required bool showOnlyRejected,
 }) async {

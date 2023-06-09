@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:report_project/admin/screens/admin_project_priority.dart';
 import 'package:report_project/admin/screens/admin_report_home.dart';
 import 'package:report_project/admin/screens/admin_report_rejected.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
@@ -102,6 +103,10 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           children: [
             _menuBarItem(Icons.work_outline, 'Project', () {
               Navigator.pushNamed(context, AdminProjectHomeScreen.routeName);
+            }),
+            _menuBarItem(Icons.work_history_outlined, "Project\nPriority", () {
+              Navigator.pushNamed(
+                  context, AdminProjectPriorityScreen.routeName);
             }),
             _menuBarItem(Icons.insert_drive_file_outlined, "Report", () {
               Navigator.pushNamed(context, AdminReportHomeScreen.routeName);

@@ -8,7 +8,7 @@ import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/styles/constant.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
-import 'package:report_project/employee/widgets/project_category_dropdown.dart';
+import 'package:report_project/common/widgets/category_dropdown.dart';
 
 class AdminReportRejectedScreen extends ConsumerStatefulWidget {
   static const routeName = '/admin-report-rejected-home';
@@ -67,7 +67,7 @@ class _AdminReportRejectedScreenState
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
           ),
           elevation: 5,
-          child: projectCategoryDropdown(
+          child: categoryDropdown(
             context,
             "Project Category",
             projectCategorySelected,
@@ -92,7 +92,7 @@ class _AdminReportRejectedScreenState
   }
 
   Widget _listReportView(context, WidgetRef ref) {
-    final reports = ref.watch(getAdminReportByProjectProvider(
+    final reports = ref.watch(findAdminReportByProjectProvider(
       projectId: ref.watch(adminReportRejectedProjectCategorySelectedProvider),
       showOnlyRejected: true,
     ));

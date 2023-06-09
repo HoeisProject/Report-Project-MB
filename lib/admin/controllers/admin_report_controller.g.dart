@@ -6,8 +6,8 @@ part of 'admin_report_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAdminReportByProjectHash() =>
-    r'd108b5183ce26d34e0d539089af8cdde5f8a5f69';
+String _$findAdminReportByProjectHash() =>
+    r'7a17cee8b0a1d553acf2ee223c8892112fe32449';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,33 +30,33 @@ class _SystemHash {
   }
 }
 
-typedef GetAdminReportByProjectRef
+typedef FindAdminReportByProjectRef
     = AutoDisposeFutureProviderRef<List<ReportModel>>;
 
-/// See also [getAdminReportByProject].
-@ProviderFor(getAdminReportByProject)
-const getAdminReportByProjectProvider = GetAdminReportByProjectFamily();
+/// See also [findAdminReportByProject].
+@ProviderFor(findAdminReportByProject)
+const findAdminReportByProjectProvider = FindAdminReportByProjectFamily();
 
-/// See also [getAdminReportByProject].
-class GetAdminReportByProjectFamily
+/// See also [findAdminReportByProject].
+class FindAdminReportByProjectFamily
     extends Family<AsyncValue<List<ReportModel>>> {
-  /// See also [getAdminReportByProject].
-  const GetAdminReportByProjectFamily();
+  /// See also [findAdminReportByProject].
+  const FindAdminReportByProjectFamily();
 
-  /// See also [getAdminReportByProject].
-  GetAdminReportByProjectProvider call({
+  /// See also [findAdminReportByProject].
+  FindAdminReportByProjectProvider call({
     required String projectId,
     required bool showOnlyRejected,
   }) {
-    return GetAdminReportByProjectProvider(
+    return FindAdminReportByProjectProvider(
       projectId: projectId,
       showOnlyRejected: showOnlyRejected,
     );
   }
 
   @override
-  GetAdminReportByProjectProvider getProviderOverride(
-    covariant GetAdminReportByProjectProvider provider,
+  FindAdminReportByProjectProvider getProviderOverride(
+    covariant FindAdminReportByProjectProvider provider,
   ) {
     return call(
       projectId: provider.projectId,
@@ -76,31 +76,31 @@ class GetAdminReportByProjectFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getAdminReportByProjectProvider';
+  String? get name => r'findAdminReportByProjectProvider';
 }
 
-/// See also [getAdminReportByProject].
-class GetAdminReportByProjectProvider
+/// See also [findAdminReportByProject].
+class FindAdminReportByProjectProvider
     extends AutoDisposeFutureProvider<List<ReportModel>> {
-  /// See also [getAdminReportByProject].
-  GetAdminReportByProjectProvider({
+  /// See also [findAdminReportByProject].
+  FindAdminReportByProjectProvider({
     required this.projectId,
     required this.showOnlyRejected,
   }) : super.internal(
-          (ref) => getAdminReportByProject(
+          (ref) => findAdminReportByProject(
             ref,
             projectId: projectId,
             showOnlyRejected: showOnlyRejected,
           ),
-          from: getAdminReportByProjectProvider,
-          name: r'getAdminReportByProjectProvider',
+          from: findAdminReportByProjectProvider,
+          name: r'findAdminReportByProjectProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getAdminReportByProjectHash,
-          dependencies: GetAdminReportByProjectFamily._dependencies,
+                  : _$findAdminReportByProjectHash,
+          dependencies: FindAdminReportByProjectFamily._dependencies,
           allTransitiveDependencies:
-              GetAdminReportByProjectFamily._allTransitiveDependencies,
+              FindAdminReportByProjectFamily._allTransitiveDependencies,
         );
 
   final String projectId;
@@ -108,7 +108,7 @@ class GetAdminReportByProjectProvider
 
   @override
   bool operator ==(Object other) {
-    return other is GetAdminReportByProjectProvider &&
+    return other is FindAdminReportByProjectProvider &&
         other.projectId == projectId &&
         other.showOnlyRejected == showOnlyRejected;
   }

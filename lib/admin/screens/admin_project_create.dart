@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
+import 'package:report_project/admin/controllers/admin_project_priority_controller.dart';
 import 'package:report_project/admin/view_model/admin_project_create_view_model.dart';
 import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/widgets/category_dropdown.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
@@ -67,7 +69,11 @@ class _AdminProjectCreateScreen
     if (_nameCtl.text.isNotEmpty &&
         _descCtl.text.isNotEmpty &&
         startDate != null &&
-        endDate != null) {
+        endDate != null &&
+        ref.read(adminProjectCreateTimeSpanSelected).isNotEmpty &&
+        ref.read(adminProjectCreateMoneyEstimateSelected).isNotEmpty &&
+        ref.read(adminProjectCreateManpowerSelected).isNotEmpty &&
+        ref.read(adminProjectCreateMaterialFeasibilitySelected).isNotEmpty) {
       return true;
     }
     return false;
@@ -83,13 +89,19 @@ class _AdminProjectCreateScreen
           "Fill the requirement ", Colors.red);
       return;
     }
-    final errMsg =
-        await ref.read(adminProjectControllerProvider.notifier).createProject(
-              name: _nameCtl.text.trim(),
-              description: _descCtl.text.trim(),
-              startDate: startDate!,
-              endDate: endDate!,
-            );
+    final errMsg = await ref
+        .read(adminProjectControllerProvider.notifier)
+        .createProject(
+          name: _nameCtl.text.trim(),
+          description: _descCtl.text.trim(),
+          startDate: startDate!,
+          endDate: endDate!,
+          timeSpanId: ref.read(adminProjectCreateTimeSpanSelected),
+          moneyEstimateId: ref.read(adminProjectCreateMoneyEstimateSelected),
+          manpowerId: ref.read(adminProjectCreateManpowerSelected),
+          materialFeasibilityId:
+              ref.read(adminProjectCreateMaterialFeasibilitySelected),
+        );
     if (errMsg.isEmpty) {
       showSnackBar(context, Icons.done, Colors.greenAccent,
           "Success, Project Created", Colors.greenAccent);
@@ -148,7 +160,7 @@ class _AdminProjectCreateScreen
               TextInputType.text,
               false,
               false,
-              4,
+              3,
             ),
             ViewWithIcon(
               text: startDate != null
@@ -186,7 +198,10 @@ class _AdminProjectCreateScreen
                     pickedDate;
               },
             ),
-            sizedSpacer(context: context, height: 30.0),
+            _timeSpanDropdown(),
+            _moneyEstimateDropdown(),
+            _manpowerDropdown(),
+            _materialFeasibilityDropdown(),
             customButton(
               context,
               isLoading,
@@ -199,6 +214,182 @@ class _AdminProjectCreateScreen
           ],
         ),
       ),
+    );
+  }
+
+  Widget _timeSpanDropdown() {
+    final timeSpanList = ref.watch(getTimeSpanProvider);
+    final timeSpanSelected = ref.watch(adminProjectCreateTimeSpanSelected);
+    return timeSpanList.when(
+      data: (data) {
+        final categories = [
+          const DropdownMenuItem(value: '', child: Text('Choose Time Span')),
+          ...data
+              .map((e) => DropdownMenuItem(
+                    value: e.id,
+                    child: Text('${e.min} - ${e.max} working days'),
+                  ))
+              .toList()
+        ];
+        return Card(
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black38),
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+          elevation: 5,
+          child: categoryDropdown(
+            context,
+            "Time Span Category",
+            timeSpanSelected,
+            categories,
+            (value) {
+              ref
+                  .read(adminProjectCreateTimeSpanSelected.notifier)
+                  .update((state) => value ?? '');
+            },
+            const Icon(Icons.keyboard_arrow_down),
+          ),
+        );
+      },
+      error: (error, stackTrace) {
+        return const Center(child: Text('Error Time Span ...'));
+      },
+      loading: () {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Widget _moneyEstimateDropdown() {
+    final moneyEstimateList = ref.watch(getMoneyEstimateProvider);
+    final moneyEstimateSelected =
+        ref.watch(adminProjectCreateMoneyEstimateSelected);
+    return moneyEstimateList.when(
+      data: (data) {
+        final categories = [
+          const DropdownMenuItem(
+              value: '', child: Text('Choose Money Estimate')),
+          ...data
+              .map((e) => DropdownMenuItem(
+                    value: e.id,
+                    child: Text('Rp.${e.min} - Rp.${e.max}'),
+                  ))
+              .toList()
+        ];
+        return Card(
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black38),
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+          elevation: 5,
+          child: categoryDropdown(
+            context,
+            "Money Estimate Category",
+            moneyEstimateSelected,
+            categories,
+            (value) {
+              ref
+                  .read(adminProjectCreateMoneyEstimateSelected.notifier)
+                  .update((state) => value ?? '');
+            },
+            const Icon(Icons.keyboard_arrow_down),
+          ),
+        );
+      },
+      error: (error, stackTrace) {
+        return const Center(child: Text('Error Money Estimate ...'));
+      },
+      loading: () {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Widget _manpowerDropdown() {
+    final manpowerList = ref.watch(getManpowerProvider);
+    final manpowerSelected = ref.watch(adminProjectCreateManpowerSelected);
+    return manpowerList.when(
+      data: (data) {
+        final categories = [
+          const DropdownMenuItem(value: '', child: Text('Choose Time Span')),
+          ...data
+              .map((e) => DropdownMenuItem(
+                    value: e.id,
+                    child: Text('${e.min} - ${e.max} manpower'),
+                  ))
+              .toList()
+        ];
+        return Card(
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black38),
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+          elevation: 5,
+          child: categoryDropdown(
+            context,
+            "Manpower Category",
+            manpowerSelected,
+            categories,
+            (value) {
+              ref
+                  .read(adminProjectCreateManpowerSelected.notifier)
+                  .update((state) => value ?? '');
+            },
+            const Icon(Icons.keyboard_arrow_down),
+          ),
+        );
+      },
+      error: (error, stackTrace) {
+        return const Center(child: Text('Error Manpower ...'));
+      },
+      loading: () {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Widget _materialFeasibilityDropdown() {
+    final materialFeasibilityList = ref.watch(getMaterialFeasibilityProvider);
+    final materialFeasibilitySelected =
+        ref.watch(adminProjectCreateMaterialFeasibilitySelected);
+    return materialFeasibilityList.when(
+      data: (data) {
+        final categories = [
+          const DropdownMenuItem(
+              value: '', child: Text('Choose Material Feasibility')),
+          ...data
+              .map((e) => DropdownMenuItem(
+                    value: e.id,
+                    child: Text(e.description),
+                  ))
+              .toList()
+        ];
+        return Card(
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black38),
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+          elevation: 5,
+          child: categoryDropdown(
+            context,
+            "Material Feasibility Category",
+            materialFeasibilitySelected,
+            categories,
+            (value) {
+              ref
+                  .read(adminProjectCreateMaterialFeasibilitySelected.notifier)
+                  .update((state) => value ?? '');
+            },
+            const Icon(Icons.keyboard_arrow_down),
+          ),
+        );
+      },
+      error: (error, stackTrace) {
+        return const Center(child: Text('Error Material Feasibility ...'));
+      },
+      loading: () {
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

@@ -11,3 +11,20 @@ final adminProjectCreateEndDateProvider =
 
 final adminProjectCreateIsLoadingProvider =
     StateProvider.autoDispose<bool>((ref) => false);
+
+final adminProjectCreateTimeSpanSelected = StateProvider<String>((ref) {
+  return '';
+});
+
+final adminProjectCreateMoneyEstimateSelected = StateProvider<String>((ref) {
+  return '';
+});
+
+final adminProjectCreateManpowerSelected = StateProvider<String>((ref) {
+  return '';
+});
+
+final adminProjectCreateMaterialFeasibilitySelected =
+    StateProvider<String>((ref) {
+  return '';
+});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:report_project/common/styles/constant.dart';
 
-Widget projectCategoryDropdown(
+Widget categoryDropdown(
   BuildContext context,
   String fieldLabel,
   String? projectCategorySelected,

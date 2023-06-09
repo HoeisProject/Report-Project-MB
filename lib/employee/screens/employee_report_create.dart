@@ -19,7 +19,7 @@ import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_home.dart';
 import 'package:report_project/employee/view_model/create_report_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
-import 'package:report_project/employee/widgets/project_category_dropdown.dart';
+import 'package:report_project/common/widgets/category_dropdown.dart';
 import 'package:report_project/employee/widgets/report_attach_media.dart';
 import 'package:report_project/employee/widgets/select_media_dialog.dart';
 
@@ -185,7 +185,7 @@ class _ReportCreateState extends ConsumerState<EmployeeReportCreateScreen> {
                     return DropdownMenuItem(value: e.id, child: Text(e.name));
                   }).toList()
                 ];
-                return projectCategoryDropdown(
+                return categoryDropdown(
                   context,
                   "Project Category",
                   projectCategorySelected,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:report_project/admin/screens/admin_project_priority.dart';
 import 'package:report_project/admin/screens/admin_report_detail.dart';
 import 'package:report_project/admin/screens/admin_project_detail.dart';
 import 'package:report_project/admin/screens/admin_report_home.dart';
@@ -61,6 +62,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       final project = routeSettings.arguments as ProjectModel;
       return MaterialPageRoute(
           builder: (context) => AdminProjectDetail(project: project));
+    case AdminProjectPriorityScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const AdminProjectPriorityScreen());
 
     /// User
     case AdminUserHomeScreen.routeName:

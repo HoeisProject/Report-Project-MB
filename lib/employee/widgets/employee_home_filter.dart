@@ -72,7 +72,7 @@ class EmployeeHomeFilterMenuState
                       context,
                       "Project Category",
                       ref,
-                      projectCategoryDropdown(context, ref, projectCategories),
+                      categoryDropdown(context, ref, projectCategories),
                     );
                   },
                   error: (error, stackTrace) {
@@ -160,7 +160,7 @@ class EmployeeHomeFilterMenuState
     );
   }
 
-  Widget projectCategoryDropdown(BuildContext context, WidgetRef ref,
+  Widget categoryDropdown(BuildContext context, WidgetRef ref,
       List<DropdownMenuItem<String>>? items) {
     return DropdownButton(
       value: ref.watch(employeeHomeProjectCategorySelectedProvider),
