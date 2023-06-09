@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_with_icon.dart';
 import 'package:report_project/common/widgets/show_loading_dialog.dart';

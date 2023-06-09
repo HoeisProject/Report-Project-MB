@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:report_project/common/controller/show_image_full_func_controller.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/widgets/show_download_loading_dialog.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';
 

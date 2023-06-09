@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/controllers/admin_project_priority_controller.dart';
 import 'package:report_project/common/models/project_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/widgets/view_text_field.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 

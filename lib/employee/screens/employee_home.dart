@@ -6,7 +6,7 @@ import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/models/project_model.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';

@@ -5,7 +5,7 @@ import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/admin/screens/admin_project_create.dart';
 import 'package:report_project/admin/screens/admin_project_detail.dart';
 import 'package:report_project/common/models/project_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class AdminProjectHomeScreen extends ConsumerWidget {

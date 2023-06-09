@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/login_register_view_model.dart';
 import 'package:report_project/common/models/role_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/account_verify_view_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/input_media_field.dart';
 import 'package:report_project/common/widgets/input_text_field.dart';

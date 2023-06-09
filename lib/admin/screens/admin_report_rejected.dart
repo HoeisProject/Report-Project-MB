@@ -5,7 +5,7 @@ import 'package:report_project/admin/controllers/admin_report_controller.dart';
 import 'package:report_project/admin/screens/admin_report_detail.dart';
 import 'package:report_project/admin/view_model/admin_report_rejected_view_model.dart';
 import 'package:report_project/common/models/report_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/common/widgets/category_dropdown.dart';

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_user_controller.dart';
 import 'package:report_project/admin/view_model/admin_user_verify_view_model.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/widgets/custom_button.dart';
 import 'package:report_project/common/widgets/show_image_full_func.dart';
 import 'package:report_project/common/widgets/show_snack_bar.dart';

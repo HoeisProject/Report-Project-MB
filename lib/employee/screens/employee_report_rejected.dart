@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/common/models/report_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_report_detail.dart';

@@ -6,7 +6,7 @@ import 'package:report_project/auth/widgets/user_profile_edit_image.dart';
 import 'package:report_project/auth/widgets/user_profile_edit_text.dart';
 import 'package:report_project/common/models/role_model.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/widgets/show_image_full_func.dart';
 import 'package:report_project/common/widgets/sized_spacer.dart';
 import 'package:report_project/common/widgets/view_with_icon.dart';

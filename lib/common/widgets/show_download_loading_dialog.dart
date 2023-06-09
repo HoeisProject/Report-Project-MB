@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/controller/show_image_full_func_controller.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 
 class ShowDownloadLoadingDialog extends ConsumerStatefulWidget {
   const ShowDownloadLoadingDialog({super.key});

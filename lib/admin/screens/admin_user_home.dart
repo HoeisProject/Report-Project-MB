@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/admin/controllers/admin_user_controller.dart';
 import 'package:report_project/admin/screens/admin_user_verify.dart';
 import 'package:report_project/common/models/user_model.dart';
-import 'package:report_project/common/styles/constant.dart';
+import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 
 class AdminUserHomeScreen extends ConsumerWidget {
