@@ -106,15 +106,19 @@ class _AdminProjectPriorityScreenState
         ref.watch(adminProjectPriorityMoneyEstimateSelected);
     return moneyEstimateList.when(
       data: (data) {
+        final formatCurrency = NumberFormat.simpleCurrency(locale: 'id_ID');
         final categories = [
           const DropdownMenuItem(
               value: '', child: Text('Choose Money Estimate')),
-          ...data
-              .map((e) => DropdownMenuItem(
-                    value: e.id,
-                    child: Text('Rp.${e.min} - Rp.${e.max}'),
-                  ))
-              .toList()
+          ...data.map((e) {
+            final min = formatCurrency.format(e.min);
+            final max = formatCurrency.format(e.max);
+            return DropdownMenuItem(
+              value: e.id,
+              child: Text('$min - $max'),
+              // child: Text('Rp.${e.min} - Rp.${e.max}'),
+            );
+          }).toList()
         ];
         return Card(
           shape: const RoundedRectangleBorder(

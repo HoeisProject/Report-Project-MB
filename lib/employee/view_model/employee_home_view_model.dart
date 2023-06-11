@@ -2,6 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/employee/controllers/report_controller.dart';
 
+final employeeHomeProjectCategorySelected = StateProvider((ref) => '');
+
+final employeeHomeShowOnlyRejectedSwitch = StateProvider((ref) => false);
+
 final employeeHomeSearchTextProvider = StateProvider((ref) => '');
 
 final employeeHomeStatusSelectedProvider = StateProvider((ref) => 0);

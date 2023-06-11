@@ -221,8 +221,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   Widget _body() {
     return Center(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height / 1.25,
-        width: MediaQuery.of(context).size.width / 1.2,
+        height: MediaQuery.of(context).size.height * 0.9,
+        width: MediaQuery.of(context).size.width * 0.9,
         child: Card(
           elevation: 10.0,
           shape: const RoundedRectangleBorder(

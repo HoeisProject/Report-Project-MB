@@ -108,15 +108,17 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
               Navigator.pushNamed(
                   context, AdminProjectPriorityScreen.routeName);
             }),
-            _menuBarItem(Icons.insert_drive_file_outlined, "Report", () {
+            _menuBarItem(Icons.insert_drive_file_outlined, "Manage\nReport",
+                () {
               Navigator.pushNamed(context, AdminReportHomeScreen.routeName);
             }),
-            _menuBarItem(Icons.supervised_user_circle_outlined, "User", () {
+            _menuBarItem(Icons.supervised_user_circle_outlined, "Manage\nUser",
+                () {
               Navigator.pushNamed(context, AdminUserHomeScreen.routeName);
             }),
-            _menuBarItem(Icons.cancel_outlined, "Rejected\nReport", () {
-              Navigator.pushNamed(context, AdminReportRejectedScreen.routeName);
-            }),
+            // _menuBarItem(Icons.cancel_outlined, "Rejected\nReport", () {
+            //   Navigator.pushNamed(context, AdminReportRejectedScreen.routeName);
+            // }),
           ],
         ),
       ),

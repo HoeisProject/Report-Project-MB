@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:report_project/admin/controllers/admin_project_controller.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/screens/login_register.dart';
 import 'package:report_project/common/models/project_model.dart';
@@ -8,18 +9,19 @@ import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/common/models/user_model.dart';
 import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
+import 'package:report_project/common/widgets/category_dropdown.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
+import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_report_create.dart';
 import 'package:report_project/employee/screens/employee_report_detail.dart';
-import 'package:report_project/employee/screens/employee_report_rejected.dart';
+import 'package:report_project/employee/screens/employee_report_home.dart';
 import 'package:report_project/employee/screens/user_status_no_upload.dart';
 import 'package:report_project/employee/screens/user_status_pending.dart';
 import 'package:report_project/employee/screens/user_status_rejected.dart';
 import 'package:report_project/employee/view_model/employee_home_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/employee/widgets/employee_home_filter.dart';
-import 'package:report_project/employee/widgets/employee_home_search_bar.dart';
 
 class EmployeeHomeScreen extends ConsumerStatefulWidget {
   static const routeName = '/employee-home';
@@ -31,7 +33,7 @@ class EmployeeHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
-  final _searchController = TextEditingController();
+  // final _searchController = TextEditingController();
 
   List<ProjectModel> listProject = [];
 
@@ -89,7 +91,9 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _menuBar(),
-            _searchAndFilter(),
+            // _searchAndFilter(),
+            // _projecCategory(context, ref),
+
             Expanded(child: _listReportView()),
           ],
         ),
@@ -106,13 +110,12 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _menuBarItem(Icons.assignment_outlined, "Report", () {
+            _menuBarItem(Icons.add_box_outlined, "Add\nReport", () {
               Navigator.pushNamed(
                   context, EmployeeReportCreateScreen.routeName);
             }),
-            _menuBarItem(Icons.cancel_outlined, "Rejected\nReport", () {
-              Navigator.pushNamed(
-                  context, EmployeeReportRejectedScreen.routeName);
+            _menuBarItem(Icons.assignment_outlined, "Manage\nReport", () {
+              Navigator.pushNamed(context, EmployeeReportHomeScreen.routeName);
             }),
           ],
         ),
@@ -167,22 +170,70 @@ class _EmployeeHomeState extends ConsumerState<EmployeeHomeScreen> {
         icon: const Icon(Icons.filter_list));
   }
 
-  Widget _searchAndFilter() {
-    return Row(
-      children: [
-        Flexible(
-          flex: 4,
-          child: employeeHomeSearchBar(context, ref, _searchController),
-        ),
-        Flexible(
-          child: showFilterMenu(context, ref),
-        ),
-      ],
+  // Widget _searchAndFilter() {
+  //   return Row(
+  //     children: [
+  //       Flexible(
+  //         flex: 4,
+  //         child: employeeHomeSearchBar(context, ref, _searchController),
+  //       ),
+  //       Flexible(
+  //         child: showFilterMenu(context, ref),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _projecCategory(context, WidgetRef ref) {
+    final projects = ref.watch(adminProjectControllerProvider);
+
+    final projectCategorySelected =
+        ref.watch(employeeHomeProjectCategorySelected);
+    return projects.when(
+      data: (data) {
+        final projectCategories = [
+          const DropdownMenuItem(
+            value: '',
+            child: Text('Choose Project'),
+          ),
+          ...data.map((e) {
+            return DropdownMenuItem(value: e.id, child: Text(e.name));
+          }).toList()
+        ];
+        return Card(
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black38),
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          ),
+          elevation: 5,
+          child: categoryDropdown(
+            context,
+            "Project Category",
+            projectCategorySelected,
+            projectCategories,
+            (value) {
+              ref.read(employeeHomeProjectCategorySelected.notifier).state =
+                  value ?? '';
+            },
+            const Icon(Icons.keyboard_arrow_down),
+          ),
+        );
+      },
+      error: (error, stackTrace) {
+        return const Center(child: Text('Error Happen'));
+      },
+      loading: () {
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 
   Widget _listReportView() {
     final reports = ref.watch(employeeHomeFutureFilteredList);
+    // final reports = ref.watch(getReportByProjectProvider(
+    //   projectId: ref.watch(employeeHomeProjectCategorySelected),
+    //   showOnlyRejected: false,
+    // ));
     return Card(
       shape: const RoundedRectangleBorder(
         side: BorderSide(color: Colors.black38),

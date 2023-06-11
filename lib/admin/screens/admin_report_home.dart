@@ -37,6 +37,18 @@ class _AdminReportHomeScreenState extends ConsumerState<AdminReportHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _projecCategory(context, ref),
+            ListTile(
+              title: const Text('Show only rejected'),
+              onTap: () {},
+              trailing: Switch(
+                value: ref.watch(adminHomeShowOnlyRejectedSwitch),
+                onChanged: (value) {
+                  ref
+                      .read(adminHomeShowOnlyRejectedSwitch.notifier)
+                      .update((state) => value);
+                },
+              ),
+            ),
             Expanded(child: _listReportView(context, ref)),
           ],
         ),
@@ -92,7 +104,7 @@ class _AdminReportHomeScreenState extends ConsumerState<AdminReportHomeScreen> {
   Widget _listReportView(context, WidgetRef ref) {
     final reports = ref.watch(findAdminReportByProjectProvider(
       projectId: ref.watch(adminReportHomeProjectCategorySelectedProvider),
-      showOnlyRejected: false,
+      showOnlyRejected: ref.watch(adminHomeShowOnlyRejectedSwitch),
     ));
     return Card(
       shape: const RoundedRectangleBorder(

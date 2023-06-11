@@ -6,18 +6,19 @@ import 'package:report_project/common/styles/constant_style.dart';
 import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_report_detail.dart';
+import 'package:report_project/employee/view_model/employee_home_view_model.dart';
 import 'package:report_project/employee/view_model/employee_report_rejected_view_model.dart';
 import 'package:report_project/employee/widgets/custom_appbar.dart';
 import 'package:report_project/common/widgets/category_dropdown.dart';
 
-class EmployeeReportRejectedScreen extends ConsumerWidget {
-  static const routeName = '/report-rejected-home';
-  const EmployeeReportRejectedScreen({super.key});
+class EmployeeReportHomeScreen extends ConsumerWidget {
+  static const routeName = '/report-home';
+  const EmployeeReportHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: customAppbar('Report Rejected'),
+      appBar: customAppbar('Report Management'),
       body: _body(context, ref),
     );
   }
@@ -31,6 +32,18 @@ class EmployeeReportRejectedScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _projecCategory(context, ref),
+            ListTile(
+              title: const Text('Show only rejected'),
+              onTap: () {},
+              trailing: Switch(
+                value: ref.watch(employeeHomeShowOnlyRejectedSwitch),
+                onChanged: (value) {
+                  ref
+                      .read(employeeHomeShowOnlyRejectedSwitch.notifier)
+                      .update((state) => value);
+                },
+              ),
+            ),
             Expanded(child: _listReportView(context, ref)),
           ],
         ),
@@ -88,7 +101,7 @@ class EmployeeReportRejectedScreen extends ConsumerWidget {
     final reports = ref.watch(getReportByProjectProvider(
       projectId:
           ref.watch(employeeReportRejectedProjectCategorySelectedProvider),
-      showOnlyRejected: true,
+      showOnlyRejected: ref.watch(employeeHomeShowOnlyRejectedSwitch),
     ));
     return Card(
       shape: const RoundedRectangleBorder(
