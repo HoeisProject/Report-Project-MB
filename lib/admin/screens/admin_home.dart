@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_project/admin/screens/admin_project_priority.dart';
 import 'package:report_project/admin/screens/admin_report_home.dart';
-import 'package:report_project/admin/screens/admin_report_rejected.dart';
 import 'package:report_project/admin/screens/admin_user_home.dart';
 import 'package:report_project/admin/screens/admin_project_home.dart';
 import 'package:report_project/admin/view_model/admin_home_view_model.dart';

@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:report_project/common/controller/theme_controller.dart';
-import 'package:report_project/common/services/back4app_config.dart';
 import 'package:report_project/splash/splash_screen.dart';
 import 'package:report_project/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Back4appConfig.initialize();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ProviderScope(overrides: [], child: MyApp()));
 }

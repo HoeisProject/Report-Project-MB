@@ -12,7 +12,6 @@ import 'package:report_project/common/utilities/translate_position.dart';
 import 'package:report_project/common/widgets/category_dropdown.dart';
 import 'package:report_project/common/widgets/error_screen.dart';
 import 'package:report_project/common/widgets/show_drawer.dart';
-import 'package:report_project/employee/controllers/report_controller.dart';
 import 'package:report_project/employee/screens/employee_report_create.dart';
 import 'package:report_project/employee/screens/employee_report_detail.dart';
 import 'package:report_project/employee/screens/employee_report_home.dart';

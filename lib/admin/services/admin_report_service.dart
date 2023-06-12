@@ -7,7 +7,6 @@ import 'package:report_project/data/constant_data.dart';
 import 'package:report_project/data/dio_client.dart';
 import 'package:report_project/data/token_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 
 part 'admin_report_service.g.dart';
 
@@ -116,56 +115,5 @@ class AdminReportService {
     } on DioException catch (e) {
       return left(e.toString());
     }
-  }
-}
-
-class AdminReportServicess {
-  Future<List<ParseObject>> getReport(
-    String rejectReportStatusId,
-  ) async {
-    final getPostObject = ParseObject('Report');
-    final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..includeObject(["userId"]);
-    // if (showRejectedReportOnly) {
-    //   queryPosts.whereEqualTo(
-    //     ReportModelEnum.reportStatusId.name,
-    //     rejectReportStatusId,
-    //   );
-    // } else {
-    //   queryPosts.whereNotEqualTo(
-    //     ReportModelEnum.reportStatusId.name,
-    //     rejectReportStatusId,
-    //   );
-    // }
-
-    final ParseResponse response = await queryPosts.query();
-    if (response.success && response.results != null) {
-      return response.results as List<ParseObject>;
-    }
-    return [];
-  }
-
-  Future<List<ParseObject>> getReportMedia(String reportId) async {
-    ParseObject? getPostObject = ParseObject('ReportMedia');
-    final queryPosts = QueryBuilder<ParseObject>(getPostObject)
-      ..whereEqualTo('reportId', reportId);
-    final ParseResponse response = await queryPosts.query();
-
-    if (response.success && response.results != null) {
-      return response.results as List<ParseObject>;
-    }
-    return [];
-  }
-
-  Future<ParseResponse> updateReportStatus(
-    String objectId,
-    String projectStatus,
-  ) async {
-    ParseObject updateReport = ParseObject("Report")
-      ..objectId = objectId
-      ..set(ReportModelEnum.reportStatusId.name,
-          (ParseObject('ReportStatus')..objectId = projectStatus).toPointer());
-
-    return updateReport.save();
   }
 }
