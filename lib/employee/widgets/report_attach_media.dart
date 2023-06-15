@@ -6,8 +6,12 @@ import 'package:images_picker/images_picker.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:report_project/common/styles/constant_style.dart';
 
-Widget reportAttachMedia(BuildContext context, String fieldLabel,
-    List<Media> listMediaFile, void Function()? onPressed) {
+Widget reportAttachMedia(
+  BuildContext context,
+  String fieldLabel,
+  List<Media> listMediaFile,
+  void Function()? onPressed,
+) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     child: Column(

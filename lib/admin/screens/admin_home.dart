@@ -100,7 +100,7 @@ class AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _menuBarItem(Icons.work_outline, 'Project', () {
+            _menuBarItem(Icons.work_outline, 'Manage\nProject', () {
               Navigator.pushNamed(context, AdminProjectHomeScreen.routeName);
             }),
             _menuBarItem(Icons.work_history_outlined, "Project\nPriority", () {
