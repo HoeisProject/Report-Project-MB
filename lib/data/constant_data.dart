@@ -6,13 +6,10 @@ class ConstantApi {
 
   /// https://stackoverflow.com/questions/55785581/socketexception-os-error-connection-refused-errno-111-in-flutter-using-djan
   /// Emulator
-  static const String baseUrl = 'http://10.0.2.2:8000';
+  // static const String baseUrl = 'http://10.0.2.2:8000';
 
   /// GCP
-  // static const String baseUrl = 'http://34.128.127.133:8000';
-
-  /// Real Device
-  // static const String baseUrl = 'http://127.0.0.1:8000';
+  static const String baseUrl = 'http://34.128.127.133:8000';
 
   static const String api = '/api';
 
