@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:images_picker/images_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/user_profile_edit_view_model.dart';
 import 'package:report_project/auth/widgets/view_image_field.dart';
@@ -119,17 +119,13 @@ class UserProfileEditImage extends ConsumerWidget {
   }
 
   void getMediaFromCamera(WidgetRef ref) async {
+    final ImagePicker picker = ImagePicker();
     try {
-      List<Media>? getMedia = await ImagesPicker.openCamera(
-        pickType: PickType.image,
-        quality: 0.8,
-        maxSize: 800,
-        language: Language.English,
-      );
+      XFile? getMedia = await picker.pickImage(source: ImageSource.camera);
       if (getMedia != null) {
-        String? imagePath = getMedia[0].thumbPath;
+        String? imagePath = getMedia.path;
         ref.read(userProfileEditMediaFileProvider.notifier).state =
-            File(imagePath!);
+            File(imagePath);
       }
     } catch (e) {
       debugPrint(e.toString());

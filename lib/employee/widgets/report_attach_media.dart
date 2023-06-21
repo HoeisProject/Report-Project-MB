@@ -1,15 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:images_picker/images_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
-// import 'package:image_picker/image_picker.dart';
 import 'package:report_project/common/styles/constant_style.dart';
 
 Widget reportAttachMedia(
   BuildContext context,
   String fieldLabel,
-  List<Media> listMediaFile,
+  List<XFile> listMediaFile,
   void Function()? onPressed,
 ) {
   return Container(
@@ -52,7 +51,7 @@ Widget reportAttachMedia(
   );
 }
 
-Widget _attachMediaItem(Media mediaFile) {
+Widget _attachMediaItem(XFile mediaFile) {
   return SizedBox(
     width: 75.0,
     height: 75.0,

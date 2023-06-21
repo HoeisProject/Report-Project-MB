@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:images_picker/images_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:report_project/common/models/report_model.dart';
 import 'package:report_project/employee/services/report_media_service.dart';
 import 'package:report_project/employee/services/report_service.dart';
@@ -55,7 +55,7 @@ class ReportController extends _$ReportController {
     required String title,
     required Position position,
     required String description,
-    required List<Media> listMediaFile,
+    required List<XFile> listMediaFile,
   }) async {
     debugPrint('ReportController - createProject');
 

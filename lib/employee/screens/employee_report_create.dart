@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:images_picker/images_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
@@ -41,6 +41,8 @@ class _ReportCreateState extends ConsumerState<EmployeeReportCreateScreen> {
   final _reportDescCtl = TextEditingController();
 
   Position? position;
+
+  final ImagePicker picker = ImagePicker();
 
   @override
   void initState() {
@@ -296,7 +298,7 @@ class _ReportCreateState extends ConsumerState<EmployeeReportCreateScreen> {
   }
 
   bool fieldValidation(
-    List<Media> listMediaPickerFile,
+    List<XFile> listMediaPickerFile,
     String projectCategorySelected,
   ) {
     if (_reportTitleCtl.text.trim().isNotEmpty &&
@@ -315,19 +317,15 @@ class _ReportCreateState extends ConsumerState<EmployeeReportCreateScreen> {
     final listMediaPickerFile =
         ref.read(createReportListMediaPickerFileProvider.notifier);
     try {
-      List<Media>? getMedia = await ImagesPicker.pick(
-        count: 5,
-        pickType: PickType.image,
-        language: Language.English,
-      );
+      List<XFile>? getMedia = await picker.pickMultiImage();
       if (listMediaPickerFile.state.isEmpty) {
-        if (getMedia != null) {
+        if (getMedia.isNotEmpty) {
           listMediaPickerFile.state = getMedia;
         } else {
           listMediaPickerFile.state = [];
         }
       } else {
-        if (getMedia != null) {
+        if (getMedia.isNotEmpty) {
           listMediaPickerFile.state = [
             ...listMediaPickerFile.state,
             ...getMedia
@@ -344,15 +342,10 @@ class _ReportCreateState extends ConsumerState<EmployeeReportCreateScreen> {
     final listMediaPickerFile =
         ref.read(createReportListMediaPickerFileProvider.notifier);
     try {
-      List<Media>? getMedia = await ImagesPicker.openCamera(
-        pickType: PickType.image,
-        quality: 0.8,
-        maxSize: 800,
-        language: Language.English,
-      );
+      XFile? getMedia = await picker.pickImage(source: ImageSource.camera);
       if (listMediaPickerFile.state.isEmpty) {
         if (getMedia != null) {
-          listMediaPickerFile.state = getMedia;
+          listMediaPickerFile.state = [getMedia];
         } else {
           listMediaPickerFile.state = [];
         }
@@ -360,7 +353,7 @@ class _ReportCreateState extends ConsumerState<EmployeeReportCreateScreen> {
         if (getMedia != null) {
           listMediaPickerFile.state = [
             ...listMediaPickerFile.state,
-            ...getMedia
+            ...[getMedia]
           ];
         } else {}
       }

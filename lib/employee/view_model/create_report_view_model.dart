@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:images_picker/images_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 final createReportProjectCategorySelectedProvider =
     StateProvider.autoDispose<String>((ref) {
@@ -16,6 +16,6 @@ final createReportPositionProvider = StateProvider.autoDispose<String>((ref) {
 });
 
 final createReportListMediaPickerFileProvider =
-    StateProvider.autoDispose<List<Media>>((ref) {
+    StateProvider.autoDispose<List<XFile>>((ref) {
   return [];
 });

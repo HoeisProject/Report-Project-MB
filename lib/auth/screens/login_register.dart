@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:images_picker/images_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/login_register_view_model.dart';
 import 'package:report_project/common/models/role_model.dart';
@@ -40,6 +40,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final emailCtl = TextEditingController();
   final passwordCtl = TextEditingController();
   final phoneNumberCtl = TextEditingController();
+
+  final ImagePicker picker = ImagePicker();
 
   void login(context) async {
     ref.read(loginRegisterLoadingProvider.notifier).state = true;
@@ -122,16 +124,11 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
   void getMediaFromCamera() async {
     try {
-      List<Media>? getMedia = await ImagesPicker.openCamera(
-        pickType: PickType.image,
-        quality: 0.8,
-        maxSize: 800,
-        language: Language.English,
-      );
+      XFile? getMedia = await picker.pickImage(source: ImageSource.camera);
       if (getMedia != null) {
-        String? imagePath = getMedia[0].thumbPath;
+        String? imagePath = getMedia.path;
         ref.read(loginRegisterMediaFileProvider.notifier).state =
-            File(imagePath!);
+            File(imagePath);
       }
     } catch (e) {
       debugPrint('getMediaFromCamera: ${e.toString()}');

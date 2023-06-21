@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:images_picker/images_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:report_project/auth/controllers/profile_controller.dart';
 import 'package:report_project/auth/view_model/account_verify_view_model.dart';
 import 'package:report_project/common/styles/constant_style.dart';
@@ -23,6 +23,8 @@ class AccountVerify extends ConsumerStatefulWidget {
 class _AccountVerifyState extends ConsumerState<AccountVerify> {
   final keyNik = GlobalKey<FormState>();
   final nikCtl = TextEditingController();
+
+  final ImagePicker picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -142,16 +144,11 @@ class _AccountVerifyState extends ConsumerState<AccountVerify> {
 
   void getMediaFromCamera() async {
     try {
-      List<Media>? getMedia = await ImagesPicker.openCamera(
-        pickType: PickType.image,
-        quality: 0.8,
-        maxSize: 800,
-        language: Language.English,
-      );
+      XFile? getMedia = await picker.pickImage(source: ImageSource.camera);
       if (getMedia != null) {
-        String? imagePath = getMedia[0].thumbPath;
+        String? imagePath = getMedia.path;
         ref.read(accountVerifyMediaFileProvider.notifier).state =
-            File(imagePath!);
+            File(imagePath);
       }
     } catch (e) {
       debugPrint(e.toString());
