@@ -22,6 +22,8 @@ Widget categoryDropdown(
           ),
         ),
         DropdownButton<String>(
+          isExpanded: true,
+          itemHeight: null,
           value: projectCategorySelected,
           items: projectCategories,
           onChanged: onChanged,
