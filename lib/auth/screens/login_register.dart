@@ -126,7 +126,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
     try {
       XFile? getMedia = await picker.pickImage(source: ImageSource.camera);
       if (getMedia != null) {
-        String? imagePath = getMedia.path;
+        String imagePath = getMedia.path;
         ref.read(loginRegisterMediaFileProvider.notifier).state =
             File(imagePath);
       }

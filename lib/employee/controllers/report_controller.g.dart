@@ -121,7 +121,7 @@ class GetReportByProjectProvider
   }
 }
 
-String _$reportControllerHash() => r'b3d3fb1c9f294cdcc3e6f1934088ebe33cc772fe';
+String _$reportControllerHash() => r'361001e0e30e14a31bfe863357d7b6886736140d';
 
 /// See also [ReportController].
 @ProviderFor(ReportController)

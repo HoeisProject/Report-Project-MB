@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:report_project/data/constant_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'dio_client.g.dart';
+part 'dio_multipart.g.dart';
 
 @Riverpod(keepAlive: true)
-DioClient dioClient(DioClientRef ref) {
-  return DioClient(Dio());
+DioPutusAsa dioPutusAsa(DioPutusAsaRef ref) {
+  return DioPutusAsa(Dio());
 }
 
-class DioClient {
+class DioPutusAsa {
   final Dio _dio;
 
   Options tokenOptions(String token) {
@@ -20,19 +20,16 @@ class DioClient {
     );
   }
 
-  DioClient(this._dio) {
+  DioPutusAsa(this._dio) {
     _dio
       ..options.baseUrl = ConstantApi.baseUrl + ConstantApi.api
       ..options.connectTimeout = ConstantApi.connectionTimeout
       ..options.receiveTimeout = ConstantApi.receiveTimeout
       ..options.headers = {
         'Accept': 'application/vnd.api+json',
-        // 'Accept': '*/*',
-        // 'Content-Type': '*/*',
         'Content-Type': 'application/vnd.api+json',
         // 'Content-Type': 'multipart/form-data',
         // 'Content-Type': 'application/x-www-form-urlencoded',
-        // 'Content-Type': ['application/vnd.api+json', 'multipart/form-data'],
         'Connection': 'keep-alive',
         // 'Content-Type': 'application/json',
         // 'Accept': 'application/json',

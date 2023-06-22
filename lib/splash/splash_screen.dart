@@ -46,9 +46,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       if (await Permission.microphone.isPermanentlyDenied) {
         Permission.microphone.request();
       }
-      if (await Permission.storage.request().isPermanentlyDenied) {
-        await openAppSettings();
-      }
+      // if (await Permission.storage.request().isPermanentlyDenied) {
+      //   await openAppSettings();
+      // }
       Map<Permission, PermissionStatus> _ = await [
         Permission.location,
         Permission.storage,

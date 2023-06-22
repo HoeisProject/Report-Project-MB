@@ -14,10 +14,10 @@ class ConstantApi {
   static const String api = '/api';
 
   /// Receive Timeout
-  static const Duration receiveTimeout = Duration(seconds: 10);
+  static const Duration receiveTimeout = Duration(seconds: 300);
 
   /// Conection Timeout
-  static const Duration connectionTimeout = Duration(seconds: 10);
+  static const Duration connectionTimeout = Duration(seconds: 300);
 }
 
 class EndPoint {
