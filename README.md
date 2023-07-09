@@ -4,13 +4,17 @@ project reporting mobile application
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+[https://docs.flutter.dev/tools/vs-code]
 
-A few resources to get you started if this is your first Flutter project:
+1. Run android emulator with minimum SDK 21
+1. Open folder with VS Code
+1. Start debugging (F5) or run without debugging (ctrl + F5)
+1. If running locally, go to `lib/data/constant_data.dart` and change code exactly with code snippet below
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```dart
+  /// Emulator
+  static const String baseUrl = 'http://10.0.2.2:8000';
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  /// GCP
+  // static const String baseUrl = 'http://34.128.127.133:8000';
+```
